@@ -34,7 +34,7 @@ public class UserService implements IUserService {
     public void updateUser(String id, UserRequest userRequest) {
         User user = userRepository.findById(UUID.fromString(id))
             .orElseThrow(() -> new UserNotFoundException("Cannot find user with id :" + id));
-        user.setFullName(userRequest.fullName());
+        user.setFullName(userRequest.fullname());
         user.setEmail(userRequest.email());
         user.setRoles(userRequest.roles());
         userRepository.save(user);
