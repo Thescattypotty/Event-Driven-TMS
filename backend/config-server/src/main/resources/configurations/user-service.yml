@@ -3,9 +3,9 @@ server:
 spring:
   datasource:
     driver-calss-name: org.postgresql.Driver
-    url: jdbc:mysql://localhost:3306/user
-    useername: 
-    password: 
+    url: jdbc:postgresql://localhost:5432/user
+    useername: admin
+    password: admin
   jpa:
     hibernate:
       ddl-auto: update
