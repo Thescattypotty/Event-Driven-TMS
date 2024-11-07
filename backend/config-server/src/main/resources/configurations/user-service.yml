@@ -1,10 +1,11 @@
 server:
   port: 8010
+
 spring:
   datasource:
-    driver-calss-name: org.postgresql.Driver
+    driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/user
-    useername: admin
+    username: admin
     password: admin
   jpa:
     hibernate:
