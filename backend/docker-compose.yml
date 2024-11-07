@@ -1,0 +1,29 @@
+services:
+  config-server:
+    build: ./config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - event-driven-network
+  registry-service:
+    build: ./registry-service
+    ports:
+      - "8761:8761"
+    depends_on:
+      - config-server
+    networks:
+      - event-driven-network
+
+  gateway-service:
+    build: ./gateway-service
+    ports:
+      - "8222:8222"
+    depends_on:
+      - registry-service
+    networks:
+      - event-driven-network
+networks:
+  event-driven-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
