@@ -3,9 +3,9 @@ package org.driventask.user.Exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class UserNotFoundException extends RuntimeException{
-    public UserNotFoundException(String message){
+@ResponseStatus(value = HttpStatus.CONFLICT)
+public class PasswordIncorrectException extends RuntimeException{
+    public PasswordIncorrectException(String message){
         super(message);
     }
 }

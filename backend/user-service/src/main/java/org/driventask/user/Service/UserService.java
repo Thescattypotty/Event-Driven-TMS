@@ -3,9 +3,11 @@ package org.driventask.user.Service;
 import java.util.UUID;
 
 import org.driventask.user.Entity.User;
+import org.driventask.user.Exception.PasswordIncorrectException;
 import org.driventask.user.Exception.UserNotFoundException;
 import org.driventask.user.IService.IUserService;
 import org.driventask.user.Payload.Mapper.UserMapper;
+import org.driventask.user.Payload.Request.ChangePasswordRequest;
 import org.driventask.user.Payload.Request.UserRequest;
 import org.driventask.user.Payload.Response.UserResponse;
 import org.driventask.user.Repository.UserRepository;
@@ -52,6 +54,21 @@ public class UserService implements IUserService {
         if(userRepository.existsById(UUID.fromString(id))){
             userRepository.deleteById(UUID.fromString(id));
         }
+        else{
+            throw new UserNotFoundException("Cannot find user with id :" + id);
+        }
+    }
+
+    @Override
+    public void changePassword(String id, ChangePasswordRequest changePasswordRequest) {
+        User user = userRepository.findById(UUID.fromString(id))
+            .orElseThrow(() -> new UserNotFoundException("Cannot find user with id :" + id));
+        if(passwordEncoder.matches(changePasswordRequest.oldPassword(), user.getPassword())){
+            user.setPassword(passwordEncoder.encode(changePasswordRequest.newPassword()));
+        }
+        else{
+            throw new PasswordIncorrectException("Pasword incorrect !!!");
+        }   
     }
     
 }
