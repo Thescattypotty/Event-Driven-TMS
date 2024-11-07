@@ -9,9 +9,15 @@ import org.springframework.stereotype.Service;
 public class UserMapper {
 
     public User toUser(UserRequest userRequest){
-        return null;
+        return User
+            .builder()
+            .fullName(userRequest.fullname())
+            .email(userRequest.email())
+            .password(userRequest.password())
+            .roles(userRequest.roles())
+            .build();
     }
     public UserResponse fromUser(User user){
-        return null;
+        return new UserResponse(user.getId().toString(), user.getFullName(), user.getEmail());
     }
 }
