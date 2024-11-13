@@ -12,12 +12,15 @@ public record UserRequest(
     @NotNull
     @NotBlank
     String fullname,
+
     @NotNull
     @Email
     String email,
+    
     @NotNull
     @NotBlank
     String password,
+    
     Set<ERole> roles
 ) {
     

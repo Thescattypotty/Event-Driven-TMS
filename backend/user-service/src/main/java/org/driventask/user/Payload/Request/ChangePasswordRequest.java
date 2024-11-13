@@ -7,6 +7,7 @@ public record ChangePasswordRequest(
     @NotBlank
     @NotNull
     String oldPassword, 
+    
     @NotBlank
     @NotNull
     String newPassword
