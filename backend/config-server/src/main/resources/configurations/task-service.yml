@@ -1,0 +1,14 @@
+server:
+  port: 8020
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/task
+    username: admin
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+      database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
