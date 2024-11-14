@@ -71,7 +71,6 @@ public class UserService implements IUserService {
             user.setPassword(passwordEncoder.encode(changePasswordRequest.newPassword()));
             userProducer.sendEmailToUser(new UserChangingListener(user.getEmail(), user.getFullName(),
                     EUserChangement.USER_CHANGE_PASSWORD));
-
         }
         else{
             throw new PasswordIncorrectException("Pasword incorrect !!!");
