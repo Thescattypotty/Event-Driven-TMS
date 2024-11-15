@@ -1,0 +1,31 @@
+server:
+  port: 8020
+
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/task
+    username: admin
+    password: admin
+  sql:
+    init:
+      mode: always
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      ## we need to create that !
+      properties:
+        spring.json.type.mapping: 
+          TaskCreation: org.driventask.task.Payload.Kafka.TaskCreation
+          TaskUpdate: org.driventask.task.Payload.Kafka.TaskUpdate
+
+
+  webflux:
+    websocket:
+      max-frame-payload-length: 124KB
+      max-text-message: 124KB
+
+application:
+  config:
+    user-url: http://localhost:8222/api/v1/user

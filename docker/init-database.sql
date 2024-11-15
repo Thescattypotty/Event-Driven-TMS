@@ -1,2 +1,3 @@
 CREATE DATABASE "user";
+CREATE DATABASE "task";
 
