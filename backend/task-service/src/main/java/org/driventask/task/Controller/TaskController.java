@@ -38,8 +38,7 @@ public class TaskController {
     @GetMapping("/{taskId}")
     public Mono<ResponseEntity<TaskResponse>> getTaskById(@PathVariable String taskId) {
         return taskService.getTaskById(taskId)
-                .map(taskResponse -> new ResponseEntity<>(taskResponse, HttpStatus.OK))
-                .onErrorResume(e -> Mono.just(new ResponseEntity<>(HttpStatus.NOT_FOUND)));
+            .map(taskResponse -> new ResponseEntity<>(taskResponse, HttpStatus.OK));
     }
 
     @GetMapping("/project/{projectId}")
@@ -63,18 +62,18 @@ public class TaskController {
     @MessageMapping("/task/create")
     public Mono<Void> createTaskWebSocket(@Valid TaskRequest taskRequest) {
         return taskService.createTask(taskRequest)
-                .then();
+            .then();
     }
 
     @MessageMapping("/task/update/")
     public Mono<Void> updateTaskWebSocket(String taskId,TaskRequest taskRequest) {
         return taskService.updateTask(taskId, taskRequest)
-                .then();
+            .then();
     }
 
     @MessageMapping("/task/delete")
     public Mono<Void> deleteTaskWebSocket(String taskId) {
         return taskService.deleteTask(taskId)
-                .then();
+            .then();
     }
 }
