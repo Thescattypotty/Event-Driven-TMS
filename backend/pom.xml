@@ -43,7 +43,9 @@
         <module>gateway-service</module>
         <module>registry-service</module>
         <module>user-service</module>
+        <module>project-service</module>
     </modules>
+
 
     <build>
         <plugins>
