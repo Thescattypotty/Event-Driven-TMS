@@ -1,6 +1,14 @@
 version: "3.9"
 
 services:
+  core-service:
+    image: maven:3.8-openjdk-17
+    container_name: core-service
+    working_dir: /app
+    volumes:
+      - ./:app
+    command: mvn clean install -DskipTests
+
   config-server: 
     image: maven:3.8-openjdk-17
     container_name: config-server
@@ -10,6 +18,15 @@ services:
     command : mvn spring-boot:run
     ports:
       - "8888:8888"
+    depends_on:
+      - core-service
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend-network
 
   registry-service:
     image: maven:3.8-openjdk-17
@@ -22,6 +39,8 @@ services:
       - "8761:8761"
     depends_on:
       - config-service
+    networks:
+      - backend-network
 
   gateway-service:
     image: maven:3.8-openjdk-17
@@ -35,6 +54,8 @@ services:
     depends_on:
       - config-service
       - registry-service
+    networks:
+      - backend-network
 
   user-service:
     image: maven:3.8-openjdk-17
@@ -48,6 +69,8 @@ services:
     depends_on:
       - config-service
       - registry-service
+    networks:
+      - backend-network
 
   task-service:
     image: maven:3.8-openjdk-17
@@ -61,6 +84,8 @@ services:
     depends_on:
       - config-service
       - registry-service
+    networks:
+      - backend-network
 
   auth-service:
     image: maven:3.8-openjdk-17
@@ -74,3 +99,13 @@ services:
     depends_on:
       - config-service
       - registry-service
+    networks:
+      - backend-network
+
+
+networks:
+  backend-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.enable_ip_masquerade: "true"
+      com.docker.network.bridge.enable_icc: "false"
