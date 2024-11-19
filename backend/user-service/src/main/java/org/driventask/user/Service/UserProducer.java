@@ -1,6 +1,7 @@
 package org.driventask.user.Service;
 
-import org.driventask.user.Payload.Response.UserChangingListener;
+import org.driventask.user.Payload.Kafka.UserCreation;
+import org.driventask.user.Payload.Kafka.UserUpdated;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.stereotype.Service;
@@ -14,14 +15,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class UserProducer {
-    private final KafkaTemplate<String, UserChangingListener> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public void sendEmailToUser(UserChangingListener userChangingPasword){
-        Message<UserChangingListener> message = MessageBuilder
-            .withPayload(userChangingPasword)
+    public void handleUserCreation(UserCreation userCreation){
+        Message<UserCreation> message = MessageBuilder
+            .withPayload(userCreation)
             .setHeader(KafkaHeaders.TOPIC, "user-topic")
             .build();
-
+        kafkaTemplate.send(message);
+    }
+    public void handleUserUpdate(UserUpdated userUpdated){
+        Message<UserUpdated> message = MessageBuilder
+            .withPayload(userUpdated)
+            .setHeader(KafkaHeaders.TOPIC, "user-topic")
+            .build();
         kafkaTemplate.send(message);
     }
 }

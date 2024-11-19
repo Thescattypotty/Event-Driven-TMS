@@ -8,7 +8,7 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaUserTopicConfiguration {
  
     public NewTopic userTopic(){
-        return TopicBuilder.name("topic-user")
+        return TopicBuilder.name("user-topic")
             .build();
     }
 }

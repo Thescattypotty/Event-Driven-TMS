@@ -2,13 +2,19 @@ server:
   port: 8010
 
 spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/user
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/user
     username: admin
     password: admin
-  jpa:
-    hibernate:
-      ddl-auto: update
-      database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    properties:
+      spring.json.type.mapping:
+        UserUpdated: org.driventask.user.Payload.Kafka.UserUpdated
+        UserCreation: org.driventask.user.Payload.Kafka.UserCreation
+  sql:
+    init:
+      mode: always

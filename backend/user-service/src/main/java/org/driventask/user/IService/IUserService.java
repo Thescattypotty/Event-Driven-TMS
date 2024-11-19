@@ -4,10 +4,13 @@ import org.driventask.user.Payload.Request.ChangePasswordRequest;
 import org.driventask.user.Payload.Request.UserRequest;
 import org.driventask.user.Payload.Response.UserResponse;
 
+import reactor.core.publisher.Mono;
+
 public interface IUserService {
-    void createUser(UserRequest userRequest);
-    void updateUser(String id , UserRequest userRequest);
-    UserResponse getUser(String id);
-    void deleteUser(String id);
-    void changePassword(String id, ChangePasswordRequest changePasswordRequest);
+    Mono<Void> createUser(UserRequest userRequest);
+    Mono<Void> updateUser(String id , UserRequest userRequest);
+    Mono<UserResponse> getUser(String id);
+    Mono<Void> deleteUser(String id);
+    Mono<Void> changePassword(String id, ChangePasswordRequest changePasswordRequest);
+    Mono<Boolean> isUserExist(String id);
 }

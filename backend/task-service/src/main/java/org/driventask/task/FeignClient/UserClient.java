@@ -14,7 +14,7 @@ public interface UserClient {
     @GetMapping("/{id}")
     Mono<ResponseEntity<UserResponse>> getUser(@PathVariable String id);
 
-    @GetMapping("/{id}")
+    @GetMapping("/exists/{id}")
     Mono<ResponseEntity<Boolean>> isUserExist(@PathVariable String id);
 
 }

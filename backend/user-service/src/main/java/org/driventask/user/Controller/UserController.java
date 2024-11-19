@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,26 +27,34 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUser(@PathVariable String id){
-        return  ResponseEntity.ok(userService.getUser(id));
+    public Mono<ResponseEntity<UserResponse>> getUser(@PathVariable String id){
+        return userService.getUser(id)
+            .map(user -> new ResponseEntity<>(user,HttpStatus.OK));
+    }
+    
+    @GetMapping("/exists/{id}")
+    public Mono<ResponseEntity<Boolean>> isUserExist(@PathVariable String id) {
+        return userService.isUserExist(id)
+            .map(isExisying -> new ResponseEntity<>(isExisying, HttpStatus.ACCEPTED));
     }
     
     @PostMapping("/create")
-    public ResponseEntity<Void> saveUser(@RequestBody @Valid UserRequest userRequest){
-        userService.createUser(userRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public Mono<ResponseEntity<Void>> saveUser(@RequestBody @Valid UserRequest userRequest){
+        return userService.createUser(userRequest)
+            .then(Mono.just(new ResponseEntity<>(HttpStatus.CREATED)));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Void> updtadeUser(@PathVariable String id , @RequestBody @Valid UserRequest user){
-        userService.updateUser(id, user);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    public Mono<ResponseEntity<Void>> updtadeUser(@PathVariable String id , @RequestBody @Valid UserRequest userRequest){
+        return userService.updateUser(id,userRequest)
+            .then(Mono.just(new ResponseEntity<>(HttpStatus.ACCEPTED)));
     }
     
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable @Valid String id){
-        userService.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    public Mono<ResponseEntity<Void>> deleteUser(@PathVariable @Valid String id){
+        return userService.deleteUser(id)
+            .then(Mono.just(new ResponseEntity<>(HttpStatus.ACCEPTED)));
     }
+
      
 }
