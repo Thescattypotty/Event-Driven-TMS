@@ -54,9 +54,10 @@ public class TaskService implements ITaskService{
                 }
 
                 return saveTaskAndPublishEvents(taskRequest);
-            });
+            }
+        );
     }
-
+    
     @Override
     public Mono<TaskResponse> getTaskById(String taskId) {
         return taskRepository.findById(UUID.fromString(taskId))
