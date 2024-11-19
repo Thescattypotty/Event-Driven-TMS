@@ -1,29 +1,76 @@
+version: "3.9"
+
 services:
-  config-server:
-    build: ./config-server
+  config-server: 
+    image: maven:3.8-openjdk-17
+    container_name: config-server
+    working_dir: /app
+    volumes:
+      - ./config-service:/app
+    command : mvn spring-boot:run
     ports:
       - "8888:8888"
-    networks:
-      - event-driven-network
+
   registry-service:
-    build: ./registry-service
+    image: maven:3.8-openjdk-17
+    container_name: registry-service
+    working_dir: /app
+    volumes:
+      - ./registry-service:/app
+    command: mvn spring-boot:run
     ports:
       - "8761:8761"
     depends_on:
-      - config-server
-    networks:
-      - event-driven-network
+      - config-service
 
   gateway-service:
-    build: ./gateway-service
+    image: maven:3.8-openjdk-17
+    container_name: gateway-service
+    working_dir: /app
+    volumes:
+      - ./gateway-service:/app
+    command: mvn spring-boot:run
     ports:
       - "8222:8222"
     depends_on:
+      - config-service
       - registry-service
-    networks:
-      - event-driven-network
-networks:
-  event-driven-network:
-    driver: bridge
-    driver_opts:
-      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
+
+  user-service:
+    image: maven:3.8-openjdk-17
+    container_name: user-service
+    working_dir: /app
+    volumes:
+      - ./user-service:/app
+    command: mvn spring-boot:run
+    ports:
+      - "8010:8010"
+    depends_on:
+      - config-service
+      - registry-service
+
+  task-service:
+    image: maven:3.8-openjdk-17
+    container_name: task-service
+    working_dir: /app
+    volumes:
+      - ./task-service:/app
+    command: mvn spring-boot:run
+    ports:
+      - "8020:8020"
+    depends_on:
+      - config-service
+      - registry-service
+
+  auth-service:
+    image: maven:3.8-openjdk-17
+    container_name: auth-service
+    working_dir: /app
+    volumes:
+      - ./auth-service:/app
+    command: mvn spring-boot:run
+    ports:
+      - "8030:8030"
+    depends_on:
+      - config-service
+      - registry-service
