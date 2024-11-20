@@ -1,6 +1,7 @@
 package org.driventask.auth.Service;
 
 import org.driventask.auth.Payload.Kafka.UserLogedIn;
+import org.driventask.auth.Payload.Kafka.UserLogedOut;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
@@ -19,6 +20,14 @@ public class AuthProducer {
     public void handleUserAuthenticated(UserLogedIn userLogedIn){
         Message<UserLogedIn> message = MessageBuilder
             .withPayload(userLogedIn)
+            .setHeader(KafkaHeaders.TOPIC, "auth-topic")
+            .build();
+        kafkaTemplate.send(message);
+    }
+    
+    public void handleUserLogout(UserLogedOut userLogedOut){
+        Message<UserLogedOut> message = MessageBuilder
+            .withPayload(userLogedOut)
             .setHeader(KafkaHeaders.TOPIC, "auth-topic")
             .build();
         kafkaTemplate.send(message);

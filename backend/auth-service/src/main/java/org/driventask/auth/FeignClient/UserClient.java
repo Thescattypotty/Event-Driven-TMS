@@ -13,6 +13,8 @@ import reactor.core.publisher.Mono;
     url = "${application.config.user-url}"
 )
 public interface UserClient {
+
     @GetMapping("/auth/verify")
     Mono<UserAuthResponse> verifyUserCredentials(@RequestBody UserAuthRequest userAuthRequest); 
+
 }

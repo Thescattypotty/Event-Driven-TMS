@@ -25,4 +25,11 @@ public class AuthenticationController {
         return authenticationService.login(loginRequest)
             .map(jwtResponse -> new ResponseEntity<>(jwtResponse, HttpStatus.OK));
     }
+
+    //this function isn't terminated we will replace JwtResponse with some security context to get the user or we will leave it like it is who knows
+    @PostMapping("/logout")
+    public Mono<ResponseEntity<Void>> logout(@RequestBody JwtResponse jwtResponse){
+        return authenticationService.logout(jwtResponse)
+            .then(Mono.just(new ResponseEntity<>(HttpStatus.OK)));
+    }
 }

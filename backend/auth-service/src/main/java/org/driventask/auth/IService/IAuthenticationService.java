@@ -7,4 +7,5 @@ import reactor.core.publisher.Mono;
 
 public interface IAuthenticationService {
     Mono<JwtResponse> login(LoginRequest loginRequest);
+    Mono<Void> logout(JwtResponse jwtResponse);
 }
