@@ -4,9 +4,11 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -34,10 +36,13 @@ public class Project {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    private String userId;
+    @Column(value = "project_user")
+    private Set<String> userId;
 
-    private String taskId;
+    @Column(value = "project_task")
+    private Set<String> taskId;
 
-    private String fileId;
+    @Column(value = "project_file")
+    private Set<String> fileId;
 
 }

@@ -3,6 +3,7 @@ package org.driventask.project.Payload.Mapper;
 import org.driventask.project.Entity.Project;
 import org.springframework.stereotype.Service;
 import org.driventask.project.Payload.Request.ProjectRequest;
+import org.driventask.project.Payload.Response.ProjectResponse;
 
 @Service
 public class ProjectMapper {
@@ -13,8 +14,6 @@ public class ProjectMapper {
                     .description(projectRequest.description())
                     .startDate(projectRequest.startDate())
                     .endDate(projectRequest.endDate())
-                    .createdAt(projectRequest.createdAt())
-                    .updatedAt(projectRequest.updatedAt())
                     .build();
         }
 
@@ -26,7 +25,10 @@ public class ProjectMapper {
                     project.getStartDate(),
                     project.getEndDate(),
                     project.getCreatedAt(),
-                    project.getUpdatedAt()
+                    project.getUpdatedAt(),
+                    project.getUserId(),
+                    project.getFileId()
             );
 
+        }
 }
