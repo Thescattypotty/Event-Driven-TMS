@@ -11,9 +11,11 @@ public record ProjectRequest(
     @NotBlank
     String name ,
     String description,
+    LocalDateTime createdAt,
+    LocalDateTime updatedAt,
     LocalDateTime startDate,
     LocalDateTime endDate,
-    Set<String> users_id,
+    String userId,
     Set<String> file_id
 ) {
 

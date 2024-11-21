@@ -36,13 +36,13 @@ public class Project {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @Column(value = "project_user")
+    @Column(value = "project_users")
     private Set<String> userId;
 
-    @Column(value = "project_task")
+    @Column(value = "project_tasks")
     private Set<String> taskId;
 
-    @Column(value = "project_file")
+    @Column(value = "project_files")
     private Set<String> fileId;
 
 }
