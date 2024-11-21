@@ -47,6 +47,7 @@
         <module>auth-service</module>
     </modules>
 
+
     <build>
         <plugins>
             <plugin>

@@ -1,0 +1,14 @@
+server:
+  port: 8040
+
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/project
+    username: admin
+    password: admin
+
+application:
+  config:
+    user-url: http://localhost:8222/api/v1/user
+    task-url: http://localhost:8222/api/v1/task
+    file-url: http://localhost:8222/api/v1/file
