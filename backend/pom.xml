@@ -44,6 +44,8 @@
         <module>registry-service</module>
         <module>user-service</module>
         <module>project-service</module>
+        <module>task-service</module>
+        <module>auth-service</module>
     </modules>
 
 
