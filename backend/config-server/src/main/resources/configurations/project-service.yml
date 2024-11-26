@@ -6,6 +6,17 @@ spring:
     url: r2dbc:postgresql://localhost:5432/project
     username: admin
     password: admin
+  sql:
+    init:
+      mode: always
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    propertues:
+      spring.json.type.mapping:
+        
 
 application:
   config:
