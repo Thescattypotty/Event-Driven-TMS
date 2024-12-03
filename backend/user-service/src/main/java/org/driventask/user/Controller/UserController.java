@@ -1,6 +1,8 @@
 package org.driventask.user.Controller;
 
+import org.driventask.user.Payload.Request.UserAuthRequest;
 import org.driventask.user.Payload.Request.UserRequest;
+import org.driventask.user.Payload.Response.UserAuthResponse;
 import org.driventask.user.Payload.Response.UserResponse;
 import org.driventask.user.Service.UserService;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,6 +57,14 @@ public class UserController {
         return userService.deleteUser(id)
             .then(Mono.just(new ResponseEntity<>(HttpStatus.ACCEPTED)));
     }
+
+    @PostMapping("/auth/verify")
+    public Mono<ResponseEntity<UserAuthResponse>> verifyUserCredentials(@RequestBody UserAuthRequest userAuthRequest){
+        System.out.println("Hello world");
+        return userService.verifyUserCredentials(userAuthRequest)
+            .map(userResponse -> new ResponseEntity<>(userResponse, HttpStatus.OK));
+    }
+
 
      
 }

@@ -22,6 +22,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public Mono<ResponseEntity<JwtResponse>> login(@RequestBody @Valid LoginRequest loginRequest){
+        System.out.println("Hello world");
         return authenticationService.login(loginRequest)
             .map(jwtResponse -> new ResponseEntity<>(jwtResponse, HttpStatus.OK));
     }
