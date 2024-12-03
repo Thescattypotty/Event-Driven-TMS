@@ -7,4 +7,4 @@ jwt:
 
 application:
   config:
-    user-url: http://localhost:8222/api/v1/user
+    user-url: http://localhost:8010/api/v1/user

@@ -11,7 +11,9 @@ import org.driventask.user.Payload.Kafka.UserCreation;
 import org.driventask.user.Payload.Kafka.UserUpdated;
 import org.driventask.user.Payload.Mapper.UserMapper;
 import org.driventask.user.Payload.Request.ChangePasswordRequest;
+import org.driventask.user.Payload.Request.UserAuthRequest;
 import org.driventask.user.Payload.Request.UserRequest;
+import org.driventask.user.Payload.Response.UserAuthResponse;
 import org.driventask.user.Payload.Response.UserResponse;
 import org.driventask.user.Repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -126,6 +128,20 @@ public class UserService implements IUserService {
     public Mono<Boolean> isUserExist(String id) {
         return userRepository.existsById(UUID.fromString(id));
     }
+
+    @Override
+    public Mono<UserAuthResponse> verifyUserCredentials(UserAuthRequest userAuthRequest) {
+        return userRepository.findByEmail(userAuthRequest.email())
+            .switchIfEmpty(Mono.error(new UserNotFoundException("User does not exist")))
+            .flatMap(user -> {
+                if (passwordEncoder.matches(userAuthRequest.password(), user.getPassword())) {
+                    return Mono.just(new UserAuthResponse(user.getEmail(), user.getRoles()));
+                } else {
+                    return Mono.error(new PasswordIncorrectException("Password is incorrect"));
+                }
+            });
+    }
+
     
 }
 

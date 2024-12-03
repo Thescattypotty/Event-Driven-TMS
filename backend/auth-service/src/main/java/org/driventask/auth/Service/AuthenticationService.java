@@ -27,8 +27,8 @@ public class AuthenticationService implements IAuthenticationService{
             .verifyUserCredentials(new UserAuthRequest(loginRequest.email(), loginRequest.password()))
             .switchIfEmpty(Mono.error(new BadCredentialsException("Invalid Email or Password .")))
             .flatMap(userAuthResponse -> {
-                String accessToken = jwtService.generateToken(userAuthResponse.email(), userAuthResponse.roles(), "ACCESS");
-                String refreshToken = jwtService.generateToken(userAuthResponse.email(), userAuthResponse.roles(), "REFRESH");
+                String accessToken = jwtService.generateToken(userAuthResponse.getBody().email(), userAuthResponse.getBody().roles(), "ACCESS");
+                String refreshToken = jwtService.generateToken(userAuthResponse.getBody().email(), userAuthResponse.getBody().roles(), "REFRESH");
                 authProducer.handleUserAuthenticated(new UserLogedIn(accessToken));
                 return Mono.just(new JwtResponse(accessToken, refreshToken));
                 }
