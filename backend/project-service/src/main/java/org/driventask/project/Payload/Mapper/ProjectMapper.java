@@ -1,9 +1,9 @@
 package org.driventask.project.Payload.Mapper;
 
 import org.driventask.project.Entity.Project;
-import org.springframework.stereotype.Service;
 import org.driventask.project.Payload.Request.ProjectRequest;
 import org.driventask.project.Payload.Response.ProjectResponse;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProjectMapper {
@@ -14,6 +14,7 @@ public class ProjectMapper {
                     .description(projectRequest.description())
                     .startDate(projectRequest.startDate())
                     .endDate(projectRequest.endDate())
+                    // we need to add users & files id , by verifying them
                     .build();
         }
 
@@ -27,6 +28,7 @@ public class ProjectMapper {
                     project.getCreatedAt(),
                     project.getUpdatedAt(),
                     project.getUserId(),
+                    project.getTaskId(),
                     project.getFileId()
             );
 

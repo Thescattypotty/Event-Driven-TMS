@@ -17,7 +17,7 @@ public class ProjectProducer {
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public void sendProjectCreationEvent(ProjectCreation projectCreation){
-        Message<ProjectCreation> message=MessageBuilder
+        Message<ProjectCreation> message = MessageBuilder
             .withPayload(projectCreation)
             .setHeader(KafkaHeaders.TOPIC, "project-topic")
             .build();
@@ -25,7 +25,7 @@ public class ProjectProducer {
     } 
 
     public void sendProjectUpdateEvent(ProjectUpdate projectUpdate){
-        Message<ProjectUpdate> message=MessageBuilder
+        Message<ProjectUpdate> message = MessageBuilder
             .withPayload(projectUpdate)
             .setHeader(KafkaHeaders.TOPIC, "project-topic")
             .build();

@@ -14,6 +14,4 @@ public record ProjectUpdate (
 
 ) {
 
-    
-    
 }

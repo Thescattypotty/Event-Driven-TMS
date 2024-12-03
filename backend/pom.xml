@@ -17,19 +17,36 @@
     <description>Demo project for Spring Boot</description>
     <packaging>pom</packaging>
 
-    <url />
+    <url>https://github.com/Thescattypotty/Event-Driven-TMS</url>
+
     <licenses>
-        <license />
+        <license>
+            <name>MIT License</name>
+            <url>https://github.com/Thescattypotty/Event-Driven-TMS/blob/main/LICENSE</url>
+        </license>
     </licenses>
+
     <developers>
-        <developer />
+        <developer>
+            <id>Senshi</id>
+            <name>Bennis Yahya</name>
+            <email>bennis-yahya@outlook.com</email>
+            <url>https://bennis-yahya.vercel.app</url>
+        </developer>
+        <developer>
+            <id>oualidams</id>
+            <name>Amsaguine Oualid</name>
+            <email>w.amsaguine@gmail.com</email>
+            <url />
+        </developer>
     </developers>
     <scm>
-        <connection />
-        <developerConnection />
+        <connection>scm:git:https://github.com/Thescattypotty/Event-Driven-TMS.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:Thescattypotty/Event-Driven-TMS.git</developerConnection>
         <tag />
-        <url />
+        <url>https://github.com/Thescattypotty/Event-Driven-TMS</url>
     </scm>
+
     <properties>
         <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -45,6 +62,7 @@
         <module>user-service</module>
         <module>task-service</module>
         <module>auth-service</module>
+        <module>project-service</module>
     </modules>
 
 
