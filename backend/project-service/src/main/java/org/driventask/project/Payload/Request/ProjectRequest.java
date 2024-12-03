@@ -9,13 +9,16 @@ import jakarta.validation.constraints.NotNull;
 public record ProjectRequest(
     @NotNull
     @NotBlank
-    String name ,
+    String name,
+
     String description,
-    LocalDateTime createdAt,
-    LocalDateTime updatedAt,
+    
     LocalDateTime startDate,
+    
     LocalDateTime endDate,
-    String userId,
+    
+    Set<String> userId,
+    
     Set<String> file_id
 ) {
 
