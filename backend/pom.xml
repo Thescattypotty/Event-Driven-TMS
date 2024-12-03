@@ -63,6 +63,7 @@
         <module>task-service</module>
         <module>auth-service</module>
         <module>project-service</module>
+        <module>file-service</module>
     </modules>
 
 

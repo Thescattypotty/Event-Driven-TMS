@@ -1,0 +1,16 @@
+server:
+  port: 8050
+
+spring:
+  data:
+    mongodb:
+      username: admin
+      password: admin
+      host: localhost
+      port: 27017
+      database: files
+      authentication-database: admin
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
