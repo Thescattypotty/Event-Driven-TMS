@@ -1,0 +1,130 @@
+<!-- Main Content -->
+<div class="hk-pg-wrapper">
+  <!-- Page Body -->
+  <div class="hk-pg-body">
+    <!-- Container -->
+    <div class="container-xxl">
+      <!-- Row -->
+      <div class="row">
+        <div
+          class="col-xl-7 col-lg-6 d-lg-block d-none v-separator separator-sm"
+        >
+          <div class="auth-content py-md-0 py-8">
+            <div class="row">
+              <div class="col-xxl-9 col-xl-8 col-lg-11 text-center mx-auto">
+                <img
+                  src="assets/img/macaroni-logged-out.png"
+                  class="img-fluid w-sm-40 w-50 mb-3"
+                  alt="login"
+                />
+                <h3 class="mb-2">Welcome to Event-Driven TMS</h3>
+                <p class="w-xxl-65 w-100 mx-auto">
+                  Organize, track, and manage your tasks seamlessly. Empower
+                  your project management with our Kanban system.
+                </p>
+                <a href="#" class="btn btn-sm btn-primary btn-uppercase mt-4"
+                  >Get Started</a
+                >
+                <p class="p-xs mt-5 text-light">
+                    Built with care for efficient project management.
+                  <a
+                    href="https://github.com/TheScattyPotty/Event-Driven-TMS"
+                    target="_blank"
+                    class="text-light"
+                    ><u>Powered By Senshi & OualidAms</u></a
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="col-xl-5 col-lg-6 col-md-7 col-sm-10 position-relative mx-auto"
+        >
+          <div class="auth-content py-md-0 py-8">
+            <form class="w-100" (ngSubmit)="login()">
+              <div class="row">
+                <div class="col-lg-10 mx-auto">
+                  <h4 class="mb-4">Sign in to your account</h4>
+                  <div class="row gx-3">
+                    <div class="form-group col-lg-12">
+                      <div class="form-label-group">
+                        <label>Email</label>
+                      </div>
+                      <input
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        placeholder="Enter email ID"
+                        [(ngModel)]="loginRequest.email"
+                        type="email"
+                        required
+                      />
+                    </div>
+                    <div class="form-group col-lg-12">
+                      <div class="form-label-group">
+                        <label>Password</label>
+                        <a href="#" class="fs-7 fw-medium">Forgot Password ?</a>
+                      </div>
+                      <div class="input-group password-check">
+                        <span class="input-affix-wrapper">
+                          <input
+                            class="form-control"
+                            placeholder="Enter your password"
+                            id="password"
+                            name="password"
+                            [(ngModel)]="loginRequest.password"
+                            type="password"
+                            required
+                          />
+                          <a href="#" class="input-suffix text-muted">
+                            <span class="feather-icon">
+                              <i-feather
+                                class="form-icon"
+                                name="eye"
+                              ></i-feather>
+                            </span>
+                            <span class="feather-icon d-none">
+                              <i-feather
+                                class="form-icon"
+                                name="eye-off"
+                              ></i-feather>
+                            </span>
+                          </a>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-center">
+                    <div class="form-check form-check-sm mb-3">
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        id="logged_in"
+                        checked
+                      />
+                      <label
+                        class="form-check-label text-muted fs-7"
+                        for="logged_in"
+                        >Keep me logged in</label
+                      >
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    class="btn btn-primary btn-uppercase btn-block"
+                  >
+                    Login
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- /Row -->
+    </div>
+    <!-- /Container -->
+  </div>
+  <!-- /Page Body -->
+</div>
