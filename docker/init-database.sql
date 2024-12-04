@@ -1,3 +1,3 @@
 CREATE DATABASE "user";
 CREATE DATABASE "task";
-
+CREATE DATABASE "project";

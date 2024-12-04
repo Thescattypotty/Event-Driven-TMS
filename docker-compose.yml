@@ -8,6 +8,9 @@ services:
       PGDATA: /data/postgres
     volumes:
       - ./docker/init-database.sql:/docker-entrypoint-initdb.d/init-database.sql
+      - ./docker/user-init-database.sql:/docker-entrypoint-initdb.d/user-init-database.sql
+      - ./docker/project-init-database.sql:/docker-entrypoint-initdb.d/project-init-database.sql
+      - ./docker/task-init-database.sql:/docker-entrypoint-initdb.d/task-init-database.sql
       - postgres_data:/data/postgres
     ports:
       - "5432:5432"
