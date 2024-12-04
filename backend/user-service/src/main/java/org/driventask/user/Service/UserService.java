@@ -38,19 +38,20 @@ public class UserService implements IUserService {
         User user = userMapper.toUser(userRequest);
         String encodedPassword = passwordEncoder.encode(userRequest.password());
         user.setPassword(encodedPassword);
+        System.out.println("user");
         return userRepository.save(user)
-            .flatMap(userCreated -> {
-                userProducer.handleUserCreation(
-                    new UserCreation(
-                        userCreated.getId().toString(),
-                        userCreated.getFullName(),
-                        userCreated.getEmail(),
-                        userCreated.getCreatedAt()
+            .doOnNext(userCreated -> {
+            System.out.println("Saved user: " + userCreated.getId());
+            userProducer.handleUserCreation(
+                new UserCreation(
+                    userCreated.getId().toString(),
+                    userCreated.getFullName(),
+                    userCreated.getEmail(),
+                    userCreated.getCreatedAt()
                     )
                 );
-                return Mono.empty();
             }
-        );
+        ).then();
     }
 
     @Override

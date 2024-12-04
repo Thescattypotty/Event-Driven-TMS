@@ -7,6 +7,7 @@ import org.driventask.auth.Payload.Kafka.UserLogedOut;
 import org.driventask.auth.Payload.Request.LoginRequest;
 import org.driventask.auth.Payload.Request.UserAuthRequest;
 import org.driventask.auth.Payload.Response.JwtResponse;
+import org.driventask.auth.Payload.Response.UserAuthResponse;
 import org.springframework.stereotype.Service;
 import org.driventask.auth.Exception.BadCredentialsException;
 
@@ -23,17 +24,29 @@ public class AuthenticationService implements IAuthenticationService{
 
     @Override
     public Mono<JwtResponse> login(LoginRequest loginRequest) {
-        return userClient
-            .verifyUserCredentials(new UserAuthRequest(loginRequest.email(), loginRequest.password()))
-            .switchIfEmpty(Mono.error(new BadCredentialsException("Invalid Email or Password .")))
-            .flatMap(userAuthResponse -> {
-                String accessToken = jwtService.generateToken(userAuthResponse.getBody().email(), userAuthResponse.getBody().roles(), "ACCESS");
-                String refreshToken = jwtService.generateToken(userAuthResponse.getBody().email(), userAuthResponse.getBody().roles(), "REFRESH");
-                authProducer.handleUserAuthenticated(new UserLogedIn(accessToken));
-                return Mono.just(new JwtResponse(accessToken, refreshToken));
+        return Mono.fromCallable(() -> {
+                UserAuthResponse userAuthResponse = userClient.verifyUserCredentials(
+                    new UserAuthRequest(loginRequest.email(), loginRequest.password())
+                );
+
+                if (userAuthResponse == null || userAuthResponse.email() == null) {
+                    throw new BadCredentialsException("Invalid Email or Password.");
                 }
-            )
-            .onErrorMap(e -> new BadCredentialsException("Invalid email or password .", e));
+
+                String accessToken = jwtService.generateToken(userAuthResponse.email(), userAuthResponse.roles(), "ACCESS");
+                String refreshToken = jwtService.generateToken(userAuthResponse.email(), userAuthResponse.roles(), "REFRESH");
+                System.out.println("Access Token :" + accessToken);
+                System.out.println("Refresh Token :" + refreshToken);
+                //authProducer.handleUserAuthenticated(new UserLogedIn(accessToken));
+
+                return new JwtResponse(accessToken, refreshToken);
+            }
+        )
+        .doOnSuccess(jwtResponse -> authProducer.handleUserAuthenticated(new UserLogedIn(jwtResponse.accessToken())))
+        .onErrorMap(e -> {
+                System.out.println("Error occurred: " + e.getMessage());
+                return new BadCredentialsException("Invalid email or password.", e);
+                });
     }
 
     @Override

@@ -23,11 +23,10 @@ import lombok.Setter;
 @Setter
 @Builder
 @Table(name = "users")
-public class User {
+public class User{
     
     @Id
-    @Builder.Default
-    private UUID id = UUID.randomUUID();
+    private UUID id;
 
     private String fullName;
 
