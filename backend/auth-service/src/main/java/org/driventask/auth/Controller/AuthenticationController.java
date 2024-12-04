@@ -21,10 +21,14 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public Mono<ResponseEntity<JwtResponse>> login(@RequestBody @Valid LoginRequest loginRequest){
+    public Mono<ResponseEntity<JwtResponse>> login(@RequestBody @Valid LoginRequest loginRequest) {
         System.out.println("Hello world");
         return authenticationService.login(loginRequest)
-            .map(jwtResponse -> new ResponseEntity<>(jwtResponse, HttpStatus.OK));
+            .doOnSubscribe(sub -> System.out.println("Subscription started"))
+            .doOnNext(jwtResponse -> System.out.println("Generated JWT Response: " + jwtResponse.accessToken()))
+            .doOnError(e -> System.out.println("Error during login: " + e.getMessage()))
+            .map(jwtResponse -> new ResponseEntity<>(jwtResponse, HttpStatus.OK))
+            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal));
     }
 
     //this function isn't terminated we will replace JwtResponse with some security context to get the user or we will leave it like it is who knows

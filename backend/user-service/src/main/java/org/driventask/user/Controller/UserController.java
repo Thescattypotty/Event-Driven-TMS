@@ -64,7 +64,4 @@ public class UserController {
         return userService.verifyUserCredentials(userAuthRequest)
             .map(userResponse -> new ResponseEntity<>(userResponse, HttpStatus.OK));
     }
-
-
-     
 }
