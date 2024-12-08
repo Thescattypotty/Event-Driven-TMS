@@ -1,4 +1,13 @@
-<header></header>
-<router-outlet />
-<footer></footer>
-
+<div *ngIf="!isLoginRoute()">
+    <app-header></app-header>
+    <app-sidebar></app-sidebar>
+  </div>
+  
+  <main>
+    <router-outlet />
+  </main>
+  
+  <div *ngIf="!isLoginRoute()">
+    <app-footer></app-footer>
+  </div>
+  

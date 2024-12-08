@@ -1,130 +1,169 @@
-<!-- Main Content -->
-<div class="hk-pg-wrapper">
-  <!-- Page Body -->
-  <div class="hk-pg-body">
-    <!-- Container -->
-    <div class="container-xxl">
-      <!-- Row -->
-      <div class="row">
-        <div
-          class="col-xl-7 col-lg-6 d-lg-block d-none v-separator separator-sm"
-        >
-          <div class="auth-content py-md-0 py-8">
-            <div class="row">
-              <div class="col-xxl-9 col-xl-8 col-lg-11 text-center mx-auto">
-                <img
-                  src="assets/img/macaroni-logged-out.png"
-                  class="img-fluid w-sm-40 w-50 mb-3"
-                  alt="login"
-                />
-                <h3 class="mb-2">Welcome to Event-Driven TMS</h3>
-                <p class="w-xxl-65 w-100 mx-auto">
-                  Organize, track, and manage your tasks seamlessly. Empower
-                  your project management with our Kanban system.
-                </p>
-                <a href="#" class="btn btn-sm btn-primary btn-uppercase mt-4"
-                  >Get Started</a
-                >
-                <p class="p-xs mt-5 text-light">
+<!-- Wrapper -->
+<div class="hk-wrapper hk-pg-auth" data-footer="simple">
+<!-- Top Navbar -->
+<nav class="hk-navbar navbar navbar-expand-xl navbar-light fixed-top">
+  <div class="container-xxl">
+    <!-- Start Nav -->
+    <div class="nav-start-wrap">
+      <a class="navbar-brand" href="">
+        <img class="brand-img d-inline-block" src="assets/img/logo-light.png" alt="brand" />
+      </a>
+    </div>
+    <!-- /Start Nav -->
+
+    <!-- End Nav -->
+    <div class="nav-end-wrap">
+      <ul class="navbar-nav flex-row">
+        <li class="nav-item nav-link py-0">
+          <button class="btn btn-sm btn-outline-light"><span><span class="icon"><span class="feather-icon"><i data-feather="help-circle"></i></span></span><span>Get Help</span></span></button>
+        </li>
+      </ul>	
+    </div>
+    <!-- /End Nav -->
+  </div>
+
+</nav>
+<!-- /Top Navbar -->
+
+  <!-- Main Content -->
+  <div class="hk-pg-wrapper pt-0 pb-xl-0 pb-5">
+    <div class="hk-pg-body pt-0 pb-xl-0">
+      <!-- Container -->
+      <div class="container-xxl">
+        <!-- Row -->
+        <div class="row">
+          <div class="col-xl-7 col-lg-6 d-lg-block d-none v-separator separator-sm">
+            <div class="auth-content py-md-0 py-8 text-center">
+              <div class="row">
+                <div class="col-xxl-9 col-xl-8 col-lg-11 text-center mx-auto">
+                  <img
+                    src="assets/img/macaroni-logged-out.png"
+                    class="img-fluid w-sm-40 w-50 mb-3"
+                    alt="Welcome to Event-Driven TMS"
+                    onerror="this.style.display='none';"
+                  />
+                  <h3 class="mb-2">Welcome to Event-Driven TMS</h3>
+                  <p class="w-xxl-65 w-100 mx-auto">
+                    Organize, track, and manage your tasks seamlessly. Empower your
+                    project management with our Kanban system.
+                  </p>
+                  <a href="#" class="btn btn-sm btn-primary btn-uppercase mt-4">Get Started</a>
+                  <p class="p-xs mt-5 text-light">
                     Built with care for efficient project management.
-                  <a
-                    href="https://github.com/TheScattyPotty/Event-Driven-TMS"
-                    target="_blank"
-                    class="text-light"
-                    ><u>Powered By Senshi & OualidAms</u></a
-                  >
-                </p>
+                    <a
+                      href="https://github.com/TheScattyPotty/Event-Driven-TMS"
+                      target="_blank"
+                      class="text-light"
+                    ><u>Powered By Senshi & OualidAms</u></a>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="col-xl-5 col-lg-6 col-md-7 col-sm-10 position-relative mx-auto"
-        >
-          <div class="auth-content py-md-0 py-8">
-            <form class="w-100" (ngSubmit)="login()">
-              <div class="row">
-                <div class="col-lg-10 mx-auto">
-                  <h4 class="mb-4">Sign in to your account</h4>
-                  <div class="row gx-3">
-                    <div class="form-group col-lg-12">
-                      <div class="form-label-group">
-                        <label>Email</label>
+          
+          <div
+            class="col-xl-5 col-lg-6 col-md-7 col-sm-10 position-relative mx-auto"
+          >
+            <div class="auth-content py-md-0 py-8">
+              <form class="w-100" (ngSubmit)="login()">
+                <div class="row">
+                  <div class="col-lg-10 mx-auto">
+                    <h4 class="mb-4">Sign in to your account</h4>
+                    <div class="row gx-3">
+                      <div class="form-group col-lg-12">
+                        <div class="form-label-group">
+                          <label>Email</label>
+                        </div>
+                        <input
+                          class="form-control"
+                          id="email"
+                          name="email"
+                          placeholder="Enter email ID"
+                          [(ngModel)]="loginRequest.email"
+                          type="email"
+                          required
+                        />
                       </div>
-                      <input
-                        class="form-control"
-                        id="email"
-                        name="email"
-                        placeholder="Enter email ID"
-                        [(ngModel)]="loginRequest.email"
-                        type="email"
-                        required
-                      />
+                      <div class="form-group col-lg-12">
+                        <div class="form-label-group">
+                          <label>Password</label>
+                          <a href="#" class="fs-7 fw-medium">Forgot Password ?</a>
+                        </div>
+                        <div class="input-group password-check">
+                          <span class="input-affix-wrapper">
+                            <input
+                              class="form-control"
+                              placeholder="Enter your password"
+                              id="password"
+                              name="password"
+                              [(ngModel)]="loginRequest.password"
+                              type="password"
+                              required
+                            />
+                            <a href="#" class="input-suffix text-muted">
+                              <span class="feather-icon">
+                                <i-feather
+                                  class="form-icon"
+                                  name="eye"
+                                ></i-feather>
+                              </span>
+                              <span class="feather-icon d-none">
+                                <i-feather
+                                  class="form-icon"
+                                  name="eye-off"
+                                ></i-feather>
+                              </span>
+                            </a>
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div class="form-group col-lg-12">
-                      <div class="form-label-group">
-                        <label>Password</label>
-                        <a href="#" class="fs-7 fw-medium">Forgot Password ?</a>
-                      </div>
-                      <div class="input-group password-check">
-                        <span class="input-affix-wrapper">
-                          <input
-                            class="form-control"
-                            placeholder="Enter your password"
-                            id="password"
-                            name="password"
-                            [(ngModel)]="loginRequest.password"
-                            type="password"
-                            required
-                          />
-                          <a href="#" class="input-suffix text-muted">
-                            <span class="feather-icon">
-                              <i-feather
-                                class="form-icon"
-                                name="eye"
-                              ></i-feather>
-                            </span>
-                            <span class="feather-icon d-none">
-                              <i-feather
-                                class="form-icon"
-                                name="eye-off"
-                              ></i-feather>
-                            </span>
-                          </a>
-                        </span>
+                    <div class="d-flex justify-content-center">
+                      <div class="form-check form-check-sm mb-3">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="logged_in"
+                          checked
+                        />
+                        <label
+                          class="form-check-label text-muted fs-7"
+                          for="logged_in"
+                          >Keep me logged in</label
+                        >
                       </div>
                     </div>
+                    <button
+                      type="submit"
+                      class="btn btn-primary btn-uppercase btn-block"
+                    >
+                      Login
+                    </button>
                   </div>
-                  <div class="d-flex justify-content-center">
-                    <div class="form-check form-check-sm mb-3">
-                      <input
-                        type="checkbox"
-                        class="form-check-input"
-                        id="logged_in"
-                        checked
-                      />
-                      <label
-                        class="form-check-label text-muted fs-7"
-                        for="logged_in"
-                        >Keep me logged in</label
-                      >
-                    </div>
-                  </div>
-                  <button
-                    type="submit"
-                    class="btn btn-primary btn-uppercase btn-block"
-                  >
-                    Login
-                  </button>
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
+        <!-- /Row -->
       </div>
-      <!-- /Row -->
+      <!-- /Container -->
     </div>
-    <!-- /Container -->
+    <!-- /Page Body -->
+
+    <!-- Page Footer -->
+    <div class="hk-footer border-0">
+      <footer class="container-xxl footer">
+        <div class="row">
+          <div class="col-xl-8 text-center">
+            <p class="footer-text pb-0"><span class="copy-text">Jampack © 2023 All rights reserved.</span> <a href="#" class="" target="_blank">Privacy Policy</a><span class="footer-link-sep">|</span><a href="#" class="" target="_blank">T&C</a><span class="footer-link-sep">|</span><a href="#" class="" target="_blank">System Status</a></p>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <!-- / Page Footer -->
+  
   </div>
-  <!-- /Page Body -->
+  <!-- /Main Content -->
 </div>
+  <!-- /Wrapper -->

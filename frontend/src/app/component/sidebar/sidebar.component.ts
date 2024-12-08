@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { IconModuleModule } from '../../module/icon-module/icon-module.module';
 
 @Component({
-  selector: 'sidebar',
+  selector: 'app-sidebar',
   standalone: true,
-  imports: [],
+  imports: [IconModuleModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })

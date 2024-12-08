@@ -3,6 +3,8 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/auth/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { SidebarComponent } from './component/sidebar/sidebar.component';
+import { HeaderComponent } from './component/header/header.component';
+import { FooterComponent } from './component/footer/footer.component';
 
 export const routes: Routes = [
     {
@@ -14,8 +16,5 @@ export const routes: Routes = [
         path: 'login',
         component: LoginComponent
     },
-    {
-        path: 'sidebar',
-        component: SidebarComponent
-    }
+    
 ];
