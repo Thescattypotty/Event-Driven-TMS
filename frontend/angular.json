@@ -27,6 +27,8 @@
               }
             ],
             "styles": [
+              "public/css/dropzone.min.css",
+              "public/css/perfect-scrollbar.css",
               "src/styles.css"
             ],
             "scripts": [
@@ -34,6 +36,16 @@
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
               "node_modules/feather-icons/dist/feather.min.js",
               "node_modules/simplebar/dist/simplebar.min.js",
+              "public/js/init.js",
+              "public/js/chips-init.js",
+              "public/js/dashboard-data.js",
+              "public/js/simplebar.min.js",
+              "public/js/kanban-board-data.js",
+              "public/js/chips-init.js",
+              "public/js/dropify-data.js",
+              "public/js/color-picker-data.js",
+              "public/js/perfect-scrollbar.min.js",
+              "public/js/dropdown-bootstrap-extended.js",
               "src/script.js"
 
             ],
@@ -99,10 +111,15 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              
+            ]
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
