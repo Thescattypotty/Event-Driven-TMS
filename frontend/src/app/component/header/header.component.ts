@@ -7,7 +7,6 @@ import { RouterLink } from '@angular/router';
 	standalone: true,
 	imports: [
 		IconModuleModule,
-		RouterLink
 	],
 	templateUrl: './header.component.html',
 	styleUrl: './header.component.css'

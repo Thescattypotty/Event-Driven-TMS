@@ -1,0 +1,42 @@
+/*Togglable*/
+.hk-sidebar-togglable {
+    height: 25px;
+    width: 25px;
+    left: -12.5px;
+    border-radius: 50%;
+    top: 52px;
+    position: absolute;
+    background: #fff;
+    cursor: pointer;
+    border: 1px solid #d8d8d8;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    justify-content: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    box-shadow: 0 0.125rem 0.125rem rgba(47, 52, 58, 0.15) !important;
+    -moz-transition: transform 0.3s ease-in-out;
+    -o-transition: transform 0.3s ease-in-out;
+    -webkit-transition: transform 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
+    z-index: 2;
+  }
+  .hk-sidebar-togglable:after {
+    content: "\ea62";
+    font-family: remixicon;
+    text-rendering: auto;
+  }
+  .hk-sidebar-togglable.active {
+    -webkit-transform: translateX(32px);
+    -moz-transform: translateX(32px);
+    -ms-transform: translateX(32px);
+    -o-transform: translateX(32px);
+    transform: translateX(32px);
+  }
+  .hk-sidebar-togglable.active:after {
+    content: "\ea6c";
+  }

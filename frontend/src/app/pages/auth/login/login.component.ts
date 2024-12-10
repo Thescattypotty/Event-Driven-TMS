@@ -11,10 +11,9 @@ import { IconModuleModule } from '../../../module/icon-module/icon-module.module
 	selector: 'auth-login',
 	standalone: true,
 	imports: [
-		FormsModule,
-		RouterLink,
-		IconModuleModule
-	],
+    FormsModule,
+    IconModuleModule
+],
 	templateUrl: './login.component.html',
 	styleUrl: './login.component.css'
 })

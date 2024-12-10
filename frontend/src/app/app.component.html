@@ -1,8 +1,12 @@
-<!-- Wrapper -->
-<div class="hk-wrapper hk-pg-auth" data-footer="simple">
+<div *ngIf="!isLoginRoute">
   <app-header></app-header>
-  
-    <router-outlet />
+  <app-sidebar></app-sidebar>
+</div>
 
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<div *ngIf="!isLoginRoute">
   <app-footer></app-footer>
 </div>
