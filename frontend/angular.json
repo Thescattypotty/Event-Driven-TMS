@@ -29,6 +29,7 @@
             "styles": [
               "public/css/dropzone.min.css",
               "public/css/perfect-scrollbar.css",
+              "public/css/responsive.bootstrap5.min.css",
               "src/styles.css"
             ],
             "scripts": [
