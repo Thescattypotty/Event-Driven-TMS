@@ -6,17 +6,19 @@ import { SidebarComponent } from './component/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs';
 import { AuthService } from './services/auth.service';
+import { DashboardLayoutComponent } from "./component/dashboard-layout/dashboard-layout.component";
 
 @Component({
 	selector: 'app-root',
 	standalone: true,
 	imports: [
-		CommonModule,
-		RouterOutlet,
-		FooterComponent,
-		HeaderComponent,
-		SidebarComponent,
-	],
+    CommonModule,
+    RouterOutlet,
+    FooterComponent,
+    HeaderComponent,
+    SidebarComponent,
+    DashboardLayoutComponent
+],
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css'],
 })

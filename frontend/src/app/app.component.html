@@ -18,10 +18,6 @@
 
 <ng-template #dashboardRoute>
   <ng-container *ngIf="isDashboardRoute;">
-    <app-header></app-header>
-    <app-sidebar></app-sidebar>
-    <main>
-      <router-outlet />
-    </main>
+    <app-dashboard-layout></app-dashboard-layout>
   </ng-container>
 </ng-template>

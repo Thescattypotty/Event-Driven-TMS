@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoginRequest } from '../../../models/login-request';
 import { JwtResponse } from '../../../models/jwt-response';
 import { ErrorResponse } from '../../../models/error-response';
@@ -17,7 +17,7 @@ import { IconModuleModule } from '../../../module/icon-module/icon-module.module
 	templateUrl: './login.component.html',
 	styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
 	loginRequest: LoginRequest = { email: '', password: ''};
 	jwtResponse: JwtResponse | null = null;
 	errorMessage: ErrorResponse | null = null;
@@ -46,5 +46,8 @@ export class LoginComponent {
 				this.errorMessage = error;
 			}
 		})
+	}
+	ngOnInit(): void {
+		this.authService.logout();
 	}
 }
