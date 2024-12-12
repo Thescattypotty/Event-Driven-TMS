@@ -20,6 +20,6 @@ spring:
 
 application:
   config:
-    user-url: http://localhost:8222/api/v1/user
-    task-url: http://localhost:8222/api/v1/task
-    file-url: http://localhost:8222/api/v1/file
+    user-url: http://localhost:8010/api/v1/user
+    task-url: http://localhost:8020/api/v1/task
+    file-url: http://localhost:8050/api/v1/file

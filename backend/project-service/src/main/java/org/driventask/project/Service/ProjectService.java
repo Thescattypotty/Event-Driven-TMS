@@ -8,6 +8,7 @@ import org.driventask.project.Exception.ProjectNotFoundException;
 import org.driventask.project.IService.IProjectService;
 import org.driventask.project.KafkaService.ProjectProducer;
 import org.driventask.project.Payload.Kafka.ProjectCreation;
+import org.driventask.project.Payload.Kafka.ProjectUpdate;
 import org.driventask.project.Payload.Mapper.ProjectMapper;
 import org.driventask.project.Payload.Request.ProjectRequest;
 import org.driventask.project.Payload.Response.ProjectResponse;
@@ -30,23 +31,26 @@ public class ProjectService implements IProjectService {
     @Override
     @Transactional
     public Mono<Void> createProject(ProjectRequest projectRequest) {
-        Project project = projectMapper.toProject(projectRequest);
-        return projectRepository.save(project)
-                .flatMap(projectCreated -> {
-                    projectProducer.sendProjectCreationEvent(
-                            new ProjectCreation(
-                                    projectCreated.getId().toString(),
-                                    projectCreated.getUserId().toString(),
-                                    projectCreated.getName(),
-                                    projectCreated.getDescription(),
-                                    projectCreated.getCreatedAt(),
-                                    projectCreated.getStartDate(),
-                                    projectCreated.getEndDate()
-                            )
-                    );
-                    return Mono.empty();
-                }
+        return Mono.fromCallable(() -> {
+            Project project = projectMapper.toProject(projectRequest);
+            return project;
+        })
+        .flatMap(projectMapped -> projectRepository.save(projectMapped))
+        .doOnNext(projectSaved->{
+            projectProducer.sendProjectCreationEvent(
+                new ProjectCreation(
+                    projectSaved.getId().toString(),
+                    projectSaved.getUserId().toString(),
+                    projectSaved.getName(),
+                    projectSaved.getDescription(),
+                    projectSaved.getCreatedAt(),
+                    projectSaved.getStartDate(),
+                    projectSaved.getEndDate()
+                )  
             );
+        })
+        .then()
+        .onErrorMap(e -> new ProjectNotFoundException("Cannot create Project"));
     }
 
 
@@ -54,31 +58,44 @@ public class ProjectService implements IProjectService {
     @Transactional
     public Mono<Void> updateProject(String projectId, ProjectRequest projectRequest) {
         return projectRepository.findById(UUID.fromString(projectId))
+            .switchIfEmpty(Mono.error(new ProjectNotFoundException("Cannot find Project with ID :" + projectId)))
             .flatMap(project -> {
-                Project updatedProject = projectMapper.toProject(projectRequest);
-                updatedProject.setId(project.getId());
-                projectRepository.save(updatedProject);
-                return Mono.empty();
-            }
-        );
+                Project projectUpdated = projectMapper.toProject(projectRequest);
+                projectUpdated.setId(project.getId());
+                return projectRepository.save(projectUpdated);
+            })
+            .doOnNext(projectSaved -> {
+                projectProducer.sendProjectUpdateEvent(
+                    new ProjectUpdate(
+                        projectSaved.getId().toString(),
+                        projectSaved.getUserId().toString(),
+                        projectSaved.getName(),
+                        projectSaved.getDescription(),
+                        projectSaved.getUpdatedAt(),
+                        projectSaved.getStartDate(),
+                        projectSaved.getEndDate()
+                    )
+                );
+            })
+            .then()
+            .onErrorMap(e -> new ProjectNotFoundException("Cannot create Project"));
     }
 
     
 
     @Override
     public Flux<ProjectResponse> getAllProjects(String userId) {
-        return projectRepository.findByUserId(Set.of(userId))
+        return projectRepository.findByUserId(userId)
+            .switchIfEmpty(Mono.error(new ProjectNotFoundException("Cannot find Project with user ID :" + userId)))
             .map(projectMapper::fromProject);
     }
-
-    
 
     @Override
     @Transactional
     public Mono<Void> deleteProject(String projectId) {
         return projectRepository.findById(UUID.fromString(projectId))
-            .flatMap(existingProject -> projectRepository.delete(existingProject))
             .switchIfEmpty(Mono.error(new ProjectNotFoundException("Cannot find Project with ID:" + projectId)))
+            .flatMap(existingProject -> projectRepository.delete(existingProject))
             .doOnTerminate(null)
             .then();
     }
@@ -88,8 +105,8 @@ public class ProjectService implements IProjectService {
     @Override
     public Mono<ProjectResponse> getProjectById(String projectId) {
         return projectRepository.findById(UUID.fromString(projectId))
-            .map(projectMapper::fromProject)
-            .switchIfEmpty(Mono.error(new ProjectNotFoundException("Cannot find Project with ID:" + projectId)));
+            .switchIfEmpty(Mono.error(new ProjectNotFoundException("Cannot find Project with ID:" + projectId)))
+            .map(projectMapper::fromProject);
     }
 
 }

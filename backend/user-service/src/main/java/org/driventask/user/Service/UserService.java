@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.driventask.user.Entity.User;
 import org.driventask.user.Enum.EUserEvent;
 import org.driventask.user.Exception.PasswordIncorrectException;
+import org.driventask.user.Exception.UserFailedCreationException;
 import org.driventask.user.Exception.UserNotFoundException;
 import org.driventask.user.IService.IUserService;
 import org.driventask.user.Payload.Kafka.UserCreation;
@@ -35,94 +36,100 @@ public class UserService implements IUserService {
     @Override
     @Transactional
     public Mono<Void> createUser(UserRequest userRequest) {
-        User user = userMapper.toUser(userRequest);
-        String encodedPassword = passwordEncoder.encode(userRequest.password());
-        user.setPassword(encodedPassword);
-        System.out.println("user");
-        return userRepository.save(user)
-            .doOnNext(userCreated -> {
-            System.out.println("Saved user: " + userCreated.getId());
-            userProducer.handleUserCreation(
-                new UserCreation(
-                    userCreated.getId().toString(),
-                    userCreated.getFullName(),
-                    userCreated.getEmail(),
-                    userCreated.getCreatedAt()
-                    )
-                );
-            }
-        ).then();
+        return Mono.fromCallable(() -> {
+            User user = userMapper.toUser(userRequest);
+            String encodedPassword = passwordEncoder.encode(userRequest.password());
+            user.setPassword(encodedPassword);
+            return user;
+            })
+            .flatMap(user -> userRepository.save(user)
+                .flatMap(userCreated -> {
+                    return Mono.fromRunnable(() -> {
+                        userProducer.handleUserCreation(
+                            new UserCreation(
+                                userCreated.getId().toString(),
+                                userCreated.getFullName(),
+                                userCreated.getEmail(),
+                                userCreated.getCreatedAt()
+                                )
+                            );
+                        }
+                    );
+                })
+            ).then()
+            .onErrorMap(e -> new UserFailedCreationException("Cannot create user for now")
+        );
     }
 
     @Override
     @Transactional
     public Mono<Void> updateUser(String id, UserRequest userRequest) {
         return userRepository.findById(UUID.fromString(id))
+            .switchIfEmpty(Mono.error(new UserNotFoundException("Cannot find User")))
             .flatMap(userFounded -> {
                 userFounded.setFullName(userRequest.fullname());
                 userFounded.setEmail(userRequest.email());
                 userFounded.setRoles(userRequest.roles());
-
-                return userRepository.save(userFounded)
-                    .flatMap(userUpdated -> {
-                        userProducer.handleUserUpdate(
-                            new UserUpdated(
-                                userUpdated.getId().toString(),
-                                userUpdated.getFullName(),
-                                userUpdated.getEmail(),
-                                EUserEvent.USER_CHANGE_INFORMATIONS,
-                                userUpdated.getUpdatedAt()
-                            )
-                        );
-                        return Mono.empty();
-                    }
+                return userRepository.save(userFounded);
+            })
+            .doOnNext(userSaved -> {
+                userProducer.handleUserUpdate(
+                    new UserUpdated(
+                    userSaved.getId().toString(),
+                    userSaved.getFullName(),
+                    userSaved.getEmail(),
+                    EUserEvent.USER_CHANGE_INFORMATIONS,
+                    userSaved.getUpdatedAt()
+                    )
                 );
-            }
-        );
+            })
+            .then()
+            .onErrorMap(e -> new UserFailedCreationException("Cannot update user for now"));
     }
-
 
     @Override
     public Mono<UserResponse> getUser(String id) {
         return userRepository.findById(UUID.fromString(id))
+            .onErrorMap(e -> new UserNotFoundException("Cannot find user with ID :" + id))
             .map(userMapper::fromUser);
     }
 
     @Override
+    @Transactional
     public Mono<Void> deleteUser(String id) {
-
         return userRepository.findById(UUID.fromString(id))
+            .switchIfEmpty(Mono.error(new UserNotFoundException("Cannot find User")))
             .flatMap(user  -> userRepository.deleteById(UUID.fromString(id)))
-            .switchIfEmpty(Mono.error(new UserNotFoundException("Cannot find user with ID :" + id)))
-            .then();
-            
+            .then();  
     }
 
     @Override
+    @Transactional
     public Mono<Void> changePassword(String id, ChangePasswordRequest changePasswordRequest) {
-
         return userRepository.findById(UUID.fromString(id))
-            .flatMap(userFound-> {
-                if(passwordEncoder.matches(changePasswordRequest.oldPassword(), userFound.getPassword())){
-                    userFound.setPassword(passwordEncoder.encode(changePasswordRequest.newPassword()));
-                    return userRepository.save(userFound)
-                        .flatMap(userChanged -> {
-                            userProducer.handleUserUpdate(
-                                new UserUpdated(
-                                    userChanged.getId().toString(),
-                                    userChanged.getFullName(),
-                                    userChanged.getEmail(),
-                                    EUserEvent.USER_CHANGE_PASSWORD,
-                                    userChanged.getUpdatedAt()
-                                )
-                            );
-                            return Mono.empty();
-                        }
-                    );
+            .switchIfEmpty(Mono.error(new UserNotFoundException("Cannot find User")))
+            .flatMap(userFounded -> {
+                if(passwordEncoder.matches(changePasswordRequest.oldPassword(), userFounded.getPassword())){
+                    userFounded.setPassword(passwordEncoder.encode(changePasswordRequest.newPassword()));
+                    return userRepository.save(userFounded);
+                }else{
+                    return Mono.error(new PasswordIncorrectException("Password is Incorrect"));
                 }
-                return Mono.error(new PasswordIncorrectException("Password is incorrect"));
             }
-        );
+        ).doOnNext(userSaved -> {
+            userProducer.handleUserUpdate(
+                new UserUpdated(
+                    userSaved.getId().toString(),
+                    userSaved.getFullName(),
+                    userSaved.getEmail(),
+                    EUserEvent.USER_CHANGE_PASSWORD,
+                    userSaved.getUpdatedAt()
+                    )
+                );
+            }
+        )
+        .then()
+        .onErrorMap(e -> new PasswordIncorrectException("Password is Incorrect"));
     }
 
     @Override
@@ -131,6 +138,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional
     public Mono<UserAuthResponse> verifyUserCredentials(UserAuthRequest userAuthRequest) {
         return userRepository.findByEmail(userAuthRequest.email())
             .switchIfEmpty(Mono.error(new UserNotFoundException("User does not exist")))
@@ -140,7 +148,8 @@ public class UserService implements IUserService {
                 } else {
                     return Mono.error(new PasswordIncorrectException("Password is incorrect"));
                 }
-            });
+            }
+        );
     }
 
     
