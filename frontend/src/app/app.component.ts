@@ -5,31 +5,35 @@ import { HeaderComponent } from './component/header/header.component';
 import { SidebarComponent } from './component/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs';
+import { AuthService } from './services/auth.service';
+import { DashboardLayoutComponent } from "./component/dashboard-layout/dashboard-layout.component";
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [
+	selector: 'app-root',
+	standalone: true,
+	imports: [
     CommonModule,
     RouterOutlet,
     FooterComponent,
     HeaderComponent,
     SidebarComponent,
+    DashboardLayoutComponent
 ],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+	templateUrl: './app.component.html',
+	styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'frontend';
-  isLoginRoute: boolean = false;
+	title = 'Event Driven TMS';
 
-  constructor(private router: Router) {}
+	constructor(private router: Router, private authService: AuthService) { }
 
-  ngOnInit() {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: NavigationEnd) => {
-      this.isLoginRoute = event.urlAfterRedirects.includes('/login');
-    });
-  }
+	get isAuthenticated(): boolean{
+		return this.authService.isLoggedIn();
+	}
+	get isDashboardRoute(): boolean{
+		return !this.router.url.startsWith('/login');
+	}
+	get isLoginRoute(): boolean{
+		return this.router.url.startsWith('/login');
+	}
 }
