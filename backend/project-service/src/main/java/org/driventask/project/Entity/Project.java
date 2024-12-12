@@ -18,9 +18,9 @@ import java.util.UUID;
 @Builder
 @Table(name = "projects")
 public class Project {
+    
     @Id
-    @Builder.Default
-    private UUID id = UUID.randomUUID();
+    private UUID id;
 
     private String name;
 

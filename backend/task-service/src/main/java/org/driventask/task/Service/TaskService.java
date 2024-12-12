@@ -15,7 +15,6 @@ import org.driventask.task.Payload.Mapper.TaskMapper;
 import org.driventask.task.Payload.Request.TaskRequest;
 import org.driventask.task.Payload.Response.TaskResponse;
 import org.driventask.task.Repository.TaskRepository;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -31,7 +30,6 @@ public class TaskService implements ITaskService{
     private final TaskMapper taskMapper;
     private final TaskRepository taskRepository;
     private final TaskProducer taskProducer;
-    private final SimpMessagingTemplate simpMessagingTemplate;
     private final UserClient userClient;
     private final ProjectClient projectClient;
 
@@ -52,7 +50,6 @@ public class TaskService implements ITaskService{
                             return saveTaskAndPublishEvents(taskRequest);
                         });
                 }
-
                 return saveTaskAndPublishEvents(taskRequest);
             }
         );
@@ -61,8 +58,8 @@ public class TaskService implements ITaskService{
     @Override
     public Mono<TaskResponse> getTaskById(String taskId) {
         return taskRepository.findById(UUID.fromString(taskId))
-            .map(taskMapper::fromTask)
-            .switchIfEmpty(Mono.error(new TaskNotFoundException("Cannot find Task with ID: " + taskId)));
+            .switchIfEmpty(Mono.error(new TaskNotFoundException("Cannot find Task with ID: " + taskId)))
+            .map(taskMapper::fromTask);
     }
 
     @Override
@@ -75,6 +72,7 @@ public class TaskService implements ITaskService{
     @Transactional
     public Mono<Void> updateTask(String taskId, TaskRequest taskRequest) {
         return taskRepository.findById(UUID.fromString(taskId))
+            .switchIfEmpty(Mono.error(new TaskNotFoundException("Cannot find Task")))
             .flatMap(existingTask -> {
                 if (StringUtils.hasText(taskRequest.userAssigned())) {
                     return userClient.isUserExist(taskRequest.userAssigned())
@@ -82,7 +80,6 @@ public class TaskService implements ITaskService{
                             if (Boolean.FALSE.equals(userResponse.getBody())) {
                                 return Mono.error(new UserNotFoundException("User not found with ID: " + taskRequest.userAssigned()));
                             }
-
                             existingTask.setTitle(taskRequest.title());
                             existingTask.setDescription(taskRequest.description());
                             existingTask.setPriority(taskRequest.priority());
@@ -103,8 +100,7 @@ public class TaskService implements ITaskService{
                     return taskRepository.save(existingTask);
                 }
             })
-            .flatMap(taskUpdated -> {
-                simpMessagingTemplate.convertAndSend("/topic/task", taskRequest);
+            .doOnNext(taskUpdated -> {
                 taskProducer.sendTaskUpdateEvent(
                     new TaskUpdate(
                         taskUpdated.getId().toString(),
@@ -116,9 +112,10 @@ public class TaskService implements ITaskService{
                         taskUpdated.getUpdatedAt()
                     )
                 );
-                return Mono.empty();
             }
-        );
+        )
+        .then()
+        .onErrorMap(e -> new TaskNotFoundException("Cannot create Task"));
     }
 
 
@@ -126,16 +123,14 @@ public class TaskService implements ITaskService{
     @Transactional
     public Mono<Void> deleteTask(String taskId) {
         return taskRepository.findById(UUID.fromString(taskId))
-            .flatMap(existingTask -> taskRepository.delete(existingTask))
             .switchIfEmpty(Mono.error(new TaskNotFoundException("Cannot find task with id :" + taskId)))
-            .doOnTerminate(() -> simpMessagingTemplate.convertAndSend("/topic/task/delete", taskId))                                                                        // clients
+            .flatMap(existingTask -> taskRepository.delete(existingTask))
             .then();
     }
 
     private Mono<Void> saveTaskAndPublishEvents(TaskRequest taskRequest) {
         return taskRepository.save(taskMapper.toTask(taskRequest))
-            .flatMap(savedTask -> {
-                simpMessagingTemplate.convertAndSend("/topic/task", taskRequest);
+            .doOnNext(savedTask -> {
                 taskProducer.sendTaskCreationEvent(
                     new TaskCreation(
                         savedTask.getId().toString(),
@@ -143,10 +138,10 @@ public class TaskService implements ITaskService{
                         savedTask.getProjectId(),
                         savedTask.getUserAssigned(),
                         savedTask.getCreatedAt()
-                    )
-                );
-                return Mono.empty();
-            }
-        );
+                        )
+                    );
+                }
+            )
+            .then();
     }
 }

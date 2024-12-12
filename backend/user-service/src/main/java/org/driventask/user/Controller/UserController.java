@@ -31,30 +31,50 @@ public class UserController {
     @GetMapping("/{id}")
     public Mono<ResponseEntity<UserResponse>> getUser(@PathVariable String id){
         return userService.getUser(id)
-            .map(user -> new ResponseEntity<>(user,HttpStatus.OK));
+            .doOnSubscribe(sub -> System.out.println("Subscription Started"))
+            .doOnNext(next -> System.out.println("updateTaskWebSocket executed"))
+            .doOnError(e -> System.out.println("Error durring task Creation"))
+            .map(user -> new ResponseEntity<>(user,HttpStatus.OK))
+            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal));
     }
     
     @GetMapping("/exists/{id}")
     public Mono<ResponseEntity<Boolean>> isUserExist(@PathVariable String id) {
         return userService.isUserExist(id)
-            .map(isExisying -> new ResponseEntity<>(isExisying, HttpStatus.ACCEPTED));
+            .doOnSubscribe(sub -> System.out.println("Subscription Started"))
+            .doOnNext(next -> System.out.println("updateTaskWebSocket executed"))
+            .doOnError(e -> System.out.println("Error durring task Creation"))
+            .map(isExisying -> new ResponseEntity<>(isExisying, HttpStatus.ACCEPTED))
+            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal));
     }
     
     @PostMapping("/create")
     public Mono<ResponseEntity<Void>> saveUser(@RequestBody @Valid UserRequest userRequest){
         return userService.createUser(userRequest)
+            .doOnSubscribe(sub -> System.out.println("Subscription Started"))
+            .doOnNext(next -> System.out.println("updateTaskWebSocket executed"))
+            .doOnError(e -> System.out.println("Error durring task Creation"))
+            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal))
             .then(Mono.just(new ResponseEntity<>(HttpStatus.CREATED)));
     }
 
     @PutMapping("/update/{id}")
     public Mono<ResponseEntity<Void>> updtadeUser(@PathVariable String id , @RequestBody @Valid UserRequest userRequest){
         return userService.updateUser(id,userRequest)
+            .doOnSubscribe(sub -> System.out.println("Subscription Started"))
+            .doOnNext(next -> System.out.println("updateTaskWebSocket executed"))
+            .doOnError(e -> System.out.println("Error durring task Creation"))
+            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal))
             .then(Mono.just(new ResponseEntity<>(HttpStatus.ACCEPTED)));
     }
     
     @DeleteMapping("/delete/{id}")
-    public Mono<ResponseEntity<Void>> deleteUser(@PathVariable @Valid String id){
+    public Mono<ResponseEntity<Void>> deleteUser(@PathVariable String id){
         return userService.deleteUser(id)
+            .doOnSubscribe(sub -> System.out.println("Subscription Started"))
+            .doOnNext(next -> System.out.println("updateTaskWebSocket executed"))
+            .doOnError(e -> System.out.println("Error durring task Creation"))
+            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal))
             .then(Mono.just(new ResponseEntity<>(HttpStatus.ACCEPTED)));
     }
 
@@ -62,6 +82,10 @@ public class UserController {
     public Mono<ResponseEntity<UserAuthResponse>> verifyUserCredentials(@RequestBody UserAuthRequest userAuthRequest){
         System.out.println("Hello world");
         return userService.verifyUserCredentials(userAuthRequest)
-            .map(userResponse -> new ResponseEntity<>(userResponse, HttpStatus.OK));
+            .doOnSubscribe(sub -> System.out.println("Subscription Started"))
+            .doOnNext(next -> System.out.println("updateTaskWebSocket executed"))
+            .doOnError(e -> System.out.println("Error durring task Creation"))
+            .map(userResponse -> new ResponseEntity<>(userResponse, HttpStatus.OK))
+            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal));
     }
 }

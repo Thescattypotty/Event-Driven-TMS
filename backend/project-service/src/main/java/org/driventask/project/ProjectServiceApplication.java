@@ -9,7 +9,6 @@ import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 @EnableFeignClients
 @EnableR2dbcAuditing
 public class ProjectServiceApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(ProjectServiceApplication.class, args);
 	}
