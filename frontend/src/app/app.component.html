@@ -1,3 +1,4 @@
+<!--
 <div *ngIf="!isLoginRoute">
   <app-header></app-header>
   <app-sidebar></app-sidebar>
@@ -10,3 +11,17 @@
 <div *ngIf="!isLoginRoute">
   <app-footer></app-footer>
 </div>
+-->
+<ng-container *ngIf="isLoginRoute; else dashboardRoute">
+  <router-outlet />
+</ng-container>
+
+<ng-template #dashboardRoute>
+  <ng-container *ngIf="isDashboardRoute;">
+    <app-header></app-header>
+    <app-sidebar></app-sidebar>
+    <main>
+      <router-outlet />
+    </main>
+  </ng-container>
+</ng-template>
