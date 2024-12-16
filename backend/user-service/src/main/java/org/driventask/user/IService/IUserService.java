@@ -6,6 +6,7 @@ import org.driventask.user.Payload.Request.UserRequest;
 import org.driventask.user.Payload.Response.UserAuthResponse;
 import org.driventask.user.Payload.Response.UserResponse;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface IUserService {
@@ -16,4 +17,5 @@ public interface IUserService {
     Mono<Void> changePassword(String id, ChangePasswordRequest changePasswordRequest);
     Mono<Boolean> isUserExist(String id);
     Mono<UserAuthResponse> verifyUserCredentials(UserAuthRequest userAuthRequest);
+    Flux<UserResponse> getAllUsers();
 }

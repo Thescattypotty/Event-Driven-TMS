@@ -1,0 +1,314 @@
+<!-- Wrapper -->
+<div class="hk-wrapper" data-layout="vertical" data-layout-style="collapsed" data-menu="light" data-footer="simple" data-hover="active">
+<!-- Main Content -->
+<div class="hk-pg-wrapper pb-0">
+    <!-- Page Body -->
+    <div class="hk-pg-body py-0">
+        <div class="contactapp-wrap">
+            <nav class="contactapp-sidebar">
+                <div data-simplebar class="nicescroll-bar">
+                    <div class="menu-content-wrap">
+                        <button type="button" class="btn btn-primary btn-rounded btn-block mb-4" data-bs-toggle="modal" data-bs-target="#add_new_contact">
+                            Add new user
+                        </button>
+                        <div class="menu-group">
+                            <ul class="nav nav-light navbar-nav flex-column">
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="javascript:void(0);">
+                                        <span class="nav-icon-wrap">
+                                            <span class="feather-icon">
+                                                <i-feather name="inbox"></i-feather>
+                                            </span>
+                                        </span>
+                                        <span class="nav-link-text">All Users</span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="javascript:void(0);">
+                                        <span class="nav-icon-wrap"><span class="feather-icon">
+                                            <i-feather name="edit"></i-feather>
+                                        </span></span>
+                                        <span class="nav-link-text">Create User</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="separator separator-light"></div>
+                    </div>
+                </div>
+                <!--Sidebar Fixnav-->
+                <div class="contactapp-fixednav">
+                    <div class="hk-toolbar">
+                        <ul class="nav nav-light">
+                            <li class="nav-item nav-link">
+                                <a class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Settings" href="#"><span class="icon"><span class="feather-icon">
+                                    <i-feather name="settings"></i-feather>
+                                </span></span></a>
+                            </li>
+                            <li class="nav-item nav-link">
+                                <a href="#" class="btn btn-icon btn-rounded btn-flush-dark flush-soft-hover" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Archive"><span class="icon">
+                                    <span class="feather-icon">
+                                        <i-feather name="archive"></i-feather>
+                                    </span></span></a>
+                            </li>
+                            <li class="nav-item nav-link">
+                                <a href="#" class="btn btn-icon btn-rounded btn-flush-dark flush-soft-hover" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Help"><span class="icon"><span class="feather-icon">
+                                    <i-feather name="book"></i-feather>
+                                </span></span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!--/ Sidebar Fixnav-->
+            </nav>
+            <div class="contactapp-content">
+                <div class="contactapp-detail-wrap">
+                    <header class="contact-header">
+                        <div class="d-flex align-items-center">
+                            <div class="dropdown">
+                                <a class="contactapp-title dropdown-toggle link-dark" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <h1>Users</h1>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#"><span class="feather-icon dropdown-icon">
+                                        <i-feather name="users"></i-feather>
+                                    </span><span>All Contacts</span></a>
+                                    <a class="dropdown-item" href="#"><span class="feather-icon dropdown-icon">
+                                        <i-feather name="star"></i-feather>
+                                    </span><span>Important</span></a>
+                                    <a class="dropdown-item" href="#"><span class="feather-icon dropdown-icon">
+                                        <i-feather name="archive"></i-feather>
+                                    </span><span>Archive</span></a>
+                                    <a class="dropdown-item" href="#"><span class="feather-icon dropdown-icon">
+                                        <i-feather name="edit"></i-feather>
+                                    </span><span>Pending</span></a>
+                                    <a class="dropdown-item" href="#"><span class="feather-icon dropdown-icon">
+                                        <i-feather name="trash-2"></i-feather>
+                                    </span><span>Deleted</span></a>
+                                </div>
+                            </div>
+                            <div class="dropdown ms-3">
+                                <button class="btn btn-sm btn-outline-secondary flex-shrink-0 dropdown-toggle d-lg-inline-block d-none" data-bs-toggle="dropdown">Create New</button>
+                                <div class="dropdown-menu">
+                                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#add_new_contact">Add New User</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contact-options-wrap">	
+
+                            <button type="button" class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover no-caret d-sm-inline-block d-none" (click)="refreshUsers()">
+                                <span class="icon">
+                                    <span class="feather-icon">
+                                        <i-feather name="refresh-cw"></i-feather>
+                                    </span>
+                                </span>
+                            </button>
+                            <div class="v-separator d-lg-block d-none"></div>
+                            <a class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover dropdown-toggle no-caret  d-lg-inline-block d-none  ms-sm-0" href="#" data-bs-toggle="dropdown"><span class="icon" data-bs-toggle="tooltip" data-placement="top" title="" data-bs-original-title="Manage Contact"><span class="feather-icon">
+                                <i-feather name="settings"></i-feather>
+                            </span></span></a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#">Manage Users</a>
+                                <a class="dropdown-item" href="#">Import</a>
+                                <a class="dropdown-item" href="#">Export</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Send Messages</a>
+                                <a class="dropdown-item" href="#">Delegate Access</a>
+                            </div>
+                            
+                            <a class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover hk-navbar-togglable d-sm-inline-block d-none" href="#" data-bs-toggle="tooltip" data-placement="top" title="" data-bs-original-title="Collapse">
+                                <span class="icon">
+                                    <span class="feather-icon"><i-feather name="chevron-up"></i-feather></span>
+                                    <span class="feather-icon d-none"><i-feather name="chevron-down"></i-feather></span>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="hk-sidebar-togglable"></div>
+                    </header>
+                    <div class="contact-body">
+                        <div data-simplebar class="nicescroll-bar">
+                            <div class="contact-list-view">
+                                <table id="datable_1" class="table nowrap w-100 mb-5">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>FullName</th>
+                                            <th>Email Address</th>
+                                            <th>Roles</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let user of userResponse">
+                                            <td>
+                                                {{user.id}}
+                                            </td>
+                                            <td>
+                                                <div class="media align-items-center">
+                                                    <div class="media-body">
+                                                        <span class="d-block text-high-em">
+                                                            {{user.fullname}}
+                                                        </span> 
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-truncate">
+                                                {{user.email}}
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-soft-violet my-1  me-2" *ngFor="let role of user.roles">{{role}}</span>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="d-flex">
+                                                        <button class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover" >
+                                                            <span class="icon">
+                                                                <span class="feather-icon">
+                                                                    <i-feather name="edit"></i-feather>
+                                                                </span>
+                                                            </span>
+                                                        </button>
+                                                        <button type="button" class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover del-button" (click)="deleteUser(user.id)">
+                                                            <span class="icon">
+                                                                <span class="feather-icon">
+                                                                    <i-feather name="trash"></i-feather>
+                                                                </span>
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover dropdown-toggle no-caret" aria-expanded="false" data-bs-toggle="dropdown">
+                                                            <span class="icon">
+                                                                <span class="feather-icon">
+                                                                    <i-feather name="more-vertical"></i-feather>
+                                                                </span>
+                                                            </span>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-end">
+                                                            <button type="button" class="dropdown-item">
+                                                                <span class="feather-icon dropdown-icon">
+                                                                    <i-feather name="edit"></i-feather>
+                                                                </span>
+                                                                <span>Edit User</span>
+                                                            </button>
+                                                            <button class="dropdown-item" type="button" (click)="deleteUser(user.id)">
+                                                                <span class="feather-icon dropdown-icon">
+                                                                    <i-feather name="trash-2"></i-feather>
+                                                                </span>
+                                                                <span>Delete</span>
+                                                            </button>
+                                                            <button type="button" class="dropdown-item">
+                                                                <span class="feather-icon dropdown-icon">
+                                                                    <i-feather name="copy"></i-feather>
+                                                                </span>
+                                                                <span>Duplicate</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Edit Info -->
+                <div id="add_new_contact" class="modal fade add-new-contact" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                                <h5 class="mb-5">Create New User</h5>
+                                <form (ngSubmit)="createUser()">
+
+                                    <div class="title title-xs title-wth-divider text-primary text-uppercase my-4"><span>Basic Info</span></div>
+                                    <div class="row gx-3">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label class="form-label">Full Name</label>
+                                                <input 
+                                                    class="form-control"
+                                                    type="text"
+                                                    id="fullName"
+                                                    name="fullName"
+                                                    [(ngModel)]="userCreationRequest.fullname"
+                                                    required
+                                                    />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Email ID</label>
+                                                <input class="form-control"
+                                                    type="email"
+                                                    id="email"
+                                                    name="email"
+                                                    [(ngModel)]="userCreationRequest.email"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row gx-3">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Password</label>
+                                                <input class="form-control"
+                                                    type="password"
+                                                    id="password"
+                                                    name="password"
+                                                    [(ngModel)]="userCreationRequest.password"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Confirm Password</label>
+                                                <input class="form-control" type="password"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="title title-xs title-wth-divider text-primary text-uppercase my-4"><span>User Roles</span></div>
+                                    <div class="row gx-3">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="form-label">Roles</label>
+                                                <select class="form-select" 
+                                                    multiple
+                                                    id="roles"
+                                                    name="roles"
+                                                    [(ngModel)]="userCreationRequest.roles"
+                                                    >
+                                                    <option ngValue="null">----</option>
+                                                    <option *ngFor="let role of roles">
+                                                        {{role}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer align-items-center">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Discard</button>
+                                        <button type="button" (click)="createUser()" class="btn btn-primary">Create User</button>
+                                    </div>
+
+                                </form>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Body -->
+</div>
+<!-- /Main Content -->
+ </div>

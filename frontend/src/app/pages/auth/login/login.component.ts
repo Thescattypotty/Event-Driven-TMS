@@ -3,16 +3,16 @@ import { LoginRequest } from '../../../models/login-request';
 import { JwtResponse } from '../../../models/jwt-response';
 import { ErrorResponse } from '../../../models/error-response';
 import { AuthService } from '../../../services/auth.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { IconModuleModule } from '../../../module/icon-module/icon-module.module';
+import { FeatherIconsModule } from '../../../icons/feather-icons/feather-icons.module';
 
 @Component({
 	selector: 'auth-login',
 	standalone: true,
 	imports: [
     FormsModule,
-    IconModuleModule
+    FeatherIconsModule
 ],
 	templateUrl: './login.component.html',
 	styleUrl: './login.component.css'

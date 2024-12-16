@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
@@ -150,6 +151,12 @@ public class UserService implements IUserService {
                 }
             }
         );
+    }
+
+    @Override
+    public Flux<UserResponse> getAllUsers() {
+        return userRepository.findAll()
+            .map(userMapper::fromUser);
     }
 
     

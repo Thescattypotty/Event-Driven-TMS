@@ -1,10 +1,6 @@
 import { Component } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { FooterComponent } from './component/footer/footer.component';
-import { HeaderComponent } from './component/header/header.component';
-import { SidebarComponent } from './component/sidebar/sidebar.component';
+import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { filter } from 'rxjs';
 import { AuthService } from './services/auth.service';
 import { DashboardLayoutComponent } from "./component/dashboard-layout/dashboard-layout.component";
 
@@ -14,9 +10,6 @@ import { DashboardLayoutComponent } from "./component/dashboard-layout/dashboard
 	imports: [
     CommonModule,
     RouterOutlet,
-    FooterComponent,
-    HeaderComponent,
-    SidebarComponent,
     DashboardLayoutComponent
 ],
 	templateUrl: './app.component.html',
