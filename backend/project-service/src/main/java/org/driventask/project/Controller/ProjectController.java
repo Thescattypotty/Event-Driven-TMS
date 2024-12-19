@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/v1/project")
 public class ProjectController {
     
-    private ProjectService projectService;
+    private final ProjectService projectService;
 
     @PostMapping
     public Mono<ResponseEntity<Void>> createProject(@RequestBody @Valid ProjectRequest projectRequest){
@@ -34,7 +34,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}")
-    public Mono<ResponseEntity<ProjectResponse>> getProjectById(@PathVariable String projectId) {
+    public Mono<ResponseEntity<ProjectResponse>> getProjectById(@PathVariable("projectId") String projectId) {
         return projectService.getProjectById(projectId)
             .map(projectResponse -> new ResponseEntity<>(projectResponse, HttpStatus.OK));
     }
@@ -45,7 +45,7 @@ public class ProjectController {
     }
 
     @PutMapping("/{projectId}")
-    public Mono<ResponseEntity<Void>> updateProject(String projectId, ProjectRequest projectRequest) {
+    public Mono<ResponseEntity<Void>> updateProject(@PathVariable("projectId") String projectId, ProjectRequest projectRequest) {
         return projectService.updateProject(projectId,projectRequest)
             .then(Mono.just(new ResponseEntity<>(HttpStatus.ACCEPTED)));        
     }
