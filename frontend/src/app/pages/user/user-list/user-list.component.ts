@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../services/user.service';
 import { UserResponse } from '../../../models/user-response';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ERole } from '../../../models/role';
 import { FormsModule } from '@angular/forms';
 import { FeatherIconsModule } from '../../../icons/feather-icons/feather-icons.module';
@@ -10,7 +10,7 @@ import { UserRequest } from '../../../models/user-request';
 @Component({
     selector: 'app-user-list',
     standalone: true,
-    imports: [NgFor, FormsModule, FeatherIconsModule],
+    imports: [NgFor, FormsModule, FeatherIconsModule,NgIf],
     templateUrl: './user-list.component.html',
     styleUrl: './user-list.component.css'
 })
@@ -25,10 +25,25 @@ export class UserListComponent implements OnInit {
         roles: [ERole.ROLE_USER]
     };
     userUpdateRequest!: UserRequest;
-
+    isUpdateMode: boolean = false;
     constructor(private userService: UserService){
 
     }
+    openCreateModal() {
+        this.isUpdateMode = false;
+        this.userCreationRequest = { fullname: '', email: '', password: '', roles: [] }; // Reset form
+      }
+    
+      openUpdateModal(user: UserResponse) {
+        this.isUpdateMode = true;
+        this.getUser(user.id);
+        this.userCreationRequest = {
+          fullname: user.fullname,
+          email: user.email,
+          password: '', // Leave blank for security
+          roles: user.roles,
+        };
+      }
     createUser(){
         console.log("User Creation :");
         this.userService.createUser(this.userCreationRequest).subscribe({

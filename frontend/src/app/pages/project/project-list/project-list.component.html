@@ -1,0 +1,108 @@
+<div class="hk-pg-wrapper pb-0">
+    <!-- Page Body -->
+    <div class="hk-pg-body py-0">
+        <div class="taskboardapp-content">
+            <div class="taskboardapp-detail-wrap">
+                <br>
+                <div class="taskboard-body">
+                    <div data-simplebar class="nicescroll-bar">
+                        <div class="container-fluid">
+                            <div class="row justify-content-center board-team-wrap">
+                                <div class="col-md-8 col-sm-12">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="tab_boards">
+                                            <div class="d-flex justify-content-between align-items-center mb-5">
+                                                <h5 class="mb-0">All Projects</h5>
+                                                <button class="btn btn-light btn-icon" data-bs-toggle="modal" data-bs-target="#add_new_project">
+                                                    <span class="icon">
+                                                        <span class="feather-icon">
+                                                            <i data-feather="plus"></i>
+                                                        </span>
+                                                    </span>
+                                                </button>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="card board-card card-border">
+                                                        <!-- Project List -->
+                                                        <ul>
+                                                            <li *ngFor="let project of projectResponse">
+                                                                {{ project.name }}
+                                                                <button (click)="getProject(project.id)">View</button>
+                                                                <button (click)="deleteProject(project.id)">Delete</button>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Add New Project Modal -->
+                                            <div class="modal fade" id="add_new_project" tabindex="-1" aria-labelledby="addNewProjectLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="addNewProjectLabel">Add New Project</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form (ngSubmit)="createProject(projectForm.value)" #projectForm="ngForm">
+                                                                <div class="mb-3">
+                                                                    <label for="project-name" class="form-label">Project Name</label>
+                                                                    <input type="text" class="form-control" id="project-name" name="name" ngModel required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="start-date" class="form-label">Start Date</label>
+                                                                    <input type="date" class="form-control" id="start-date" name="startDate" ngModel required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="end-date" class="form-label">End Date</label>
+                                                                    <input type="date" class="form-control" id="end-date" name="endDate" ngModel required>
+                                                                </div>
+                                                                <button type="submit" class="btn btn-primary">Create Project</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Update Project Modal -->
+                                            <div class="modal fade" id="update_project" tabindex="-1" aria-labelledby="updateProjectLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="updateProjectLabel">Update Project</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form (ngSubmit)="updateProject(projectForm.value.id, projectForm.value)" #projectForm="ngForm">
+                                                                <div class="mb-3">
+                                                                    <label for="project-id" class="form-label">Project ID</label>
+                                                                    <input type="text" class="form-control" id="project-id" name="id" ngModel required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="project-name" class="form-label">Project Name</label>
+                                                                    <input type="text" class="form-control" id="project-name" name="name" ngModel required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="start-date" class="form-label">Start Date</label>
+                                                                    <input type="date" class="form-control" id="start-date" name="startDate" ngModel required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="end-date" class="form-label">End Date</label>
+                                                                    <input type="date" class="form-control" id="end-date" name="endDate" ngModel required>
+                                                                </div>
+                                                                <button type="submit" class="btn btn-primary">Update Project</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

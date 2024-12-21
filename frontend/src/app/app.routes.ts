@@ -4,12 +4,13 @@ import { LoginComponent } from './pages/auth/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { TeamMembersComponent } from './pages/team-members/team-members.component';
 import { UserListComponent } from './pages/user/user-list/user-list.component';
+import { ProjectListComponent } from './pages/project/project-list/project-list.component';
 
 export const routes: Routes = [
     {
         path: '',
         component: HomeComponent,
-        canActivate: [authGuard]
+        //canActivate: [authGuard]
     },
     {
         path: 'login',
@@ -22,6 +23,10 @@ export const routes: Routes = [
     {
         path: 'user',
         component: UserListComponent
+    },
+    {
+        path: 'project',
+        component: ProjectListComponent
     }
     
 ];
