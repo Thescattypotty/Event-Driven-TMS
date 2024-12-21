@@ -159,7 +159,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="d-flex">
-                                                        <button class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover" >
+                                                        <button class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover" data-bs-toggle="modal" data-bs-target="#add_new_contact" (click)="getUser(user.id)">
                                                             <span class="icon">
                                                                 <span class="feather-icon">
                                                                     <i-feather name="edit"></i-feather>
@@ -183,7 +183,7 @@
                                                             </span>
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-end">
-                                                            <button type="button" class="dropdown-item">
+                                                            <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#add_new_contact" (click)="getUser(user.id)">
                                                                 <span class="feather-icon dropdown-icon">
                                                                     <i-feather name="edit"></i-feather>
                                                                 </span>
@@ -212,92 +212,94 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- Edit Info -->
                 <div id="add_new_contact" class="modal fade add-new-contact" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                      <div class="modal-content">
-                        <div class="modal-body">
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          <h5 class="mb-5">{{ isUpdateMode ? 'Update User' : 'Create New User' }}</h5>
-                          <form (ngSubmit)="createUser()">
-                            <div class="title title-xs title-wth-divider text-primary text-uppercase my-4">
-                              <span>Basic Info</span>
-                            </div>
-                            <div class="row gx-3">
-                              <div class="col-sm-4">
-                                <div class="form-group">
-                                  <label class="form-label">Full Name</label>
-                                  <input
-                                    class="form-control"
-                                    type="text"
-                                    id="fullName"
-                                    name="fullName"
-                                    [(ngModel)]="userCreationRequest.fullname"
-                                    required
-                                  />
-                                </div>
-                              </div>
-                              <div class="col-sm-6">
-                                <div class="form-group">
-                                  <label class="form-label">Email ID</label>
-                                  <input
-                                    class="form-control"
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    [(ngModel)]="userCreationRequest.email"
-                                    required
-                                    [readonly]="isUpdateMode"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <div class="row gx-3" *ngIf="!isUpdateMode">
-                              <div class="col-sm-6">
-                                <div class="form-group">
-                                  <label class="form-label">Password</label>
-                                  <input
-                                    class="form-control"
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    [(ngModel)]="userCreationRequest.password"
-                                    required
-                                  />
-                                </div>
-                              </div>
-                              <div class="col-sm-6">
-                                <div class="form-group">
-                                  <label class="form-label">Confirm Password</label>
-                                  <input class="form-control" type="password" />
-                                </div>
-                              </div>
-                            </div>
-                  
-                            <div class="title title-xs title-wth-divider text-primary text-uppercase my-4">
-                              <span>User Roles</span>
-                            </div>
-                            <div class="row gx-3">
-                              <div class="col-sm-12">
-                                <div class="form-group">
-                                  <label class="form-label">Roles</label>
-                                  <select
-                                    class="form-select"
-                                    multiple
-                                    id="roles"
-                                    name="roles"
-                                    [(ngModel)]="userCreationRequest.roles"
-                                  >
-                                    <option *ngFor="let role of roles">{{ role }}</option>
-                                  </select>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="modal-footer align-items-center">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Discard</button>
-                              <button type="submit" class="btn btn-primary">
-                                {{ isUpdateMode ? 'Update User' : 'Create User' }}
-                              </button>
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                                <h5 class="mb-5">Create New User</h5>
+                                <form (ngSubmit)="id ? updateUser(id): createUser()">
+
+                                    <div class="title title-xs title-wth-divider text-primary text-uppercase my-4"><span>Basic Info</span></div>
+                                    <div class="row gx-3">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label class="form-label">Full Name</label>
+                                                <input 
+                                                    class="form-control"
+                                                    type="text"
+                                                    id="fullName"
+                                                    name="fullName"
+                                                    [(ngModel)]="userCreationRequest.fullname"
+                                                    required
+                                                    />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Email ID</label>
+                                                <input class="form-control"
+                                                    type="email"
+                                                    id="email"
+                                                    name="email"
+                                                    [(ngModel)]="userCreationRequest.email"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="!id" class="row gx-3">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Password</label>
+                                                <input class="form-control"
+                                                    type="password"
+                                                    id="password"
+                                                    name="password"
+                                                    [(ngModel)]="userCreationRequest.password"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Confirm Password</label>
+                                                <input class="form-control" type="password"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="title title-xs title-wth-divider text-primary text-uppercase my-4"><span>User Roles</span></div>
+                                    <div class="row gx-3">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="form-label">Roles</label>
+                                                <select class="form-select" 
+                                                    multiple
+                                                    id="roles"
+                                                    name="roles"
+                                                    [(ngModel)]="userCreationRequest.roles"
+                                                    >
+                                                    <option ngValue="null">----</option>
+                                                    <option *ngFor="let role of roles">
+                                                        {{role}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer align-items-center">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Discard</button>
+                                        <button type="button" (click)="createUser()" class="btn btn-primary">
+                                            {{id ? 'Update User': 'Create User'}}
+                                        </button>
+                                    </div>
+
+                                </form>
                             </div>
                           </form>
                         </div>

@@ -1,10 +1,12 @@
 export interface ProjectRequest {
-    id: string;
+    id?: string;
     name: string;
-    description: string;
-    startDate: Date;
-    endDate: Date;
-    status: ProjectStatus;
+    description?: string;
+    startDate?: Date;
+    endDate?: Date;
+    status?: ProjectStatus;
+    userId?: string[];
+    file_id?: string[];
 }
 
 export enum ProjectStatus {

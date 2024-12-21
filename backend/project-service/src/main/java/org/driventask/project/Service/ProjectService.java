@@ -81,8 +81,6 @@ public class ProjectService implements IProjectService {
             .onErrorMap(e -> new ProjectNotFoundException("Cannot create Project"));
     }
 
-    
-
     @Override
     public Flux<ProjectResponse> getAllProjects(String userId) {
         return projectRepository.findByUserId(userId)
@@ -96,10 +94,9 @@ public class ProjectService implements IProjectService {
         return projectRepository.findById(UUID.fromString(projectId))
             .switchIfEmpty(Mono.error(new ProjectNotFoundException("Cannot find Project with ID:" + projectId)))
             .flatMap(existingProject -> projectRepository.delete(existingProject))
-            .doOnTerminate(null)
+            .doOnTerminate(() -> System.out.println("Project with ID:" + projectId + " has been deleted"))
             .then();
     }
-
 
 
     @Override
