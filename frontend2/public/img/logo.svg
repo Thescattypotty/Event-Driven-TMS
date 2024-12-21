@@ -1,0 +1,15 @@
+<svg width="160" height="55" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="paint0_linear" x1="160" y1="27.5" x2="0" y2="27.5" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#D0F8EE"/>
+            <stop offset="1" stop-color="#25CBA1"/>
+        </linearGradient>
+        <linearGradient id="paint1_linear" x1="43.194" y1="69.7186" x2="140.837" y2="3.52852" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#49D4B1"/>
+            <stop offset="0.779417" stop-color="#15715A"/>
+        </linearGradient>
+    </defs>
+    <text x="10" y="35" font-family="Arial" font-size="20" fill="url(#paint1_linear)">
+        EventDrivenTMS
+    </text>
+</svg>

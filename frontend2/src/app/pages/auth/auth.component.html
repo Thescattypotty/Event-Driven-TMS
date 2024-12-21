@@ -1,1 +1,68 @@
-<p>auth works!</p>
+<div class="d-flex align-items-center py-4">
+  <main class="form-signin w-100 m-auto">
+    <form (ngSubmit)="login()">
+      <div class="nav-start-wrap">
+        <a class="navbar-brand" routerLink="">
+          <img
+            class="img-fluid mb-4"
+            src="img/brand-sm.svg"
+            alt="Event Driven TMS Logo"
+          />
+          <img
+            class="img-fluid mb-4"
+            src="img/logo.svg"
+            alt="Event Driven TMS Logo"
+          />
+        </a>
+      </div>
+
+      <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+      <div class="form-floating">
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          placeholder="username"
+          name="username"
+          [(ngModel)]="loginRequest.email"
+          required
+        />
+        <label for="username">Username</label>
+      </div>
+      <div class="form-floating">
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          placeholder="*********"
+          name="password"
+          [(ngModel)]="loginRequest.password"
+        />
+        <label for="password">Password</label>
+      </div>
+
+      <div class="form-check text-start my-3">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          value="remember-me"
+          id="flexCheckDefault"
+        />
+        <label class="form-check-label" for="flexCheckDefault">
+          Remember me
+        </label>
+      </div>
+      <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+      <p class="mt-5 mb-3 text-body-secondary">
+        Not registered?
+        <a
+          routerLink="/register"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          >Create an account</a
+        >
+      </p>
+    </form>
+  </main>
+</div>
