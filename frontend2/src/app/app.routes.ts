@@ -19,7 +19,7 @@ export const routes: Routes = [
                 component: ProjectComponent
             },
             {
-                path: 'user',
+                path: 'users',
                 component: UserComponent,
             },
             {

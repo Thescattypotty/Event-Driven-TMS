@@ -32,6 +32,7 @@ export class AuthComponent implements OnInit{
                         this.jwtResponse.accessToken.valueOf(),
                         this.jwtResponse.refreshToken.valueOf()
                     );
+                    this.router.navigate(['/']);
                 } else {
                     console.error('accessToken or refreshToken is missing!');
                 }

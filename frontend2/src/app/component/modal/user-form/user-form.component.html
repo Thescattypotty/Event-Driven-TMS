@@ -1,1 +1,66 @@
-<p>user-form works!</p>
+<div class="modal-header">
+  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="modalRef.close()"
+  ></button>
+</div>
+<div class="modal-body">
+    <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="fullname">Full Name</label>
+            <input 
+                type="text" 
+                class="form-control"
+                id="fullname" 
+                name="fullname"
+                [(ngModel)]="user!.fullname" 
+                required 
+                />
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input 
+                type="email" 
+                class="form-control"
+                id="email" 
+                name="email"
+                [(ngModel)]="user!.email" 
+                required 
+                />
+        </div>
+        <div *ngIf="create" class="form-group">
+            <label for="password">Password</label>
+            <input 
+            type="password" 
+            class="form-control"
+            id="password" 
+            name="password"
+            [(ngModel)]="user!.password" 
+            required 
+            />
+        </div>
+        <div class="form-group">
+            <label for="roles">Role</label>
+            <select 
+                class="form-control"
+                id="roles" 
+                name="roles"
+                [(ngModel)]="user!.roles" 
+                multiple
+                required 
+                >
+                <option value="ROLE_ADMIN">Admin</option>
+                <option value="ROLE_USER">User</option>
+            </select>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="modalRef.close()">
+                Close
+            </button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+    </form>
+</div>
