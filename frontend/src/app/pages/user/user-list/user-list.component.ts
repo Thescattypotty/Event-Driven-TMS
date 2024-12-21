@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../services/user.service';
 import { UserResponse } from '../../../models/user-response';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ERole } from '../../../models/role';
 import { FormsModule } from '@angular/forms';
 import { FeatherIconsModule } from '../../../icons/feather-icons/feather-icons.module';
@@ -10,7 +10,7 @@ import { UserRequest } from '../../../models/user-request';
 @Component({
     selector: 'app-user-list',
     standalone: true,
-    imports: [NgFor, FormsModule, FeatherIconsModule],
+    imports: [NgFor,NgIf, FormsModule, FeatherIconsModule],
     templateUrl: './user-list.component.html',
     styleUrl: './user-list.component.css'
 })
@@ -24,13 +24,11 @@ export class UserListComponent implements OnInit {
         password: '',
         roles: [ERole.ROLE_USER]
     };
-    userUpdateRequest!: UserRequest;
+    id: String | null = null;
 
-    constructor(private userService: UserService){
-
-    }
+    constructor(private userService: UserService){ }
     createUser(){
-        console.log("User Creation :");
+        console.log("User Creation :" + " Started");
         this.userService.createUser(this.userCreationRequest).subscribe({
             next: (response) => {
                 console.log("User Created Successfully");
@@ -42,13 +40,15 @@ export class UserListComponent implements OnInit {
         });
     }
     getUser(id: String){
+        console.log("Get User with ID: " + id + " Started");
         this.userService.getUser(id).subscribe({
             next: (response) => {
                 console.log("User Getted Sucessfully");
-                this.userUpdateRequest.fullname = response.fullname;
-                this.userUpdateRequest.email = response.email;
-                this.userUpdateRequest.password = response.email;
-                this.userUpdateRequest.roles = response.roles;
+                this.userCreationRequest.fullname = response.fullname;
+                this.userCreationRequest.email = response.email;
+                this.userCreationRequest.password = response.email;
+                this.userCreationRequest.roles = response.roles;
+                this.id = response.id;
             },
             error: (error) => {
                 console.log(error);
@@ -56,9 +56,12 @@ export class UserListComponent implements OnInit {
         });
     }
     updateUser(id: String){
-        this.userService.updateUser(id, this.userUpdateRequest).subscribe({
+        console.log("User Update with ID :" + id + " Started");
+        console.log("User Updated Sucessfully with ID : " + id);
+        this.userService.updateUser(id, this.userCreationRequest).subscribe({
             next: (response) => {
                 console.log("User with ID : " + id + " Updated Successfully .");
+                this.id = null;
                 this.refreshUsers();
             },
             error: (error) => {
@@ -68,7 +71,7 @@ export class UserListComponent implements OnInit {
     }
 
     deleteUser(id: String){
-        console.log("User deletion with ID : " + id);
+        console.log("User Delete with ID :" + id + " Started");
         this.userService.deleteUser(id).subscribe({
             next: (response) => {
                 console.log("User with ID : " + id + " Deleted Successfully .");

@@ -162,7 +162,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="d-flex">
-                                                        <button class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover" >
+                                                        <button class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover" data-bs-toggle="modal" data-bs-target="#add_new_contact" (click)="getUser(user.id)">
                                                             <span class="icon">
                                                                 <span class="feather-icon">
                                                                     <i-feather name="edit"></i-feather>
@@ -186,7 +186,7 @@
                                                             </span>
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-end">
-                                                            <button type="button" class="dropdown-item">
+                                                            <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#add_new_contact" (click)="getUser(user.id)">
                                                                 <span class="feather-icon dropdown-icon">
                                                                     <i-feather name="edit"></i-feather>
                                                                 </span>
@@ -215,6 +215,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- Edit Info -->
                 <div id="add_new_contact" class="modal fade add-new-contact" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -224,7 +225,7 @@
                                     <span aria-hidden="true">×</span>
                                 </button>
                                 <h5 class="mb-5">Create New User</h5>
-                                <form (ngSubmit)="createUser()">
+                                <form (ngSubmit)="id ? updateUser(id): createUser()">
 
                                     <div class="title title-xs title-wth-divider text-primary text-uppercase my-4"><span>Basic Info</span></div>
                                     <div class="row gx-3">
@@ -254,7 +255,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row gx-3">
+                                    <div *ngIf="!id" class="row gx-3">
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="form-label">Password</label>
@@ -296,7 +297,9 @@
                                     </div>
                                     <div class="modal-footer align-items-center">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Discard</button>
-                                        <button type="button" (click)="createUser()" class="btn btn-primary">Create User</button>
+                                        <button type="button" (click)="createUser()" class="btn btn-primary">
+                                            {{id ? 'Update User': 'Create User'}}
+                                        </button>
                                     </div>
 
                                 </form>
