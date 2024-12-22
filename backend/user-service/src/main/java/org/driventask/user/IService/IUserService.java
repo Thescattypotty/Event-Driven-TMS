@@ -18,4 +18,5 @@ public interface IUserService {
     Mono<Boolean> isUserExist(String id);
     Mono<UserAuthResponse> verifyUserCredentials(UserAuthRequest userAuthRequest);
     Flux<UserResponse> getAllUsers();
+    Mono<UserResponse> getUserByEmail(String email);
 }

@@ -24,7 +24,7 @@ export class UserFormComponent implements OnInit {
 
     }
 
-    onSubmit() {
+    onSubmit(): void {
         this.close();
     }
 

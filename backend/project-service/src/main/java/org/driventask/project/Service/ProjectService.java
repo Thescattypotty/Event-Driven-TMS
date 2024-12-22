@@ -1,6 +1,5 @@
 package org.driventask.project.Service;
 
-import java.util.Set;
 import java.util.UUID;
 
 import org.driventask.project.Entity.Project;

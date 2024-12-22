@@ -96,6 +96,13 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public Mono<UserResponse> getUserByEmail(String email){
+        return userRepository.findByEmail(email)
+            .onErrorMap(e -> new UserNotFoundException("Cannot find user with email :" + email))
+            .map(userMapper::fromUser);
+    }
+
+    @Override
     @Transactional
     public Mono<Void> deleteUser(String id) {
         return userRepository.findById(UUID.fromString(id))

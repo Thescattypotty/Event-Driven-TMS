@@ -8,11 +8,11 @@ import org.driventask.user.Payload.Response.UserAuthResponse;
 import org.driventask.user.Payload.Response.UserResponse;
 import org.driventask.user.Service.UserService;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import org.springframework.http.HttpStatus;
@@ -37,6 +37,15 @@ public class UserController {
             .doOnSubscribe(sub -> System.out.println("Subscription Started"))
             .doOnNext(next -> System.out.println("getUser executed"))
             .doOnError(e -> System.out.println("Error durring get User"))
+            .map(user -> new ResponseEntity<>(user,HttpStatus.OK))
+            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal));
+    }
+    @GetMapping("/email/{email}")
+    public Mono<ResponseEntity<UserResponse>> getUserByEmail(@RequestParam String email){
+        return userService.getUserByEmail(email)
+            .doOnSubscribe(sub -> System.out.println("Subscription Started"))
+            .doOnNext(next -> System.out.println("getUserByEmail executed"))
+            .doOnError(e -> System.out.println("Error durring get User by Email"))
             .map(user -> new ResponseEntity<>(user,HttpStatus.OK))
             .doFinally(signal -> System.out.println("Processing completed with signal: " + signal));
     }
