@@ -1,5 +1,7 @@
 package org.driventask.project.Payload.Mapper;
 
+import java.util.HashSet;
+
 import org.driventask.project.Entity.Project;
 import org.driventask.project.Payload.Request.ProjectRequest;
 import org.driventask.project.Payload.Response.ProjectResponse;
@@ -14,7 +16,8 @@ public class ProjectMapper {
                     .description(projectRequest.description())
                     .startDate(projectRequest.startDate())
                     .endDate(projectRequest.endDate())
-                    // we need to add users & files id , by verifying them
+                    .userId(projectRequest.userId())
+                    .fileId(projectRequest.file_id())
                     .build();
         }
 

@@ -7,6 +7,7 @@ import { ProjectService } from '../../services/project.service';
 import { JwtDecoderService } from '../../decoder/jwt-decoder.service';
 import { catchError, of } from 'rxjs';
 import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 @Component({
     selector: 'app-project',
@@ -29,7 +30,8 @@ export class ProjectComponent implements OnInit {
         private projectService: ProjectService,
         private modalService: MdbModalService,
         private jwtDecoderService: JwtDecoderService,
-        private router: Router
+        private router: Router,
+        private userService: UserService
     ) {
 
     }
@@ -50,9 +52,11 @@ export class ProjectComponent implements OnInit {
             })
         });
     }
+    
     viewProject(id: String){
         this.router.navigate(['/project', id]);
     }
+
     updateProject(id: String){
         this.projectService.getProject(id).subscribe({
             next: (response) => {
@@ -94,23 +98,47 @@ export class ProjectComponent implements OnInit {
     }
 
     loadProjects(){
-        this.projectService.getProjects(this.jwtDecoderService?.getUserId()).pipe(
-            catchError((error) => {
-                console.log(error);
-                return of([]);
-            })
-        ).subscribe({
-            next: (response) => {
-                this.projects = response;
-            },
-            error: (error) => {
-                console.log(error);
-            }
-        });
+
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            const payload = token.split('.')[1];
+            const decoded = window.atob(payload);
+            const email = JSON.parse(decoded).email;
+            let userId = "";
+            this.userService.getUserByEmail(email).subscribe({
+                next: (response) => {
+                    console.log(response.id);
+                    userId = response.id.valueOf();
+
+                    this.projectService.getProjects(userId).pipe(
+                        catchError((error) => {
+                            console.log(error);
+                            return of([]);
+                        })
+                    ).subscribe({
+                        next: (response) => {
+                            console.log(response);
+                            this.projects = response;
+                        },
+                        error: (error) => {
+                            console.log(error);
+                        }
+                    });
+                },
+                error: (error) => {
+                    userId = "";
+                }
+            });
+        }
+
+
+        //let id = this.jwtDecoderService.getUserId();
+        
     }
 
     ngOnInit() { 
         this.loadProjects();
+        console.log("id : " + this.jwtDecoderService?.getUserId());
     }
 
 }

@@ -13,6 +13,7 @@ export class ProjectService {
     constructor(private http: HttpClient) { }
 
     getProjects(userId: String): Observable<ProjectResponse[]> {
+        console.log('User ID', userId);
         return this.http.get<ProjectResponse[]>(`${this.API_URL}/user/${userId}`);
     }
     getProject(id: String): Observable<ProjectResponse> {

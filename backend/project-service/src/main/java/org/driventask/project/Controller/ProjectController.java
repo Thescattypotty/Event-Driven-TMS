@@ -5,6 +5,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import org.springframework.http.HttpStatus;
+
+import java.util.List;
+
 import org.driventask.project.Payload.Request.ProjectRequest;
 import org.driventask.project.Payload.Response.ProjectResponse;
 import org.driventask.project.Service.ProjectService;
@@ -29,8 +32,15 @@ public class ProjectController {
 
     @PostMapping
     public Mono<ResponseEntity<Void>> createProject(@RequestBody @Valid ProjectRequest projectRequest){
+        //return projectService.createProject(projectRequest)
+        //    .then(Mono.just(new ResponseEntity<>(HttpStatus.CREATED)));
         return projectService.createProject(projectRequest)
+            .doOnSubscribe(sub -> System.out.println("Subscription createProject Started"))
+            .doOnNext(next -> System.out.println("createProject executed"))
+            .doOnError(e -> System.out.println("Error durring Project Creation"))
+            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal))
             .then(Mono.just(new ResponseEntity<>(HttpStatus.CREATED)));
+            
     }
 
     @GetMapping("/{projectId}")
@@ -40,8 +50,14 @@ public class ProjectController {
     }
 
     @GetMapping("/user/{userId}")
-    public Flux<ProjectResponse> getAllProjects(@PathVariable("userId") String userId) {
-        return projectService.getAllProjects(userId);
+    public Mono<ResponseEntity<List<ProjectResponse>>> getAllProjects(@PathVariable("userId") String userId) {
+        return projectService.getAllProjects(userId)
+            .doOnSubscribe(sub -> System.out.println("Subscription getAllProjects Started"))
+            .doOnNext(next -> System.out.println("getAllProjects executed"))
+            .doOnError(e -> System.out.println("Error durring Project Creation"))
+            .collectList()
+            .map(projectResponse -> new ResponseEntity<>(projectResponse, HttpStatus.OK))
+            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal));
     }
 
     @PutMapping("/{projectId}")

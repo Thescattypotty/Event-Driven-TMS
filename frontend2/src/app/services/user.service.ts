@@ -16,7 +16,7 @@ export class UserService {
         return this.http.get<UserResponse>(`${this.API_URL}/${id}`);
     }
     getUserByEmail(email: String): Observable<UserResponse> {
-        return this.http.post<UserResponse>(`${this.API_URL}/email`, { params: { email } });
+        return this.http.get<UserResponse>(`${this.API_URL}/email/${email}`);
     }
     getUsers(): Observable<UserResponse[]> {
         return this.http.get<UserResponse[]>(`${this.API_URL}`);

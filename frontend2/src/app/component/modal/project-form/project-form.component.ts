@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
@@ -6,13 +6,15 @@ import { ProjectRequest } from '../../../models/project-request';
 import { UserService } from '../../../services/user.service';
 import { UserResponse } from '../../../models/user-response';
 import { FileService } from '../../../services/file.service';
+import { JwtDecoderService } from '../../../decoder/jwt-decoder.service';
 
 @Component({
   selector: 'app-project-form',
   standalone: true,
   imports: [
     FormsModule,
-    NgIf
+    NgIf,
+    NgFor
   ],
   templateUrl: './project-form.component.html',
   styleUrl: './project-form.component.css'
@@ -27,7 +29,8 @@ export class ProjectFormComponent implements OnInit{
     constructor(
         public modalRef: MdbModalRef<ProjectFormComponent>,
         private userService: UserService,
-        private fileService: FileService
+        private fileService: FileService,
+        private jwtDecoderService: JwtDecoderService
     ) {
 
     }
@@ -75,6 +78,7 @@ export class ProjectFormComponent implements OnInit{
                 userId: [],
                 file_id: []
             };
+            //this.project.userId?.push(this.jwtDecoderService.getUserId());
         }
         this.getUsers();
     }

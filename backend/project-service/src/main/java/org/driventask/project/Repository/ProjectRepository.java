@@ -1,5 +1,6 @@
 package org.driventask.project.Repository;
 
+import java.util.Set;
 import java.util.UUID;
 
 import org.driventask.project.Entity.Project;
@@ -11,5 +12,8 @@ import reactor.core.publisher.Flux;
 
 @Repository
 public interface ProjectRepository extends R2dbcRepository<Project,UUID>{
-    Flux<Project> findByUserId(String userId);
+    //Flux<Project> findByUserId(String userId);
+    
+    Flux<Project> findByUserIdIn(Set<String> userId);
+
 }

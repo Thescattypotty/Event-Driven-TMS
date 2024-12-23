@@ -41,7 +41,7 @@ public class UserController {
             .doFinally(signal -> System.out.println("Processing completed with signal: " + signal));
     }
     @GetMapping("/email/{email}")
-    public Mono<ResponseEntity<UserResponse>> getUserByEmail(@RequestParam String email){
+    public Mono<ResponseEntity<UserResponse>> getUserByEmail(@PathVariable String email){
         return userService.getUserByEmail(email)
             .doOnSubscribe(sub -> System.out.println("Subscription Started"))
             .doOnNext(next -> System.out.println("getUserByEmail executed"))
