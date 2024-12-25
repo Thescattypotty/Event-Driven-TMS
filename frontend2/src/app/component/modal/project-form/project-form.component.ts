@@ -7,6 +7,8 @@ import { UserService } from '../../../services/user.service';
 import { UserResponse } from '../../../models/user-response';
 import { FileService } from '../../../services/file.service';
 import { JwtDecoderService } from '../../../decoder/jwt-decoder.service';
+import { FileRequest } from '../../../models/file-request';
+import { catchError } from 'rxjs';
 
 @Component({
   selector: 'app-project-form',
@@ -25,12 +27,12 @@ export class ProjectFormComponent implements OnInit{
     users: UserResponse[]  = [];
     create: boolean = true;
     files: String[] = [];
+    fileRequest: FileRequest | null = null;
 
     constructor(
         public modalRef: MdbModalRef<ProjectFormComponent>,
         private userService: UserService,
-        private fileService: FileService,
-        private jwtDecoderService: JwtDecoderService
+        private fileService: FileService
     ) {
 
     }
@@ -61,11 +63,58 @@ export class ProjectFormComponent implements OnInit{
             }
         });
     }
-    uploadFile(event: any): void{
+    uploadFile(event: any): void {
         const file: File = event.target.files[0];
-        if(file){
-            
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const base64String = this.arrayBufferToBase64(new Uint8Array(reader.result as ArrayBuffer));
+                this.fileRequest = {
+                    fileName: file.name,
+                    contentType: file.type,
+                    size: file.size,
+                    file: base64String
+                };
+                console.log("File Request : ", this.fileRequest);
+                this.fileService.uploadFile(this.fileRequest).pipe(
+                    catchError((error) => {
+                        console.error(error);
+                        return [];
+                    })
+                    ).subscribe({
+                        next: (response) => {
+                            this.files.push(response);
+                            this.project?.file_id?.push(response);
+                        },
+                        error: (error) => {
+                            console.log(error);
+                        }
+                    }
+                );
+            };
+            reader.readAsArrayBuffer(file);
         }
+    }
+
+    private arrayBufferToBase64(buffer: Uint8Array): string {
+        let binary = '';
+        const len = buffer.byteLength;
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(buffer[i]);
+        }
+        return btoa(binary);
+    }
+
+    removeFile(id: String): void{
+        this.fileService.deleteFile(id).subscribe({
+            next: (response) => {
+                this.files = this.files.filter((file) => file !== id);
+                this.project?.file_id?.filter((file) => file !== id);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
     }
 
     ngOnInit(): void {
@@ -76,7 +125,7 @@ export class ProjectFormComponent implements OnInit{
                 startDate: new Date(),
                 endDate: new Date(),
                 userId: [],
-                file_id: []
+                file_id: this.files
             };
             //this.project.userId?.push(this.jwtDecoderService.getUserId());
         }

@@ -4,6 +4,7 @@ import { UserComponent } from './pages/user/user.component';
 import { ProjectComponent } from './pages/project/project.component';
 import { authGuard } from './guard/auth.guard';
 import { FileComponent } from './pages/file/file.component';
+import { ProjectDetailComponent } from './pages/project-detail/project-detail.component';
 
 export const routes: Routes = [
     {
@@ -25,6 +26,10 @@ export const routes: Routes = [
             {
                 path: 'files',
                 component: FileComponent
+            },
+            {
+                path: ':id',
+                component: ProjectDetailComponent
             }
         ]
     }

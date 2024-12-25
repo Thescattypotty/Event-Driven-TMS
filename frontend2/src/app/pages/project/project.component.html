@@ -11,8 +11,8 @@
             </button>
             </div>
         </div>
-        <div class="row" *ngFor="let project of projects">
-            <div class="col-xl-4 col-sm-6 col-12">
+        <div class="row" >
+            <div class="col-xl-4 col-sm-6 col-12" *ngFor="let project of projects">
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body">
@@ -22,9 +22,15 @@
                                     <span>{{project.name}}</span>
                                 </div>
                                 <div class="align-self-center d-flex gap-2">
-                                    <i class="bi bi-eye text-primary font-large-2 ml-4"></i>
-                                    <i class="bi bi-pencil text-warning font-large-2 ml-4"></i>
-                                    <i class="bi bi-trash text-danger font-large-2 ml-4"></i>
+                                    <button class="btn btn-sm btn-primary" (click)="viewProject(project.id)">
+                                        <i class="bi bi-eye font-large-2 ml-4"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil font-large-2 ml-4"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" (click)="deleteProject(project.id)">
+                                        <i class="bi bi-trash font-large-2 ml-4"></i>
+                                    </button>
                                 </div>
                             </div>
                             <div class="progress mt-1 mb-0" style="height: 7px;">

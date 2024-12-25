@@ -4,7 +4,6 @@ import { ProjectResponse } from '../../models/project-response';
 import { MdbModalModule, MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { ProjectFormComponent } from '../../component/modal/project-form/project-form.component';
 import { ProjectService } from '../../services/project.service';
-import { JwtDecoderService } from '../../decoder/jwt-decoder.service';
 import { catchError, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
@@ -26,10 +25,10 @@ export class ProjectComponent implements OnInit {
     projectGetted: ProjectResponse | null = null;
 
     modalRef: MdbModalRef<ProjectFormComponent> | null = null;
+
     constructor(
         private projectService: ProjectService,
         private modalService: MdbModalService,
-        private jwtDecoderService: JwtDecoderService,
         private router: Router,
         private userService: UserService
     ) {
@@ -53,10 +52,6 @@ export class ProjectComponent implements OnInit {
         });
     }
     
-    viewProject(id: String){
-        this.router.navigate(['/project', id]);
-    }
-
     updateProject(id: String){
         this.projectService.getProject(id).subscribe({
             next: (response) => {
@@ -96,9 +91,11 @@ export class ProjectComponent implements OnInit {
             }
         });
     }
+    viewProject(id: String): void{
+        this.router.navigate(['/', id]);
+    }
 
     loadProjects(){
-
         const token = localStorage.getItem('accessToken');
         if (token) {
             const payload = token.split('.')[1];
@@ -118,7 +115,10 @@ export class ProjectComponent implements OnInit {
                     ).subscribe({
                         next: (response) => {
                             console.log(response);
-                            this.projects = response;
+                            if(response instanceof Array)
+                                this.projects = response;
+                            else
+                                console.log("Error response is not an array");
                         },
                         error: (error) => {
                             console.log(error);
@@ -129,16 +129,11 @@ export class ProjectComponent implements OnInit {
                     userId = "";
                 }
             });
-        }
-
-
-        //let id = this.jwtDecoderService.getUserId();
-        
+        }        
     }
 
     ngOnInit() { 
         this.loadProjects();
-        console.log("id : " + this.jwtDecoderService?.getUserId());
     }
 
 }

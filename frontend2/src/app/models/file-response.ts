@@ -3,6 +3,6 @@ export interface FileResponse {
     fileName: String;
     contentType: String;
     size: Number;
-    file: Uint8Array;
+    file: String;
     uploadedDate: Date;
 }

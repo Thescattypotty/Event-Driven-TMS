@@ -1,6 +1,6 @@
 package org.driventask.project.Service;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import org.driventask.project.Entity.Project;
@@ -83,7 +83,7 @@ public class ProjectService implements IProjectService {
 
     @Override
     public Flux<ProjectResponse> getAllProjects(String userId) {
-        return projectRepository.findByUserIdIn(Set.of(userId))
+        return projectRepository.findByUserIdInFlux(userId)
             .switchIfEmpty(Mono.error(new ProjectNotFoundException("Cannot find Project with user ID :" + userId)))
             .map(projectMapper::fromProject);
     }

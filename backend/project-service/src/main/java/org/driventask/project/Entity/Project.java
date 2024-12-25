@@ -8,7 +8,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -37,12 +37,12 @@ public class Project {
     private LocalDateTime updatedAt;
 
     @Column(value = "project_users")
-    private Set<String> userId;
+    private List<String> userId;
 
     @Column(value = "project_tasks")
-    private Set<String> taskId;
+    private List<String> taskId;
 
     @Column(value = "project_files")
-    private Set<String> fileId;
+    private List<String> fileId;
 
 }
