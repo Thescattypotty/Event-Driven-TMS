@@ -16,15 +16,19 @@ export class ProjectService {
         console.log('User ID', userId);
         return this.http.get<ProjectResponse[]>(`${this.API_URL}/user/${userId}`);
     }
+
     getProject(id: String): Observable<ProjectResponse> {
         return this.http.get<ProjectResponse>(`${this.API_URL}/${id}`);
     }
+    
     createProject(project: ProjectRequest): Observable<void> {
         return this.http.post<void>(this.API_URL, project);
     }
+    
     updateProject(id: String, project: ProjectRequest): Observable<void> {
         return this.http.put<void>(`${this.API_URL}/${id}`, project);
     }
+    
     deleteProject(id: String) : Observable<void> {
         return this.http.delete<void>(`${this.API_URL}/${id}`);
     }

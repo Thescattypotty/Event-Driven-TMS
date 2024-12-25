@@ -6,7 +6,6 @@ import { ProjectRequest } from '../../../models/project-request';
 import { UserService } from '../../../services/user.service';
 import { UserResponse } from '../../../models/user-response';
 import { FileService } from '../../../services/file.service';
-import { JwtDecoderService } from '../../../decoder/jwt-decoder.service';
 import { FileRequest } from '../../../models/file-request';
 import { catchError } from 'rxjs';
 
