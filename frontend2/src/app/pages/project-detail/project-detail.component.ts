@@ -6,7 +6,7 @@ import {
     CdkDrag,
     CdkDropList,
 } from '@angular/cdk/drag-drop'; 
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ProjectService } from '../../services/project.service';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectResponse } from '../../models/project-response';
@@ -15,14 +15,16 @@ import { TaskResponse } from '../../models/task-response';
 import { EStatus } from '../../models/status';
 import { TaskFormComponent } from '../../component/modal/task-form/task-form.component';
 import { MdbModalModule, MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { TaskDetailsComponent } from "../../component/modal/task-details/task-details.component";
+
 @Component({
     selector: 'app-project-detail',
     standalone: true,
-    imports: [CdkDropList, CdkDrag, NgFor, MdbModalModule],
+    imports: [CdkDropList, CdkDrag, NgFor, NgIf, MdbModalModule, TaskDetailsComponent],
     templateUrl: './project-detail.component.html',
     styleUrls: ['./project-detail.component.css']
 })
-export class ProjectDetailComponent implements OnInit{
+export class ProjectDetailComponent implements OnInit {
     id: string;
 
     taskResponse: TaskResponse[] = [];
@@ -33,6 +35,9 @@ export class ProjectDetailComponent implements OnInit{
     doneTasks: TaskResponse[] = [];
 
     modalRef: MdbModalRef<TaskFormComponent> | null = null;
+
+    showTaskDetails = false;
+    selectedTask: TaskResponse | null = null;
 
     constructor(
         private projectService: ProjectService,
@@ -120,6 +125,11 @@ export class ProjectDetailComponent implements OnInit{
                 console.log(error);
             }
         })
+    }
+
+    onTaskClick(task: TaskResponse) {
+        this.selectedTask = task;
+        this.showTaskDetails = true;
     }
 
     ngOnInit(): void {
