@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
     CdkDragDrop,
     moveItemInArray,
@@ -17,28 +17,20 @@ import { TaskFormComponent } from '../../component/modal/task-form/task-form.com
 import { MdbModalModule, MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { TaskDetailsComponent } from "../../component/modal/task-details/task-details.component";
 import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
-import { SidebarModule } from 'primeng/sidebar';
-import { ButtonModule } from 'primeng/button';
-
 
 
 @Component({
     selector: 'app-project-detail',
     standalone: true,
-    imports: [CdkDropList, CdkDrag, NgFor, NgIf, MdbModalModule, MdbTabsModule],
-    templateUrl: './project-detail.component.html',
-    styleUrls: ['./project-detail.component.css'],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    imports: [CdkDropList, CdkDrag, NgFor, NgIf, MdbModalModule, TaskDetailsComponent, MdbTabsModule],
+    templateUrl: './task.component.html',
+    styleUrls: ['./task.component.css']
 })
-export class ProjectDetailComponent implements OnInit {
+export class TaskComponent implements OnInit {
     id: string;
-    sidebarVisible1: boolean = false;
-    sidebarVisible2: boolean = false;
-    sidebarVisible3: boolean = false;
-    sidebarVisible4: boolean = false;
+
     taskResponse: TaskResponse[] = [];
     projectResponse: ProjectResponse | null = null;
-    users: any[] = [];
 
     todoTasks: TaskResponse[] = [];
     inProgressTasks: TaskResponse[] = [];
@@ -49,21 +41,7 @@ export class ProjectDetailComponent implements OnInit {
     showTaskDetails = false;
     selectedTask: TaskResponse | null = null;
 
-    @Input() tabs = [
-        { value: 'tasks', label: 'Tasks' },
-        { value: 'details', label: 'Details' },
-        { value: 'files', label: 'Files' },
-        { value: 'members', label: 'Members' },
-      ];
-
-    @Input() selectedTab = 'tasks';
-    @Output() tabChange = new EventEmitter<string>();
-  
-    selectTab(tab: string): void {
-      this.selectedTab = tab;
-      this.tabChange.emit(tab);
-    }
-
+    selectedTab = 'tasks';
 
     constructor(
         private projectService: ProjectService,
@@ -105,18 +83,6 @@ export class ProjectDetailComponent implements OnInit {
         }
     }
     
-    getUsersByProjectId(id: string) {
-        this.projectService.getProject(id).subscribe({
-            next: (response) => {
-                this.projectResponse = response;
-            },
-            error: (error) => {
-                console.log(error);
-
-        }})
-    }
-
-
     createTask(status: String) {
         this.modalRef = this.modalService.open(TaskFormComponent, {
             data: {
@@ -151,7 +117,6 @@ export class ProjectDetailComponent implements OnInit {
         })
     }
 
-
     loadTasks(){
         this.taskService.getAllTasks(this.id).subscribe({
             next: (response) => {
@@ -170,8 +135,10 @@ export class ProjectDetailComponent implements OnInit {
         this.selectedTask = task;
         this.showTaskDetails = true;
     }
+    onTabChange(tab: string): void {
+        this.selectedTab = tab;
+      }
 
-    
     ngOnInit(): void {
         this.loadProject();
         this.loadTasks();
