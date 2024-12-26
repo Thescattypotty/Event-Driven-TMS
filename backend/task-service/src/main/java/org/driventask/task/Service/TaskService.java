@@ -1,6 +1,8 @@
 package org.driventask.task.Service;
 
 import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.driventask.task.Exception.ProjectNotFoundException;
 import org.driventask.task.Exception.TaskNotFoundException;
@@ -36,6 +38,7 @@ public class TaskService implements ITaskService{
     @Override
     @Transactional
     public Mono<Void> createTask(TaskRequest taskRequest) {
+        /* 
         return projectClient.isProjectExist(taskRequest.projectId())
             .flatMap(projectResponse -> {
                 if (Boolean.FALSE.equals(projectResponse.getBody())) {
@@ -52,6 +55,29 @@ public class TaskService implements ITaskService{
                 }
                 return saveTaskAndPublishEvents(taskRequest);
             }
+        );
+        */
+        return Mono.fromCallable(() -> {
+            System.out.println("Hello world");
+            return taskRequest;
+        })
+        .flatMap(task -> taskRepository.save(taskMapper.toTask(taskRequest))
+                .flatMap(taskCreated -> {
+                    return Mono.fromRunnable(() -> {
+                        taskProducer.sendTaskCreationEvent(
+                            new TaskCreation(
+                                taskCreated.getId().toString(),
+                                taskCreated.getTitle(),
+                                taskCreated.getProjectId(),
+                                taskCreated.getUserAssigned(),
+                                taskCreated.getCreatedAt()
+                            )
+                        );
+                        System.out.println("Hello Task");
+                    });
+                }
+            ).then()
+            .onErrorMap(e -> new RuntimeException("Cannot create Task"))
         );
     }
     
@@ -85,7 +111,7 @@ public class TaskService implements ITaskService{
                             existingTask.setPriority(taskRequest.priority());
                             existingTask.setStatus(taskRequest.status());
                             existingTask.setUserAssigned(taskRequest.userAssigned());
-                            existingTask.setFilesIncluded(taskRequest.filesIncluded());
+                            existingTask.setFilesIncluded(taskRequest.filesIncluded().stream().collect(Collectors.toList()));
 
                             return taskRepository.save(existingTask);
                         });
@@ -95,7 +121,7 @@ public class TaskService implements ITaskService{
                     existingTask.setPriority(taskRequest.priority());
                     existingTask.setStatus(taskRequest.status());
                     existingTask.setUserAssigned(taskRequest.userAssigned());
-                    existingTask.setFilesIncluded(taskRequest.filesIncluded());
+                    existingTask.setFilesIncluded(taskRequest.filesIncluded().stream().collect(Collectors.toList()));
 
                     return taskRepository.save(existingTask);
                 }

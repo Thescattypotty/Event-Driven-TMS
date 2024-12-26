@@ -1,6 +1,7 @@
 package org.driventask.task.Entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -44,10 +45,10 @@ public class Task {
     private String projectId;
 
     @Column("history_of_task")
-    private Set<String> historyOfTask;
+    private List<String> historyOfTask;
 
     @Column("files_included")
-    private Set<String> filesIncluded;
+    private List<String> filesIncluded;
 
     private String userAssigned;
 

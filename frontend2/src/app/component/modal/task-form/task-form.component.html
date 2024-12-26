@@ -1,1 +1,88 @@
-<p>task-form works!</p>
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Create Task</h5>
+    <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="modalRef.close()">
+    </button>
+</div>
+<div class="modal-body">
+    <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="name">Title</label>
+            <input 
+                type="text" 
+                class="form-control"
+                id="title" 
+                name="title"
+                [(ngModel)]="task!.title" 
+                required 
+                />
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea 
+                class="form-control"
+                id="description" 
+                name="description"
+                [(ngModel)]="task!.description" 
+                required 
+                >
+            </textarea>
+        </div>
+        <div class="form-group">
+            <label for="status">
+                Status
+            </label>
+            <select
+                class="form-control"
+                id="priority"
+                name="priority"
+                [(ngModel)]="task!.priority"
+                required
+                >
+                <option value="LOW">
+                    LOW
+                </option>
+                <option value="MEDIUM">
+                    MEDIUM
+                </option>
+                <option value="HIGH">
+                    HIGH
+                </option>
+            
+            </select>
+
+        </div>
+        <div class="form-group">
+            <label for="user">Team</label>
+            <select
+                class="form-control"
+                id="userAssigned"
+                name="userAssigned"
+                [(ngModel)]="task!.userAssigned"
+                required
+            >
+                <option *ngFor="let user of users" [value]="user.id">
+                    {{user.fullname}}
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="file">Files</label>
+            <input
+                type="file"
+                class="form-control"
+                name="file"
+                multiple
+            />
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="modalRef.close()">
+                Close
+            </button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+    </form>
+</div>

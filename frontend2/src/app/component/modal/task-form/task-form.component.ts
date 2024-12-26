@@ -83,5 +83,6 @@ export class TaskFormComponent implements OnInit{
         if (this.task) {
             this.task.projectId = this.projectId ?? '';
         }
+        this.getUsers();
     }
 }

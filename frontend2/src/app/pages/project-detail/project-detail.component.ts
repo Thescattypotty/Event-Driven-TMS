@@ -12,11 +12,13 @@ import { ActivatedRoute } from '@angular/router';
 import { ProjectResponse } from '../../models/project-response';
 import { TaskService } from '../../services/task.service';
 import { TaskResponse } from '../../models/task-response';
-
+import { EStatus } from '../../models/status';
+import { TaskFormComponent } from '../../component/modal/task-form/task-form.component';
+import { MdbModalModule, MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
 @Component({
     selector: 'app-project-detail',
     standalone: true,
-    imports: [CdkDropList, CdkDrag, NgFor],
+    imports: [CdkDropList, CdkDrag, NgFor, MdbModalModule],
     templateUrl: './project-detail.component.html',
     styleUrls: ['./project-detail.component.css']
 })
@@ -30,7 +32,14 @@ export class ProjectDetailComponent implements OnInit{
     inProgressTasks: TaskResponse[] = [];
     doneTasks: TaskResponse[] = [];
 
-    constructor(private projectService: ProjectService, private taskService: TaskService, private route: ActivatedRoute) {
+    modalRef: MdbModalRef<TaskFormComponent> | null = null;
+
+    constructor(
+        private projectService: ProjectService,
+        private taskService: TaskService,
+        private route: ActivatedRoute,
+        private modalService: MdbModalService
+    ) {
         this.id = this.route.snapshot.paramMap.get('id')!;
     }
     
@@ -52,6 +61,42 @@ export class ProjectDetailComponent implements OnInit{
             );
         }
     }
+    dropp(event: CdkDragDrop<string[]>) {
+        if (event.previousContainer === event.container) {
+            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        } else {
+            transferArrayItem(
+                event.previousContainer.data,
+                event.container.data,
+                event.previousIndex,
+                event.currentIndex,
+            );
+        }
+    }
+    
+    createTask(status: String) {
+        this.modalRef = this.modalService.open(TaskFormComponent, {
+            data: {
+                create: true,
+                projectId: this.id,
+                status: EStatus[status as keyof typeof EStatus]
+            }
+        });
+        this.modalRef.onClose.subscribe((task) => {
+            if(task === undefined){
+                return;
+            }
+            this.taskService.createTask(task).subscribe({
+                next: (response) => {
+                    this.loadTasks();
+                },
+                error: (error) => {
+                    console.log(error);
+                }
+            });
+        });
+    }
+
     loadProject(){
         this.projectService.getProject(this.id).subscribe({
             next: (response) => {
