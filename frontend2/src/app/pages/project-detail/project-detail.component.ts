@@ -19,6 +19,9 @@ import { TaskDetailsComponent } from "../../component/modal/task-details/task-de
 import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
+import { UserService } from '../../services/user.service';
+import { UserResponse } from '../../models/user-response';
+import { FileService } from '../../services/file.service';
 
 
 
@@ -32,13 +35,11 @@ import { ButtonModule } from 'primeng/button';
 })
 export class ProjectDetailComponent implements OnInit {
     id: string;
-    sidebarVisible1: boolean = false;
-    sidebarVisible2: boolean = false;
-    sidebarVisible3: boolean = false;
-    sidebarVisible4: boolean = false;
     taskResponse: TaskResponse[] = [];
     projectResponse: ProjectResponse | null = null;
+    userResponse: UserResponse | null = null;
     users: any[] = [];
+    files: any[] = [];
 
     todoTasks: TaskResponse[] = [];
     inProgressTasks: TaskResponse[] = [];
@@ -69,7 +70,9 @@ export class ProjectDetailComponent implements OnInit {
         private projectService: ProjectService,
         private taskService: TaskService,
         private route: ActivatedRoute,
-        private modalService: MdbModalService
+        private modalService: MdbModalService,
+        private userService: UserService,
+        private fileService: FileService
     ) {
         this.id = this.route.snapshot.paramMap.get('id')!;
     }
@@ -105,17 +108,6 @@ export class ProjectDetailComponent implements OnInit {
         }
     }
     
-    getUsersByProjectId(id: string) {
-        this.projectService.getProject(id).subscribe({
-            next: (response) => {
-                this.projectResponse = response;
-            },
-            error: (error) => {
-                console.log(error);
-
-        }})
-    }
-
 
     createTask(status: String) {
         this.modalRef = this.modalService.open(TaskFormComponent, {
@@ -126,7 +118,7 @@ export class ProjectDetailComponent implements OnInit {
             }
         });
         this.modalRef.onClose.subscribe((task) => {
-            if(task === undefined){
+            if (task === undefined) {
                 return;
             }
             this.taskService.createTask(task).subscribe({
@@ -140,15 +132,37 @@ export class ProjectDetailComponent implements OnInit {
         });
     }
 
-    loadProject(){
+    loadProject(): void {
         this.projectService.getProject(this.id).subscribe({
             next: (response) => {
                 this.projectResponse = response;
+                this.users = [];
+                response.users_id.forEach((userId: String) => {
+                    this.userService.getUser(userId).subscribe({
+                        next: (userResponse) => {
+                            this.users.push(userResponse);
+                        },
+                        error: (error) => {
+                            console.log(error);
+                        }
+                    });
+                });
+                this.files = [];
+                response.file_id.forEach((fileId: String) => {
+                    this.fileService.isFileExisting(fileId).subscribe({
+                        next: (fileResponse) => {
+                            this.files.push(fileResponse);
+                        },
+                        error: (error) => {
+                            console.log(error);
+                        }
+                    });
+                });
             },
             error: (error) => {
                 console.log(error);
             }
-        })
+        });
     }
 
 
@@ -165,6 +179,8 @@ export class ProjectDetailComponent implements OnInit {
             }
         })
     }
+
+    
 
     onTaskClick(task: TaskResponse) {
         this.selectedTask = task;

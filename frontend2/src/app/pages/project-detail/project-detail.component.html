@@ -17,9 +17,9 @@
             <div class="example-container">  
                 <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button>
 
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas offcanvas-end w-50" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
               <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasRightLabel">Offcanvas right</h5>
+                <h5 class="offcanvas-title" id="offcanvasRightLabel">Task Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
               </div>
               <div class="offcanvas-body">
@@ -148,12 +148,40 @@
             </div>
                 </div>
       <div *ngIf="selectedTab === 'files'">
-        <h3>Files Content</h3>
-        <!-- Add your files-specific content here -->
+            <h3>Files</h3>
+            <div *ngIf="files.length === 0">
+                <p>No files available.</p>
+            </div>
+            <div *ngIf="files.length > 0">
+                <ul>
+                    <li *ngFor="let file of files">
+                        {{ file }}
+                    </li>
+                </ul>
+            </div>
+            
       </div>
       <div *ngIf="selectedTab === 'members'">
         <h3>Members Content</h3>
-        <!-- Add your members-specific content here -->
+        <div class="table-responsive small">
+            <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Full Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Roles</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of users">
+                  <td>{{user.fullname}}</td>
+                  <td>{{user.email}}</td>
+                  <td>{{user.roles}}</td>
+                  
+                </tr>
+              </tbody>
+            </table>
+          </div>
       </div>
     </div>
   </div>
