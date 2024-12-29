@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 import org.driventask.auth.Exception.BadCredentialsException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthenticationService implements IAuthenticationService{
 
@@ -35,16 +37,15 @@ public class AuthenticationService implements IAuthenticationService{
 
                 String accessToken = jwtService.generateToken(userAuthResponse.email(), userAuthResponse.roles(), "ACCESS");
                 String refreshToken = jwtService.generateToken(userAuthResponse.email(), userAuthResponse.roles(), "REFRESH");
-                System.out.println("Access Token :" + accessToken);
-                System.out.println("Refresh Token :" + refreshToken);
-                //authProducer.handleUserAuthenticated(new UserLogedIn(accessToken));
+                log.info("Access Token :" + accessToken);
+                log.info("Refresh Token :" + refreshToken);
 
                 return new JwtResponse(accessToken, refreshToken);
             }
         )
         .doOnSuccess(jwtResponse -> authProducer.handleUserAuthenticated(new UserLogedIn(jwtResponse.accessToken())))
         .onErrorMap(e -> {
-                System.out.println("Error occurred: " + e.getMessage());
+                log.error("Error occurred: " + e.getMessage());
                 return new BadCredentialsException("Invalid email or password.", e);
                 });
     }
