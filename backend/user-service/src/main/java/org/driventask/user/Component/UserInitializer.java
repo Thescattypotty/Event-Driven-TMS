@@ -1,6 +1,7 @@
 package org.driventask.user.Component;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class UserInitializer implements CommandLineRunner{
     
     private final UserService userService;
@@ -19,7 +21,7 @@ public class UserInitializer implements CommandLineRunner{
     @Override
     public void run(String... args) throws Exception {
         for(int i = 0 ; i < 10 ; i++){
-            System.out.println("Hello " + i);
+            log.info("Hello " + i);
             userService.createUser(new UserRequest(
                 "full name" + i,
                 "admin" + i + "@gmail.com",
@@ -27,8 +29,8 @@ public class UserInitializer implements CommandLineRunner{
                 Set.of(ERole.ROLE_USER, ERole.ROLE_ADMIN)
             )).subscribe(
                     null, // onNext is null because it's a Mono<Void>
-                    error -> System.err.println("Error creating user: " + error.getMessage()),
-                    () -> System.out.println("User creation completed for admin" + "@gmail.com")
+                    error -> log.error("Error creating user: " + error.getMessage()),
+                    () -> log.info("User creation completed for admin" + "@gmail.com")
             );
         }
     }

@@ -1,7 +1,7 @@
 package org.driventask.project.Controller;
 
 import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Flux;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 import org.springframework.http.HttpStatus;
@@ -25,6 +25,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/v1/project")
 public class ProjectController {
     
@@ -32,13 +33,11 @@ public class ProjectController {
 
     @PostMapping
     public Mono<ResponseEntity<Void>> createProject(@RequestBody @Valid ProjectRequest projectRequest){
-        //return projectService.createProject(projectRequest)
-        //    .then(Mono.just(new ResponseEntity<>(HttpStatus.CREATED)));
         return projectService.createProject(projectRequest)
-            .doOnSubscribe(sub -> System.out.println("Subscription createProject Started"))
-            .doOnNext(next -> System.out.println("createProject executed"))
-            .doOnError(e -> System.out.println("Error durring Project Creation"))
-            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal))
+            .doOnSubscribe(sub -> log.info("Subscription createProject Started"))
+            .doOnNext(next -> log.info("createProject executed"))
+            .doOnError(e -> log.error("Error during Project Creation", e))
+            .doFinally(signal -> log.info("Processing completed with signal: {}", signal))
             .then(Mono.just(new ResponseEntity<>(HttpStatus.CREATED)));
             
     }
@@ -52,23 +51,31 @@ public class ProjectController {
     @GetMapping("/user/{userId}")
     public Mono<ResponseEntity<List<ProjectResponse>>> getAllProjects(@PathVariable("userId") String userId) {
         return projectService.getAllProjects(userId)
-            .doOnSubscribe(sub -> System.out.println("Subscription getAllProjects Started"))
-            .doOnNext(next -> System.out.println("getAllProjects executed"))
-            .doOnError(e -> System.out.println("Error durring Project Creation"))
+            .doOnSubscribe(sub -> log.info("Subscription getAllProjects Started"))
+            .doOnNext(next -> log.info("getAllProjects executed"))
+            .doOnError(e -> log.info("Error durring Project Creation"))
             .collectList()
             .map(projectResponse -> new ResponseEntity<>(projectResponse, HttpStatus.OK))
-            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal));
+            .doFinally(signal -> log.error("Processing completed with signal: " + signal));
     }
 
     @PutMapping("/{projectId}")
     public Mono<ResponseEntity<Void>> updateProject(@PathVariable("projectId") String projectId, ProjectRequest projectRequest) {
         return projectService.updateProject(projectId,projectRequest)
-            .then(Mono.just(new ResponseEntity<>(HttpStatus.ACCEPTED)));        
+            .doOnSubscribe(sub -> log.info("Subscription updateProject Started"))
+            .doOnNext(next -> log.info("updateProject executed"))
+            .doOnError(e -> log.error("Error during Project Update", e))
+            .doFinally(signal -> log.info("Processing completed with signal: {}", signal))
+            .then(Mono.just(new ResponseEntity<>(HttpStatus.OK)));        
     }
 
     @DeleteMapping("/{projectId}")
     public Mono<ResponseEntity<Void>> deleteProject(@PathVariable("projectId") String projectId){
         return projectService.deleteProject(projectId)
-            .then(Mono.just(new ResponseEntity<>(HttpStatus.ACCEPTED)));
+            .doOnSubscribe(sub -> log.info("Subscription deleteProject Started"))
+            .doOnNext(next -> log.info("deleteProject executed"))
+            .doOnError(e -> log.error("Error during Project Deletion", e))
+            .doFinally(signal -> log.info("Processing completed with signal: {}", signal))
+            .then(Mono.just(new ResponseEntity<>(HttpStatus.NO_CONTENT)));
     }
 }

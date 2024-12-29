@@ -5,7 +5,8 @@ import java.util.UUID;
 import org.driventask.user.Entity.User;
 import org.driventask.user.Enum.EUserEvent;
 import org.driventask.user.Exception.PasswordIncorrectException;
-import org.driventask.user.Exception.UserFailedCreationException;
+import org.driventask.user.Exception.UserCreationException;
+import org.driventask.user.Exception.UserUpdateException;
 import org.driventask.user.Exception.UserNotFoundException;
 import org.driventask.user.IService.IUserService;
 import org.driventask.user.Payload.Kafka.UserCreation;
@@ -22,10 +23,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class UserService implements IUserService {
 
@@ -58,7 +61,7 @@ public class UserService implements IUserService {
                     );
                 })
             ).then()
-            .onErrorMap(e -> new UserFailedCreationException("Cannot create user for now")
+            .onErrorMap(e -> new UserCreationException("Cannot create user for now")
         );
     }
 
@@ -85,7 +88,7 @@ public class UserService implements IUserService {
                 );
             })
             .then()
-            .onErrorMap(e -> new UserFailedCreationException("Cannot update user for now"));
+            .onErrorMap(e -> new UserUpdateException("Cannot update user for now"));
     }
 
     @Override

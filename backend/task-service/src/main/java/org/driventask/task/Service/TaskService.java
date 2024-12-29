@@ -1,11 +1,12 @@
 package org.driventask.task.Service;
 
 import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.driventask.task.Exception.ProjectNotFoundException;
+import org.driventask.task.Exception.TaskCreationException;
 import org.driventask.task.Exception.TaskNotFoundException;
+import org.driventask.task.Exception.TaskUpdateException;
 import org.driventask.task.Exception.UserNotFoundException;
 import org.driventask.task.FeignClient.ProjectClient;
 import org.driventask.task.FeignClient.UserClient;
@@ -22,10 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class TaskService implements ITaskService{
     
@@ -38,47 +41,29 @@ public class TaskService implements ITaskService{
     @Override
     @Transactional
     public Mono<Void> createTask(TaskRequest taskRequest) {
-        /* 
-        return projectClient.isProjectExist(taskRequest.projectId())
-            .flatMap(projectResponse -> {
-                if (Boolean.FALSE.equals(projectResponse.getBody())) {
-                    return Mono.error(new ProjectNotFoundException("Project not found with ID: " + taskRequest.projectId()));
-                }
-                if(StringUtils.hasText(taskRequest.userAssigned())){
-                    return userClient.isUserExist(taskRequest.userAssigned())
-                        .flatMap(userResponse -> {
-                            if(Boolean.FALSE.equals(userResponse.getBody())){
-                                return Mono.error(new UserNotFoundException("User not found with ID: " + taskRequest.userAssigned()));
-                            }
-                            return saveTaskAndPublishEvents(taskRequest);
-                        });
-                }
-                return saveTaskAndPublishEvents(taskRequest);
-            }
-        );
-        */
         return Mono.fromCallable(() -> {
-            System.out.println("Hello world");
-            return taskRequest;
+            if(!checkForProjectExistance(taskRequest.projectId())){
+                return Mono.error(new ProjectNotFoundException("Project not found with ID: " + taskRequest.projectId()));
+            }
+            if(StringUtils.hasText(taskRequest.userAssigned()) && !checkForUserExistance(taskRequest.userAssigned())){
+                return Mono.error(new UserNotFoundException("User not found with ID: " + taskRequest.userAssigned()));
+            }
+            return Mono.empty();
         })
-        .flatMap(task -> taskRepository.save(taskMapper.toTask(taskRequest))
-                .flatMap(taskCreated -> {
-                    return Mono.fromRunnable(() -> {
-                        taskProducer.sendTaskCreationEvent(
-                            new TaskCreation(
-                                taskCreated.getId().toString(),
-                                taskCreated.getTitle(),
-                                taskCreated.getProjectId(),
-                                taskCreated.getUserAssigned(),
-                                taskCreated.getCreatedAt()
-                            )
-                        );
-                        System.out.println("Hello Task");
-                    });
-                }
-            ).then()
-            .onErrorMap(e -> new RuntimeException("Cannot create Task"))
-        );
+        .flatMap(nullValue -> taskRepository.save(taskMapper.toTask(taskRequest)))
+        .doOnNext(taskCreated -> {
+            taskProducer.sendTaskCreationEvent(
+                    new TaskCreation(
+                        taskCreated.getId().toString(),
+                        taskCreated.getTitle(),
+                        taskCreated.getProjectId(),
+                        taskCreated.getUserAssigned(),
+                        taskCreated.getCreatedAt()
+                    )
+                );
+        })
+        .then()
+        .onErrorMap(e -> new TaskCreationException("Cannot create Task"));
     }
     
     @Override
@@ -100,31 +85,15 @@ public class TaskService implements ITaskService{
         return taskRepository.findById(UUID.fromString(taskId))
             .switchIfEmpty(Mono.error(new TaskNotFoundException("Cannot find Task")))
             .flatMap(existingTask -> {
-                if (StringUtils.hasText(taskRequest.userAssigned())) {
-                    return userClient.isUserExist(taskRequest.userAssigned())
-                        .flatMap(userResponse -> {
-                            if (Boolean.FALSE.equals(userResponse.getBody())) {
-                                return Mono.error(new UserNotFoundException("User not found with ID: " + taskRequest.userAssigned()));
-                            }
-                            existingTask.setTitle(taskRequest.title());
-                            existingTask.setDescription(taskRequest.description());
-                            existingTask.setPriority(taskRequest.priority());
-                            existingTask.setStatus(taskRequest.status());
-                            existingTask.setUserAssigned(taskRequest.userAssigned());
-                            existingTask.setFilesIncluded(taskRequest.filesIncluded().stream().collect(Collectors.toList()));
-
-                            return taskRepository.save(existingTask);
-                        });
-                } else {
-                    existingTask.setTitle(taskRequest.title());
-                    existingTask.setDescription(taskRequest.description());
-                    existingTask.setPriority(taskRequest.priority());
-                    existingTask.setStatus(taskRequest.status());
-                    existingTask.setUserAssigned(taskRequest.userAssigned());
-                    existingTask.setFilesIncluded(taskRequest.filesIncluded().stream().collect(Collectors.toList()));
-
-                    return taskRepository.save(existingTask);
+                if(StringUtils.hasText(taskRequest.userAssigned()) && !existingTask.getUserAssigned().equals(taskRequest.userAssigned())){
+                    existingTask.setUserAssigned(taskId);
                 }
+                existingTask.setTitle(taskRequest.title());
+                existingTask.setDescription(taskRequest.description());
+                existingTask.setPriority(taskRequest.priority());
+                existingTask.setStatus(taskRequest.status());
+                existingTask.setFilesIncluded(taskRequest.filesIncluded().stream().collect(Collectors.toList()));
+                return taskRepository.save(existingTask);
             })
             .doOnNext(taskUpdated -> {
                 taskProducer.sendTaskUpdateEvent(
@@ -138,10 +107,9 @@ public class TaskService implements ITaskService{
                         taskUpdated.getUpdatedAt()
                     )
                 );
-            }
-        )
-        .then()
-        .onErrorMap(e -> new TaskNotFoundException("Cannot create Task"));
+            })
+            .then()
+            .onErrorMap(e -> new TaskUpdateException("Cannot create Task"));
     }
 
 
@@ -154,20 +122,11 @@ public class TaskService implements ITaskService{
             .then();
     }
 
-    private Mono<Void> saveTaskAndPublishEvents(TaskRequest taskRequest) {
-        return taskRepository.save(taskMapper.toTask(taskRequest))
-            .doOnNext(savedTask -> {
-                taskProducer.sendTaskCreationEvent(
-                    new TaskCreation(
-                        savedTask.getId().toString(),
-                        savedTask.getTitle(),
-                        savedTask.getProjectId(),
-                        savedTask.getUserAssigned(),
-                        savedTask.getCreatedAt()
-                        )
-                    );
-                }
-            )
-            .then();
+
+    private boolean checkForUserExistance(String userId){
+        return Boolean.valueOf(userClient.isUserExist(userId).getBody());
+    }
+    private boolean checkForProjectExistance(String projectId){
+        return Boolean.valueOf(projectClient.isProjectExist(projectId).getBody());
     }
 }

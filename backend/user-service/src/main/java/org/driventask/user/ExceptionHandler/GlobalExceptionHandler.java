@@ -1,14 +1,14 @@
-package org.driventask.project.ExceptionHanlder;
+package org.driventask.user.ExceptionHandler;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.driventask.project.Exception.FileNotFoundException;
-import org.driventask.project.Exception.ProjectCreationException;
-import org.driventask.project.Exception.ProjectNotFoundException;
-import org.driventask.project.Exception.ProjectUpdateException;
-import org.driventask.project.Payload.Response.ErrorResponse;
+import org.driventask.user.Exception.PasswordIncorrectException;
+import org.driventask.user.Exception.UserCreationException;
+import org.driventask.user.Exception.UserNotFoundException;
+import org.driventask.user.Exception.UserUpdateException;
+import org.driventask.user.Payload.Response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException;
@@ -21,27 +21,38 @@ import reactor.core.publisher.Mono;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     
-    @ExceptionHandler({ProjectNotFoundException.class, FileNotFoundException.class, IllegalArgumentException.class})
-    public Mono<ResponseEntity<ErrorResponse>> handleNotFoundException(RuntimeException ex) {
+    @ExceptionHandler(PasswordIncorrectException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleException(PasswordIncorrectException exception) {
         ErrorResponse errorResponse = new ErrorResponse(
-            HttpStatus.NOT_FOUND,
-            ex.getMessage(),
-            LocalDateTime.now(),
-            null
-        );
+                HttpStatus.UNAUTHORIZED,
+                exception.getMessage(),
+                LocalDateTime.now(),
+                null);
+        return Mono.just(new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST));
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleException(UserNotFoundException exception) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.NOT_FOUND,
+                exception.getMessage(),
+                LocalDateTime.now(),
+                null);
         return Mono.just(new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND));
     }
 
-    @ExceptionHandler({ProjectCreationException.class, ProjectUpdateException.class})
-    public Mono<ResponseEntity<ErrorResponse>> handleProjectExceptions(RuntimeException ex) {
+    @ExceptionHandler({ UserCreationException.class, UserUpdateException.class })
+    public Mono<ResponseEntity<ErrorResponse>> handleException(RuntimeException exception) {
         ErrorResponse errorResponse = new ErrorResponse(
-            HttpStatus.INTERNAL_SERVER_ERROR,
-            ex.getMessage(),
-            LocalDateTime.now(),
-            null
-        );
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                exception.getMessage(),
+                LocalDateTime.now(),
+                null);
         return Mono.just(new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR));
     }
+
+    
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleMethodArgumentNotValidException(MethodArgumentNotValidException methodArgumentNotValidException){
