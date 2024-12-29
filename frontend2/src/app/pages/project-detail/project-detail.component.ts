@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, CUSTOM_ELEMENTS_SCHEMA, Inject, PLATFORM_ID} from '@angular/core';
 import {
     CdkDragDrop,
     moveItemInArray,
@@ -6,7 +6,7 @@ import {
     CdkDrag,
     CdkDropList,
 } from '@angular/cdk/drag-drop'; 
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf, CommonModule } from '@angular/common';
 import { ProjectService } from '../../services/project.service';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectResponse } from '../../models/project-response';
@@ -17,18 +17,19 @@ import { TaskFormComponent } from '../../component/modal/task-form/task-form.com
 import { MdbModalModule, MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { TaskDetailsComponent } from "../../component/modal/task-details/task-details.component";
 import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
-import { SidebarModule } from 'primeng/sidebar';
-import { ButtonModule } from 'primeng/button';
 import { UserService } from '../../services/user.service';
 import { UserResponse } from '../../models/user-response';
 import { FileService } from '../../services/file.service';
+import * as bootstrap from 'bootstrap';
+import { isPlatformBrowser } from '@angular/common';
+
 
 
 
 @Component({
     selector: 'app-project-detail',
     standalone: true,
-    imports: [CdkDropList, CdkDrag, NgFor, NgIf, MdbModalModule, MdbTabsModule],
+    imports: [CdkDropList, CdkDrag, NgFor, NgIf, MdbModalModule, MdbTabsModule, CommonModule],
     templateUrl: './project-detail.component.html',
     styleUrls: ['./project-detail.component.css'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -49,15 +50,16 @@ export class ProjectDetailComponent implements OnInit {
 
     showTaskDetails = false;
     selectedTask: TaskResponse | null = null;
+    
 
     @Input() tabs = [
-        { value: 'tasks', label: 'Tasks' },
-        { value: 'details', label: 'Details' },
-        { value: 'files', label: 'Files' },
-        { value: 'members', label: 'Members' },
+        { value: 'Tasks', label: 'tasks' },
+        { value: 'details', label: 'details' },
+        { value: 'files', label: 'files' },
+        { value: 'members', label: 'members' },
       ];
 
-    @Input() selectedTab = 'tasks';
+    @Input() selectedTab = 'Tasks';
     @Output() tabChange = new EventEmitter<string>();
   
     selectTab(tab: string): void {
@@ -72,7 +74,8 @@ export class ProjectDetailComponent implements OnInit {
         private route: ActivatedRoute,
         private modalService: MdbModalService,
         private userService: UserService,
-        private fileService: FileService
+        private fileService: FileService,
+        @Inject(PLATFORM_ID) private platformId: Object
     ) {
         this.id = this.route.snapshot.paramMap.get('id')!;
     }
@@ -95,6 +98,21 @@ export class ProjectDetailComponent implements OnInit {
             );
         }
     }
+
+    async openTaskDetails(task: TaskResponse): Promise<void> {
+  if (typeof document !== 'undefined') {
+    this.selectedTask = task;
+
+    const { Offcanvas } = await import('bootstrap');
+    const offcanvasElement = document.getElementById('offcanvasRight');
+    if (offcanvasElement) {
+      const bsOffcanvas = new Offcanvas(offcanvasElement);
+      bsOffcanvas.show();
+    }
+  }
+}
+
+      
     dropp(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
