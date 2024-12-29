@@ -19,11 +19,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import reactor.core.publisher.Mono;
 
 @DisplayName("Authentication Controller Test")
+@Feature("Authentication Controller")
 public class AuthenticationControllerTest {
 
     @Mock
@@ -39,9 +42,10 @@ public class AuthenticationControllerTest {
 
     
     @Test
-    @Description("Test de connexion")
-    @Severity(SeverityLevel.CRITICAL)
     @DisplayName("Test de connexion")
+    @Description("Test de connexion avec un email et un mot de passe valides")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Test de connexion")
     public void testLogin() {
         LoginRequest loginRequest = new LoginRequest("test@example.com", "password");
         JwtResponse jwtResponse = new JwtResponse("access-token", "refresh-token");
@@ -59,9 +63,10 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    @Description("Test de déconnexion")
-    @Severity(SeverityLevel.CRITICAL)
     @DisplayName("Test de déconnexion")
+    @Description("Test de déconnexion avec un token d'accès et un token de rafraîchissement valides")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Test de déconnexion")
     public void testLogout() {
         JwtResponse jwtResponse = new JwtResponse("access-token", "refresh-token");
 

@@ -26,15 +26,16 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.context.annotation.Description;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import reactor.core.publisher.Mono;
 
 @DisplayName("Test du service d'authentification")
-@Description("Test des services d'authentification")
+@Feature("Service d'authentification")
 public class AuthenticationServiceTest {
 
     @Mock
