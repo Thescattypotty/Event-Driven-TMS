@@ -163,8 +163,8 @@
             <br>
             <h3>Project Details</h3>
                 <div *ngIf="projectResponse">
-                    <h3>{{ projectResponse.name }}</h3>
-  <p><strong>Description:</strong>{{ projectResponse.description }}</p>
+                    <h5>Name: {{ projectResponse.name }}</h5>
+  <p><strong>Description:</strong> {{ projectResponse.description }}</p>
   <p><strong>Start Date:</strong> {{ projectResponse.startDate | date: 'medium' }}</p>
   <p><strong>End Date:</strong> {{ projectResponse.endDate | date: 'medium' }}</p>
   <p><strong>Created At:</strong> {{ projectResponse.createdAt | date: 'medium' }}</p>

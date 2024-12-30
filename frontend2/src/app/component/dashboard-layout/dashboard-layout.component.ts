@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { JwtDecoderService } from '../../decoder/jwt-decoder.service';
+import { UserService } from '../../services/user.service';
+import { catchError, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -9,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.css'
 })
-export class DashboardLayoutComponent {
+export class DashboardLayoutComponent implements OnInit {
   menuItems = [
     { icon: 'home', label: 'Home', link: '/home' },
     { icon: 'dashboard', label: 'Dashboard', link: '/dashboard' },
@@ -21,33 +25,59 @@ export class DashboardLayoutComponent {
   ];
     
   activeRoute: string = '';
-  fullName: string | null = null;
+  fullName: String | null = null;
+  userId: String = '';
 
-
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private jwtDecoderService: JwtDecoderService,
+    private userService: UserService
+  ) {} 
 
   logOut() {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
   setActive(route: string) {
     this.activeRoute = route;
   }
 
-  // Check if a route is active
   isActive(route: string): boolean {
     return this.router.url === route;
   } 
 
-  ngOnInit(): void {
-    // Subscribe to the user observable
-    this.authService.user.subscribe(user => {
-      if (user) {
-        this.fullName = user.name; // Assuming the user object has a 'name' field
+  getUser(): void {
+    console.log('getUser method called');
+    this.jwtDecoderService.getUserId().pipe(
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('No user ID found');
+        }
+        this.userId = userId;
+        console.log('User ID from JWT:', this.userId);
+        return this.userService.getUser(this.userId);
+      }),
+      catchError(error => {
+        console.error('Error in getUser:', error);
+        this.router.navigate(['/login']);
+        return of(null);
+      })
+    ).subscribe(userResponse => {
+      if (userResponse) {
+        console.log('User data received:', userResponse);
+        this.fullName = userResponse.fullname;
+        console.log('Full name set:', this.fullName);
       } else {
-        this.fullName = null; // In case user is logged out
+        console.error('No user data received');
       }
     });
   }
-
+  
+  ngOnInit(): void {
+    console.log('ngOnInit called');
+    this.getUser();
+  }
 }
+

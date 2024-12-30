@@ -22,6 +22,10 @@ export class AuthService {
         return this.http.post<JwtResponse>(`${this.API_URL}/login`, loginRequest);
     }
 
+    getToken(): string | null {
+        return this.isLocalStorageAvailable() ? localStorage.getItem('accessToken') : null;
+    }
+
     setToken(accessToken: string, refreshToken: string) {
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
@@ -52,22 +56,6 @@ export class AuthService {
             return typeof localStorage !== 'undefined';
         } catch (e) {
             return false;
-        }
-    }
-
-    private getUserDetails() {
-        if (this.isLoggedIn()) {
-            const accessToken = localStorage.getItem('accessToken');
-            this.http.get<any>(`${this.API_URL}/user-details`, {
-                headers: { 'Authorization': `Bearer ${accessToken}` }
-            }).subscribe(
-                (user) => {
-                    this.userSubject.next(user); // Set user data
-                },
-                (error) => {
-                    console.error('Error fetching user details:', error);
-                }
-            );
         }
     }
 }
