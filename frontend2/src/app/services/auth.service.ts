@@ -12,6 +12,9 @@ export class AuthService {
     private API_URL = 'http://localhost:8222/api/v1/auth';
     private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
     public isAuthenticated = this.isAuthenticatedSubject.asObservable();
+    private userSubject = new BehaviorSubject<any>(null); // Holds user data
+    public user = this.userSubject.asObservable();
+
     constructor(private http: HttpClient) {
         this.checkToken();
     }
@@ -49,6 +52,22 @@ export class AuthService {
             return typeof localStorage !== 'undefined';
         } catch (e) {
             return false;
+        }
+    }
+
+    private getUserDetails() {
+        if (this.isLoggedIn()) {
+            const accessToken = localStorage.getItem('accessToken');
+            this.http.get<any>(`${this.API_URL}/user-details`, {
+                headers: { 'Authorization': `Bearer ${accessToken}` }
+            }).subscribe(
+                (user) => {
+                    this.userSubject.next(user); // Set user data
+                },
+                (error) => {
+                    console.error('Error fetching user details:', error);
+                }
+            );
         }
     }
 }
