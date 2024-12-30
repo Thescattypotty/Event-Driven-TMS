@@ -24,7 +24,6 @@ public class FileController {
 
     @PostMapping
     public ResponseEntity<String> uploadFile(@RequestBody @Valid FileRequest fileRequest){
-        //return ResponseEntity.ok(fileService.storeFile(fileRequest));
         return ResponseEntity.status(HttpStatus.CREATED).body(fileService.storeFile(fileRequest));
     }
 
@@ -36,13 +35,11 @@ public class FileController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteFile(@PathVariable("id") String fileId){
         fileService.deleteFile(fileId);
-        //return ResponseEntity.ok("File Deleted Successfully");
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("File Deleted Successfully");
     }
 
     @GetMapping("/verify/{id}")
     public ResponseEntity<Boolean> isFileExisting(@PathVariable("id") String fileId){
-        //return ResponseEntity.ok(fileService.isFileExists(fileId));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(fileService.isFileExists(fileId));
     }
 }
