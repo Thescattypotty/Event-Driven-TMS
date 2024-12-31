@@ -59,11 +59,6 @@ export class DashboardLayoutComponent implements OnInit {
         console.log('User ID from JWT:', this.userId);
         return this.userService.getUser(this.userId);
       }),
-      catchError(error => {
-        console.error('Error in getUser:', error);
-        this.router.navigate(['/login']);
-        return of(null);
-      })
     ).subscribe(userResponse => {
       if (userResponse) {
         console.log('User data received:', userResponse);
