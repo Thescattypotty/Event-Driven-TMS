@@ -12,23 +12,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@Slf4j
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
     public Mono<ResponseEntity<JwtResponse>> login(@RequestBody @Valid LoginRequest loginRequest) {
-        System.out.println("Hello world");
         return authenticationService.login(loginRequest)
-            .doOnSubscribe(sub -> System.out.println("Subscription started"))
-            .doOnNext(jwtResponse -> System.out.println("Generated JWT Response: " + jwtResponse.accessToken()))
-            .doOnError(e -> System.out.println("Error during login: " + e.getMessage()))
+            .doOnSubscribe(sub -> log.info("Subscription started"))
+            .doOnNext(jwtResponse -> log.info("Generated JWT Response: " + jwtResponse.accessToken()))
+            .doOnError(e -> log.error("Error during login: " + e.getMessage()))
             .map(jwtResponse -> new ResponseEntity<>(jwtResponse, HttpStatus.OK))
-            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal));
+            .doFinally(signal -> log.info("Processing completed with signal: " + signal));
     }
 
     //this function isn't terminated we will replace JwtResponse with some security context to get the user or we will leave it like it is who knows

@@ -17,6 +17,7 @@ import reactor.core.publisher.Mono;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(BadCredentialsException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleBadCredentialsException(BadCredentialsException badCredentialsException){
         ErrorResponse errorResponse = new ErrorResponse(
@@ -27,6 +28,7 @@ public class GlobalExceptionHandler {
         );
         return Mono.just(new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT));
     }
+    
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleMethodArgumentNotValidException(MethodArgumentNotValidException methodArgumentNotValidException){
         List<String> errorDetails = methodArgumentNotValidException.getBindingResult().getAllErrors().stream()

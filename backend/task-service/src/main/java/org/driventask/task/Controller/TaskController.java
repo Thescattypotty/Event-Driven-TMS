@@ -1,5 +1,7 @@
 package org.driventask.task.Controller;
 
+import java.util.List;
+
 import org.driventask.task.Payload.Request.TaskRequest;
 import org.driventask.task.Payload.Response.TaskResponse;
 import org.driventask.task.Service.TaskService;
@@ -17,95 +19,96 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Flux;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/v1/task")
 public class TaskController {
 
     private final TaskService taskService;
 
-    //flux functions
     @PostMapping
     public Mono<ResponseEntity<Void>> createTask(@RequestBody @Valid TaskRequest taskRequest){
         return taskService.createTask(taskRequest)
-            .doOnSubscribe(sub -> System.out.println("Subscription Started"))
-            .doOnNext(next -> System.out.println("createTask executed"))
-            .doOnError(e -> System.out.println("Error durring task Creation"))
-            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal))
+            .doOnSubscribe(sub -> log.info("Subscription Started"))
+            .doOnNext(next -> log.info("createTask executed"))
+            .doOnError(e -> log.error("Error durring task Creation"))
+            .doFinally(signal -> log.info("Processing completed with signal: " + signal))
             .then(Mono.just(new ResponseEntity<>(HttpStatus.CREATED)));
     }
 
     @GetMapping("/{taskId}")
     public Mono<ResponseEntity<TaskResponse>> getTaskById(@PathVariable String taskId) {
         return taskService.getTaskById(taskId)
-            .doOnSubscribe(sub -> System.out.println("Subscription Started"))
-            .doOnNext(next -> System.out.println("getTaskById executed task: " + next))
-            .doOnError(e -> System.out.println("Error durring task Creation"))
-            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal))
+            .doOnSubscribe(sub -> log.info("Subscription Started"))
+            .doOnNext(next -> log.info("getTaskById executed task: " + next))
+            .doOnError(e -> log.error("Error durring task Creation"))
+            .doFinally(signal -> log.info("Processing completed with signal: " + signal))
             .map(taskResponse -> new ResponseEntity<>(taskResponse, HttpStatus.OK));
     }
 
     @GetMapping("/project/{projectId}")
-    public Flux<TaskResponse> getAllTasks(@PathVariable("projectId") String projectId) {
+    public Mono<ResponseEntity<List<TaskResponse>>> getAllTasks(@PathVariable("projectId") String projectId) {
         return taskService.getAllTasks(projectId)
-            .doOnSubscribe(sub -> System.out.println("Subscription Started"))
-            .doOnNext(next -> System.out.println("getAllTasks executed tasks: " + next))
-            .doOnError(e -> System.out.println("Error durring task Creation"))
-            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal));
+            .doOnSubscribe(sub -> log.info("Subscription Started"))
+            .doOnNext(next -> log.info("getAllTasks executed tasks: " + next))
+            .doOnError(e -> log.error("Error durring task Creation"))
+            .collectList()
+            .map(taskResponse -> new ResponseEntity<>(taskResponse, HttpStatus.OK))
+            .doFinally(signal -> log.info("Processing completed with signal: " + signal));
     }
 
     @PutMapping("/{taskId}")
     public Mono<ResponseEntity<Void>> updateTask(@PathVariable String taskId,@RequestBody @Valid TaskRequest taskRequest) {
         return taskService.updateTask(taskId, taskRequest)
-            .doOnSubscribe(sub -> System.out.println("Subscription Started"))
-            .doOnNext(next -> System.out.println("updateTask executed"))
-            .doOnError(e -> System.out.println("Error durring task Creation"))
-            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal))
-            .then(Mono.just(new ResponseEntity<>(HttpStatus.ACCEPTED)));
+            .doOnSubscribe(sub -> log.info("Subscription Started"))
+            .doOnNext(next -> log.info("updateTask executed"))
+            .doOnError(e -> log.error("Error durring task Creation"))
+            .doFinally(signal -> log.info("Processing completed with signal: " + signal))
+            .then(Mono.just(new ResponseEntity<>(HttpStatus.OK)));
     }
 
     @DeleteMapping("/{taskId}")
     public Mono<ResponseEntity<Void>> deleteTask(@PathVariable String taskId) {
         return taskService.deleteTask(taskId)
-            .doOnSubscribe(sub -> System.out.println("Subscription Started"))
-            .doOnNext(next -> System.out.println("deleteTask executed"))
-            .doOnError(e -> System.out.println("Error durring task Creation"))
-            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal))
-            .then(Mono.just(new ResponseEntity<>(HttpStatus.ACCEPTED)));
+            .doOnSubscribe(sub -> log.info("Subscription Started"))
+            .doOnNext(next -> log.info("deleteTask executed"))
+            .doOnError(e -> log.error("Error durring task Creation"))
+            .doFinally(signal -> log.info("Processing completed with signal: " + signal))
+            .then(Mono.just(new ResponseEntity<>(HttpStatus.NO_CONTENT)));
     }
     
-    //socket functions !
     @MessageMapping("/task/create")
     public Mono<Void> createTaskWebSocket(@Valid TaskRequest taskRequest) {
         return taskService.createTask(taskRequest)
-            .doOnSubscribe(sub -> System.out.println("Subscription Started"))
-            .doOnNext(next -> System.out.println("createTask executed"))
-            .doOnError(e -> System.out.println("Error durring task Creation"))
-            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal))
+            .doOnSubscribe(sub -> log.info("Subscription Started"))
+            .doOnNext(next -> log.info("createTask executed"))
+            .doOnError(e -> log.error("Error durring task Creation"))
+            .doFinally(signal -> log.info("Processing completed with signal: " + signal))
             .then();
     }
 
     @MessageMapping("/task/update/")
     public Mono<Void> updateTaskWebSocket(String taskId,TaskRequest taskRequest) {
         return taskService.updateTask(taskId, taskRequest)
-            .doOnSubscribe(sub -> System.out.println("Subscription Started"))
-            .doOnNext(next -> System.out.println("updateTaskWebSocket executed"))
-            .doOnError(e -> System.out.println("Error durring task Creation"))
-            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal))
+            .doOnSubscribe(sub -> log.info("Subscription Started"))
+            .doOnNext(next -> log.info("updateTaskWebSocket executed"))
+            .doOnError(e -> log.error("Error durring task Creation"))
+            .doFinally(signal -> log.info("Processing completed with signal: " + signal))
             .then();
     }
 
     @MessageMapping("/task/delete")
     public Mono<Void> deleteTaskWebSocket(String taskId) {
         return taskService.deleteTask(taskId)
-            .doOnSubscribe(sub -> System.out.println("Subscription Started"))
-            .doOnNext(next -> System.out.println("deleteTaskWebSocket executed"))
-            .doOnError(e -> System.out.println("Error durring task Creation"))
-            .doFinally(signal -> System.out.println("Processing completed with signal: " + signal))
+            .doOnSubscribe(sub -> log.info("Subscription Started"))
+            .doOnNext(next -> log.info("deleteTaskWebSocket executed"))
+            .doOnError(e -> log.error("Error durring task Creation"))
+            .doFinally(signal -> log.info("Processing completed with signal: " + signal))
             .then();
     }
 }

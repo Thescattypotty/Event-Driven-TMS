@@ -5,9 +5,11 @@ import org.springframework.r2dbc.core.DatabaseClient;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
-@Configuration
+//@Configuration
+@Slf4j
 @RequiredArgsConstructor
 public class DatabaseInitializer {
 
@@ -51,7 +53,7 @@ public class DatabaseInitializer {
     @PostConstruct
     public void init(){
         initializeDatabase()
-            .doOnError(error -> System.err.println("Database initiliazation failed :" + error.getMessage()))
+            .doOnError(error -> log.error("Database initiliazation failed :" + error.getMessage()))
             .subscribe();
     }
 }

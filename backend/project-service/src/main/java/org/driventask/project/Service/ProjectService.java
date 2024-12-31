@@ -1,10 +1,11 @@
 package org.driventask.project.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.driventask.project.Entity.Project;
+import org.driventask.project.Exception.ProjectCreationException;
 import org.driventask.project.Exception.ProjectNotFoundException;
+import org.driventask.project.Exception.ProjectUpdateException;
 import org.driventask.project.IService.IProjectService;
 import org.driventask.project.KafkaService.ProjectProducer;
 import org.driventask.project.Payload.Kafka.ProjectCreation;
@@ -17,11 +18,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProjectService implements IProjectService {
 
     private final ProjectRepository projectRepository;
@@ -50,7 +53,8 @@ public class ProjectService implements IProjectService {
             );
         })
         .then()
-        .onErrorMap(e -> new ProjectNotFoundException("Cannot create Project"));
+        .onErrorMap(e -> new ProjectCreationException("Cannot create Project"));
+        
     }
 
 
@@ -78,7 +82,7 @@ public class ProjectService implements IProjectService {
                 );
             })
             .then()
-            .onErrorMap(e -> new ProjectNotFoundException("Cannot create Project"));
+            .onErrorMap(e -> new ProjectUpdateException("Cannot update Project"));
     }
 
     @Override
@@ -94,7 +98,6 @@ public class ProjectService implements IProjectService {
         return projectRepository.findById(UUID.fromString(projectId))
             .switchIfEmpty(Mono.error(new ProjectNotFoundException("Cannot find Project with ID:" + projectId)))
             .flatMap(existingProject -> projectRepository.delete(existingProject))
-            .doOnTerminate(() -> System.out.println("Project with ID:" + projectId + " has been deleted"))
             .then();
     }
 

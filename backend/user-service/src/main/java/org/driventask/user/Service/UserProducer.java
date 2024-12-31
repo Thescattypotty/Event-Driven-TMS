@@ -22,7 +22,7 @@ public class UserProducer {
             .withPayload(userCreation)
             .setHeader(KafkaHeaders.TOPIC, "user-topic")
             .build();
-        System.out.println("Handler User Creartion is sent");
+        log.info("Handler User Creation is sent");
         kafkaTemplate.send(message);
     }
     public void handleUserUpdate(UserUpdated userUpdated){
@@ -30,7 +30,7 @@ public class UserProducer {
             .withPayload(userUpdated)
             .setHeader(KafkaHeaders.TOPIC, "user-topic")
             .build();
-        System.out.println("Handler User Update is sent");
+        log.info("Handler User Update is sent");
         kafkaTemplate.send(message);
     }
 }

@@ -6,11 +6,11 @@ CREATE TABLE projects (
     description TEXT,
     start_date TIMESTAMP,
     end_date TIMESTAMP,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     project_users TEXT[],
     project_tasks TEXT[],
-    project_files TEXT[]
+    project_files TEXT[],
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Optional: Create indexes for performance
