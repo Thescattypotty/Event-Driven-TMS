@@ -12,8 +12,8 @@ export class FileService {
     private API_URL = 'http://localhost:8222/api/v1/file';
     constructor(private http: HttpClient) {}
 
-    uploadFile(file: FileRequest): Observable<String>{
-        return this.http.post<String>(this.API_URL, file);
+    uploadFile(file: FileRequest): Observable<string>{
+        return this.http.post(this.API_URL, file, { responseType: 'text' });
     }
     downloadFile(id: String): Observable<FileResponse>{
         return this.http.get<FileResponse>(`${this.API_URL}/${id}`);

@@ -9,6 +9,7 @@ import { UserResponse } from '../../../models/user-response';
 import { FileRequest } from '../../../models/file-request';
 import { EPriority } from '../../../models/priority';
 import { EStatus } from '../../../models/status';
+import { catchError } from 'rxjs';
 
 @Component({
     selector: 'app-task-form',
@@ -21,11 +22,11 @@ import { EStatus } from '../../../models/status';
     templateUrl: './task-form.component.html',
     styleUrl: './task-form.component.css'
 })
-export class TaskFormComponent implements OnInit{
-   
+export class TaskFormComponent implements OnInit {
+
     task: Partial<TaskRequest> | null = null;
     create: boolean = true;
-    users: UserResponse [] = [];
+    users: UserResponse[] = [];
     files: String[] = [];
     fileRequest: FileRequest | null = null;
     projectId: String | null = null;
@@ -36,26 +37,26 @@ export class TaskFormComponent implements OnInit{
         private userService: UserService,
         private fileService: FileService
     ) {
-        
+
     }
-    onSubmit(): void{
+    onSubmit(): void {
         this.close();
     }
-    close(): void{
-        if(this.isTaskNotValid()){
+    close(): void {
+        if (this.isTaskNotValid()) {
             return;
         }
         this.modalRef.close(this.task);
     }
     isTaskNotValid(): boolean {
-        return !this.task?.title || 
-            !this.task?.description || 
-            !this.task?.priority || 
+        return !this.task?.title ||
+            !this.task?.description ||
+            !this.task?.priority ||
             !this.task?.status ||
             !this.task?.userAssigned;
-            !this.task?.projectId;
+        !this.task?.projectId;
     }
-    getUsers(): void{
+    getUsers(): void {
         this.userService.getUsers().subscribe({
             next: (users) => {
                 this.users = users;
@@ -67,10 +68,63 @@ export class TaskFormComponent implements OnInit{
         });
     }
 
+    uploadFile(event: any): void {
+        const file: File = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const base64String = this.arrayBufferToBase64(new Uint8Array(reader.result as ArrayBuffer));
+                this.fileRequest = {
+                    fileName: file.name,
+                    contentType: file.type,
+                    size: file.size,
+                    file: base64String
+                };
+                console.log("File Request : ", this.fileRequest);
+                this.fileService.uploadFile(this.fileRequest).pipe(
+                    catchError((error) => {
+                        console.error(error);
+                        return [];
+                    })
+                ).subscribe({
+                    next: (response) => {
+                        this.files.push(response);
+                        this.task?.filesIncluded?.push(response);
+                    },
+                    error: (error) => {
+                        console.log(error);
+                    }
+                }
+                );
+            };
+            reader.readAsArrayBuffer(file);
+        }
+    }
+    private arrayBufferToBase64(buffer: Uint8Array): string {
+        let binary = '';
+        const len = buffer.byteLength;
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(buffer[i]);
+        }
+        return btoa(binary);
+    }
+
+    removeFile(id: String): void {
+        this.fileService.deleteFile(id).subscribe({
+            next: (response) => {
+                this.files = this.files.filter((file) => file !== id);
+                this.task?.filesIncluded?.filter((file) => file !== id);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
+    }
+
 
 
     ngOnInit(): void {
-        if(this.create){
+        if (this.create) {
             this.task = {
                 title: '',
                 description: '',
