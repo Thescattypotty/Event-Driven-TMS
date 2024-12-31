@@ -61,15 +61,15 @@
                 <div
                     cdkDropList
                     #todoList="cdkDropList"
-                    [cdkDropListData]="todo"
+                    [cdkDropListData]="todoTasks"
                     [cdkDropListConnectedTo]="[doneList, inProgressList]"
                     class="example-list"
-                    (cdkDropListDropped)="dropp($event)">
-                    <div class="example-box list-group-item list-group-item-action d-flex gap-3 py-3" *ngFor="let item of todo" cdkDrag>
+                    (cdkDropListDropped)="drop($event)">
+                    <div class="example-box list-group-item list-group-item-action d-flex gap-3 py-3" *ngFor="let item of todoTasks" cdkDrag>
                         <div class="d-flex gap-2 w-100 justify-content-between">
                             <div>
-                                <h6 class="mb-0">Task 1</h6>
-                                <p class="mb-0 opacity-75">Task Description.</p>
+                                <h6 class="mb-0">{{item.title}}</h6>
+                                <p class="mb-0 opacity-75">T{{item.description}}</p>
                             </div>
                             <small class="text-nowrap">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -97,15 +97,15 @@
                 <div
                     cdkDropList
                     #inProgressList="cdkDropList"
-                    [cdkDropListData]="inProgress"
+                    [cdkDropListData]="inProgressTasks"
                     [cdkDropListConnectedTo]="[todoList, doneList]"
                     class="example-list"
-                    (cdkDropListDropped)="dropp($event)">
-                    <div class="example-box list-group-item list-group-item-action d-flex gap-3 py-3" *ngFor="let item of inProgress" cdkDrag>
+                    (cdkDropListDropped)="drop($event)">
+                    <div class="example-box list-group-item list-group-item-action d-flex gap-3 py-3" *ngFor="let item of inProgressTasks" cdkDrag>
                         <div class="d-flex gap-2 w-100 justify-content-between">
                             <div>
-                                <h6 class="mb-0">Task 2</h6>
-                                <p class="mb-0 opacity-75">Task Description.</p>
+                                <h6 class="mb-0">{{item.title}}</h6>
+                                <p class="mb-0 opacity-75">{{item.description}}</p>
                             </div>
                             <small class="text-nowrap">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -133,15 +133,15 @@
                 <div
                     cdkDropList
                     #doneList="cdkDropList"
-                    [cdkDropListData]="done"
+                    [cdkDropListData]="doneTasks"
                     [cdkDropListConnectedTo]="[todoList, inProgressList]"
                     class="example-list"
-                    (cdkDropListDropped)="dropp($event)">
-                    <div class="example-box list-group-item list-group-item-action d-flex gap-3 py-3" *ngFor="let item of done" cdkDrag>
+                    (cdkDropListDropped)="drop($event)">
+                    <div class="example-box list-group-item list-group-item-action d-flex gap-3 py-3" *ngFor="let item of doneTasks" cdkDrag>
                         <div class="d-flex gap-2 w-100 justify-content-between">
                             <div>
-                                <h6 class="mb-0">Task 3</h6>
-                                <p class="mb-0 opacity-75">Task Description.</p>
+                                <h6 class="mb-0">{{item.title}}</h6>
+                                <p class="mb-0 opacity-75">{{item.description}}</p>
                             </div>
                             <small class="text-nowrap">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -162,7 +162,10 @@
         <div *ngIf="selectedTab === 'Details'">
             <br>
             <h3>Project Details</h3>
-                <div *ngIf="projectResponse">
+            <div *ngIf="projectResponse === null">
+                <p>No Project available.</p>
+            </div>
+                <div *ngIf="projectResponse" >
                     <h5>Name: {{ projectResponse.name }}</h5>
   <p><strong>Description:</strong> {{ projectResponse.description }}</p>
   <p><strong>Start Date:</strong> {{ projectResponse.startDate | date: 'medium' }}</p>

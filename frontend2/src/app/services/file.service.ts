@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FileRequest } from '../models/file-request';
 import { Observable } from 'rxjs';
+import { FileResponse } from '../models/file-response';
 
 @Injectable({
     providedIn: 'root'
@@ -9,16 +10,13 @@ import { Observable } from 'rxjs';
 export class FileService {
 
     private API_URL = 'http://localhost:8222/api/v1/file';
-    constructor(private http: HttpClient) {
-
-    }
+    constructor(private http: HttpClient) {}
 
     uploadFile(file: FileRequest): Observable<String>{
         return this.http.post<String>(this.API_URL, file);
     }
-    
-    downloadFile(id: String): Observable<String>{
-        return this.http.get<String>(`${this.API_URL}/${id}`);
+    downloadFile(id: String): Observable<FileResponse>{
+        return this.http.get<FileResponse>(`${this.API_URL}/${id}`);
     }
     deleteFile(id: String): Observable<void>{
         return this.http.delete<void>(`${this.API_URL}/${id}`);

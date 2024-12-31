@@ -21,7 +21,7 @@ import { UserService } from '../../services/user.service';
 import { UserResponse } from '../../models/user-response';
 import { FileService } from '../../services/file.service';
 import * as bootstrap from 'bootstrap';
-import { isPlatformBrowser } from '@angular/common';
+import { FileResponse } from '../../models/file-response';
 
 
 
@@ -39,8 +39,8 @@ export class ProjectDetailComponent implements OnInit {
     taskResponse: TaskResponse[] = [];
     projectResponse: ProjectResponse | null = null;
     userResponse: UserResponse | null = null;
-    users: any[] = [];
-    files: any[] = [];
+    users: UserResponse[] = [];
+    files: FileResponse[] = [];
 
     todoTasks: TaskResponse[] = [];
     inProgressTasks: TaskResponse[] = [];
@@ -154,7 +154,6 @@ export class ProjectDetailComponent implements OnInit {
         this.projectService.getProject(this.id).subscribe({
             next: (response) => {
                 this.projectResponse = response;
-                this.users = [];
                 response.users_id.forEach((userId: String) => {
                     this.userService.getUser(userId).subscribe({
                         next: (userResponse) => {
@@ -165,12 +164,11 @@ export class ProjectDetailComponent implements OnInit {
                         }
                     });
                 });
-                this.files = [];
                 response.file_id.forEach((fileId: String) => {
-                    this.fileService.isFileExisting(fileId).subscribe({
+                    this.fileService.downloadFile(fileId).subscribe({
                         next: (fileResponse) => {
                             this.files.push(fileResponse);
-                        },
+                          },
                         error: (error) => {
                             console.log(error);
                         }
@@ -198,7 +196,6 @@ export class ProjectDetailComponent implements OnInit {
         })
     }
 
-    
 
     onTaskClick(task: TaskResponse) {
         this.selectedTask = task;
