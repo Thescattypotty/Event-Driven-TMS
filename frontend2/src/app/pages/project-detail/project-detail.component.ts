@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output, CUSTOM_ELEMENTS_SCHEMA, Inject, PLATFORM_ID} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, CUSTOM_ELEMENTS_SCHEMA, Inject, PLATFORM_ID } from '@angular/core';
 import {
     CdkDragDrop,
     moveItemInArray,
     transferArrayItem,
     CdkDrag,
     CdkDropList,
-} from '@angular/cdk/drag-drop'; 
+} from '@angular/cdk/drag-drop';
 import { NgFor, NgIf, CommonModule } from '@angular/common';
 import { ProjectService } from '../../services/project.service';
 import { ActivatedRoute } from '@angular/router';
@@ -50,21 +50,21 @@ export class ProjectDetailComponent implements OnInit {
 
     showTaskDetails = false;
     selectedTask: TaskResponse | null = null;
-    
+
 
     @Input() tabs = [
         { value: 'Tasks', label: 'tasks' },
         { value: 'details', label: 'details' },
         { value: 'files', label: 'files' },
         { value: 'members', label: 'members' },
-      ];
+    ];
 
     @Input() selectedTab = 'Tasks';
     @Output() tabChange = new EventEmitter<string>();
-  
+
     selectTab(tab: string): void {
-      this.selectedTab = tab;
-      this.tabChange.emit(tab);
+        this.selectedTab = tab;
+        this.tabChange.emit(tab);
     }
 
 
@@ -79,12 +79,6 @@ export class ProjectDetailComponent implements OnInit {
     ) {
         this.id = this.route.snapshot.paramMap.get('id')!;
     }
-    
-    todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
-
-    inProgress = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail'];
-
-    done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
 
     drop(event: CdkDragDrop<TaskResponse[]>) {
         if (event.previousContainer === event.container) {
@@ -96,36 +90,26 @@ export class ProjectDetailComponent implements OnInit {
                 event.previousIndex,
                 event.currentIndex,
             );
+            const task = event.container.data[event.currentIndex];
+            //update task status in backend
         }
     }
 
     async openTaskDetails(task: TaskResponse): Promise<void> {
-  if (typeof document !== 'undefined') {
-    this.selectedTask = task;
+        if (typeof document !== 'undefined') {
+            this.selectedTask = task;
 
-    const { Offcanvas } = await import('bootstrap');
-    const offcanvasElement = document.getElementById('offcanvasRight');
-    if (offcanvasElement) {
-      const bsOffcanvas = new Offcanvas(offcanvasElement);
-      bsOffcanvas.show();
-    }
-  }
-}
-
-      
-    dropp(event: CdkDragDrop<string[]>) {
-        if (event.previousContainer === event.container) {
-            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-        } else {
-            transferArrayItem(
-                event.previousContainer.data,
-                event.container.data,
-                event.previousIndex,
-                event.currentIndex,
-            );
+            const { Offcanvas } = await import('bootstrap');
+            const offcanvasElement = document.getElementById('offcanvasRight');
+            if (offcanvasElement) {
+                const bsOffcanvas = new Offcanvas(offcanvasElement);
+                bsOffcanvas.show();
+            }
         }
     }
-    
+
+
+
 
     createTask(status: String) {
         this.modalRef = this.modalService.open(TaskFormComponent, {
@@ -168,7 +152,7 @@ export class ProjectDetailComponent implements OnInit {
                     this.fileService.downloadFile(fileId).subscribe({
                         next: (fileResponse) => {
                             this.files.push(fileResponse);
-                          },
+                        },
                         error: (error) => {
                             console.log(error);
                         }
@@ -182,7 +166,7 @@ export class ProjectDetailComponent implements OnInit {
     }
 
 
-    loadTasks(){
+    loadTasks() {
         this.taskService.getAllTasks(this.id).subscribe({
             next: (response) => {
                 this.taskResponse = response;
@@ -202,7 +186,7 @@ export class ProjectDetailComponent implements OnInit {
         this.showTaskDetails = true;
     }
 
-    
+
     ngOnInit(): void {
         this.loadProject();
         this.loadTasks();
