@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, CUSTOM_ELEMENTS_SCHEMA, Inject, PLATFORM_ID} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
     CdkDragDrop,
     moveItemInArray,
@@ -6,7 +6,7 @@ import {
     CdkDrag,
     CdkDropList,
 } from '@angular/cdk/drag-drop'; 
-import { NgFor, NgIf, CommonModule } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ProjectService } from '../../services/project.service';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectResponse } from '../../models/project-response';
@@ -17,30 +17,20 @@ import { TaskFormComponent } from '../../component/modal/task-form/task-form.com
 import { MdbModalModule, MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { TaskDetailsComponent } from "../../component/modal/task-details/task-details.component";
 import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
-import { UserService } from '../../services/user.service';
-import { UserResponse } from '../../models/user-response';
-import { FileService } from '../../services/file.service';
-import * as bootstrap from 'bootstrap';
-import { isPlatformBrowser } from '@angular/common';
-
-
 
 
 @Component({
     selector: 'app-project-detail',
     standalone: true,
-    imports: [CdkDropList, CdkDrag, NgFor, NgIf, MdbModalModule, MdbTabsModule, CommonModule],
-    templateUrl: './project-detail.component.html',
-    styleUrls: ['./project-detail.component.css'],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    imports: [CdkDropList, CdkDrag, NgFor, NgIf, MdbModalModule, TaskDetailsComponent, MdbTabsModule],
+    templateUrl: './task.component.html',
+    styleUrls: ['./task.component.css']
 })
-export class ProjectDetailComponent implements OnInit {
+export class TaskComponent implements OnInit {
     id: string;
+
     taskResponse: TaskResponse[] = [];
     projectResponse: ProjectResponse | null = null;
-    userResponse: UserResponse | null = null;
-    users: any[] = [];
-    files: any[] = [];
 
     todoTasks: TaskResponse[] = [];
     inProgressTasks: TaskResponse[] = [];
@@ -50,32 +40,14 @@ export class ProjectDetailComponent implements OnInit {
 
     showTaskDetails = false;
     selectedTask: TaskResponse | null = null;
-    
 
-    @Input() tabs = [
-        { value: 'Tasks', label: 'tasks' },
-        { value: 'details', label: 'details' },
-        { value: 'files', label: 'files' },
-        { value: 'members', label: 'members' },
-      ];
-
-    @Input() selectedTab = 'Tasks';
-    @Output() tabChange = new EventEmitter<string>();
-  
-    selectTab(tab: string): void {
-      this.selectedTab = tab;
-      this.tabChange.emit(tab);
-    }
-
+    selectedTab = 'tasks';
 
     constructor(
         private projectService: ProjectService,
         private taskService: TaskService,
         private route: ActivatedRoute,
-        private modalService: MdbModalService,
-        private userService: UserService,
-        private fileService: FileService,
-        @Inject(PLATFORM_ID) private platformId: Object
+        private modalService: MdbModalService
     ) {
         this.id = this.route.snapshot.paramMap.get('id')!;
     }
@@ -98,21 +70,6 @@ export class ProjectDetailComponent implements OnInit {
             );
         }
     }
-
-    async openTaskDetails(task: TaskResponse): Promise<void> {
-  if (typeof document !== 'undefined') {
-    this.selectedTask = task;
-
-    const { Offcanvas } = await import('bootstrap');
-    const offcanvasElement = document.getElementById('offcanvasRight');
-    if (offcanvasElement) {
-      const bsOffcanvas = new Offcanvas(offcanvasElement);
-      bsOffcanvas.show();
-    }
-  }
-}
-
-      
     dropp(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -126,7 +83,6 @@ export class ProjectDetailComponent implements OnInit {
         }
     }
     
-
     createTask(status: String) {
         this.modalRef = this.modalService.open(TaskFormComponent, {
             data: {
@@ -136,7 +92,7 @@ export class ProjectDetailComponent implements OnInit {
             }
         });
         this.modalRef.onClose.subscribe((task) => {
-            if (task === undefined) {
+            if(task === undefined){
                 return;
             }
             this.taskService.createTask(task).subscribe({
@@ -150,39 +106,16 @@ export class ProjectDetailComponent implements OnInit {
         });
     }
 
-    loadProject(): void {
+    loadProject(){
         this.projectService.getProject(this.id).subscribe({
             next: (response) => {
                 this.projectResponse = response;
-                this.users = [];
-                response.users_id.forEach((userId: String) => {
-                    this.userService.getUser(userId).subscribe({
-                        next: (userResponse) => {
-                            this.users.push(userResponse);
-                        },
-                        error: (error) => {
-                            console.log(error);
-                        }
-                    });
-                });
-                this.files = [];
-                response.file_id.forEach((fileId: String) => {
-                    this.fileService.isFileExisting(fileId).subscribe({
-                        next: (fileResponse) => {
-                            this.files.push(fileResponse);
-                        },
-                        error: (error) => {
-                            console.log(error);
-                        }
-                    });
-                });
             },
             error: (error) => {
                 console.log(error);
             }
-        });
+        })
     }
-
 
     loadTasks(){
         this.taskService.getAllTasks(this.id).subscribe({
@@ -198,14 +131,14 @@ export class ProjectDetailComponent implements OnInit {
         })
     }
 
-    
-
     onTaskClick(task: TaskResponse) {
         this.selectedTask = task;
         this.showTaskDetails = true;
     }
+    onTabChange(tab: string): void {
+        this.selectedTab = tab;
+      }
 
-    
     ngOnInit(): void {
         this.loadProject();
         this.loadTasks();

@@ -8,7 +8,8 @@
       "mainClass": "org.driventask.config.ConfigServerApplication",
       "projectName": "config-server",
       "args": "",
-      "envFile": "${workspaceFolder}/.env"
+      "envFile": "${workspaceFolder}/.env",
+      "vmArgs": " -Dcom.sun.management.jmxremote"
     },
     {
       "type": "java",
@@ -17,6 +18,67 @@
       "cwd": "${workspaceFolder}",
       "mainClass": "org.driventask.registry.RegistryServiceApplication",
       "projectName": "registry-service",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env",
+      "vmArgs": " -Dcom.sun.management.jmxremote"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-AuthServiceApplication<auth-service>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "org.driventask.auth.AuthServiceApplication",
+      "projectName": "auth-service",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-FileServiceApplication<file-service>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "org.driventask.file.FileServiceApplication",
+      "projectName": "file-service",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-GatewayServiceApplication<gateway-service>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "org.driventask.gateway.GatewayServiceApplication",
+      "projectName": "gateway-service",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-ProjectServiceApplication<project-service>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "org.driventask.project.ProjectServiceApplication",
+      "projectName": "project-service",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-TaskServiceApplication<task-service>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "org.driventask.task.TaskServiceApplication",
+      "projectName": "task-service",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-UserServiceApplication<user-service>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "org.driventask.user.UserServiceApplication",
+      "projectName": "user-service",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
     }

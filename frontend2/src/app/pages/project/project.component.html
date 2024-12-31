@@ -1,45 +1,59 @@
-<div class="grey-bg container-fluid">
+<div class="grey-bg container-fluid py-3">
     <section id="minimal-statistics">
-        <div class="row">
-            <div class="col-12 mt-3 mb-1 d-flex justify-content-between align-items-center">
-            <div>
-                <h4 class="text-uppercase">Latest Project Overview</h4>
-                <p>Overview of your latest project statistics and tasks.</p>
-            </div>
-            <button class="btn btn-primary btn-sm" (click)="createProject()">
-                <i class="bi bi-plus"></i> New Project
-            </button>
-            </div>
+      <!-- Header Row -->
+      <div class="row">
+        <div class="col-12 mt-3 mb-1 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+          <div>
+            <h4 class="text-uppercase">Latest Project Overview</h4>
+            <p class="mb-0">Overview of your latest project statistics and tasks.</p>
+          </div>
+          <button class="btn btn-primary btn-sm mt-2 mt-md-0" (click)="createProject()">
+            <i class="bi bi-plus"></i> New Project
+          </button>
         </div>
-        <div class="row" >
-            <div class="col-xl-4 col-sm-6 col-12" *ngFor="let project of projects">
-                <div class="card">
-                    <div class="card-content">
-                        <div class="card-body">
-                            <div class="media d-flex justify-content-between">
-                                <div class="media-body text-left">
-                                    <h3 class="primary">{{project.createdAt}}</h3>
-                                    <span>{{project.name}}</span>
-                                </div>
-                                <div class="align-self-center d-flex gap-2">
-                                    <button class="btn btn-sm btn-primary" (click)="viewProject(project.id)">
-                                        <i class="bi bi-eye font-large-2 ml-4"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-warning">
-                                        <i class="bi bi-pencil font-large-2 ml-4"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" (click)="deleteProject(project.id)">
-                                        <i class="bi bi-trash font-large-2 ml-4"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="progress mt-1 mb-0" style="height: 7px;">
-                                <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-                    </div>
+      </div>
+  
+      <!-- Projects Row -->
+      <div class="row g-3">
+        <div class="col-xl-4 col-md-6 col-sm-12" *ngFor="let project of projects">
+          <div class="card">
+            <div class="card-content">
+              <div class="card-body">
+                <!-- Project Header -->
+                <div class="media d-flex justify-content-between">
+                  <div class="media-body text-left">
+                    <h3 class="text-primary mb-1">{{ project.name }}</h3>
+                    <h6 class="text">{{ project.description }}</h6>
+                  </div>
+                  <!-- Action Buttons -->
+                  <div class="align-self-center d-flex gap-2">
+                    <button class="btn btn-sm btn-primary" (click)="viewProject(project.id)" title="View">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-warning" title="Edit">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteProject(project.id)" title="Delete">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
                 </div>
+                <!-- Progress Bar -->
+                <div class="progress mt-3" style="height: 7px;">
+                  <div
+                    class="progress-bar bg-primary"
+                    role="progressbar"
+                    style="width: 80%"
+                    aria-valuenow="80"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </section>
-</div>
+  </div>
+  
