@@ -1,218 +1,339 @@
 <div class="tabs-container">
-    <!-- Tabs Navigation -->
-    <div class="tabs-header nav nav-tabs">
-      <button 
-        *ngFor="let tab of ['Tasks', 'Details', 'Files', 'Members']"
-        class="nav-link"
-        [class.active]="selectedTab === tab" 
-        (click)="selectTab(tab)"
-      >
-        {{ tab }}
-      </button>
-    </div>
-  
-    <!-- Tabs Content -->
-    <div class="tabs-content">
-        <div *ngIf="selectedTab === 'Tasks'">
-            <br>
-            <div class="example-container">  
-                <div class="offcanvas offcanvas-end w-50" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasRightLabel">Task Details</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body">
-                        <h6>Title:</h6>
-                        <p>{{ selectedTask?.title }}</p>
-                
-                        <h6>Description:</h6>
-                        <p>{{ selectedTask?.description }}</p>
-                
-                        <h6>Due Date:</h6>
-                        <p>{{ selectedTask?.dueDate | date: 'medium' }}</p>
-                
-                        <h6>Priority:</h6>
-                        <p>{{ selectedTask?.priority }}</p>
-                
-                        <h6>Status:</h6>
-                        <p>{{ selectedTask?.status }}</p>
-                
-                        <h6>Assigned User:</h6>
-                        <p>{{ selectedTask?.userAssigned }}</p>
-                
-                        <h6>Files Included:</h6>
-                        <ul>
-                            <li *ngFor="let file of selectedTask?.filesIncluded">{{ file }}</li>
-                        </ul>
-                
-                        <h6>History:</h6>
-                        <ul>
-                            <li *ngFor="let history of selectedTask?.historyOfTask">{{ history }}</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <h3>
-                    To do
-                    <button class="btn btn-primary btn-sm float-end" (click)="createTask('TODO')">
-                        <i class="bi bi-plus"></i>
-                    </button>
-                </h3>
-                <div
-                    cdkDropList
-                    #todoList="cdkDropList"
-                    [cdkDropListData]="todoTasks"
-                    [cdkDropListConnectedTo]="[doneList, inProgressList]"
-                    class="example-list"
-                    (cdkDropListDropped)="drop($event)">
-                    <div class="example-box list-group-item list-group-item-action d-flex gap-3 py-3" *ngFor="let item of todoTasks" cdkDrag>
-                        <div class="d-flex gap-2 w-100 justify-content-between">
-                            <div>
-                                <h6 class="mb-0">{{item.title}}</h6>
-                                <p class="mb-0 opacity-75">T{{item.description}}</p>
-                            </div>
-                            <small class="text-nowrap">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa fa-dropbox"></i>
-                                </a>
-                                <ul class="dropdown-menu bg-black text-white">
-                                    <li><a class="dropdown-item text-white"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="onTaskClick(item)">View</a></li>
-                                    <li><a class="dropdown-item text-white" href="#">Edit</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-white bg-danger" href="#">Delete</a></li>
-                                </ul>
-                            </small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
-            <div class="example-container">
-                <h3>
-                    In Progress
-                    <button class="btn btn-primary btn-sm float-end" (click)="createTask('IN_PROGRESS')">
-                        <i class="bi bi-plus"></i>
-                    </button>
-                </h3>
-                <div
-                    cdkDropList
-                    #inProgressList="cdkDropList"
-                    [cdkDropListData]="inProgressTasks"
-                    [cdkDropListConnectedTo]="[todoList, doneList]"
-                    class="example-list"
-                    (cdkDropListDropped)="drop($event)">
-                    <div class="example-box list-group-item list-group-item-action d-flex gap-3 py-3" *ngFor="let item of inProgressTasks" cdkDrag>
-                        <div class="d-flex gap-2 w-100 justify-content-between">
-                            <div>
-                                <h6 class="mb-0">{{item.title}}</h6>
-                                <p class="mb-0 opacity-75">{{item.description}}</p>
-                            </div>
-                            <small class="text-nowrap">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa fa-dropbox"></i>
-                                </a>
-                                <ul class="dropdown-menu bg-black text-white">
-                                    <li><a class="dropdown-item text-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="onTaskClick(item)">View</a></li>
-                                    <li><a class="dropdown-item text-white" href="#">Edit</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-white bg-danger" href="#">Delete</a></li>
-                                </ul>
-                            </small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
-            <div class="example-container">
-                <h3>
-                    Done
-                    <button class="btn btn-primary btn-sm float-end" (click)="createTask('DONE')">
-                        <i class="bi bi-plus"></i>
-                    </button>
-                </h3>
-                <div
-                    cdkDropList
-                    #doneList="cdkDropList"
-                    [cdkDropListData]="doneTasks"
-                    [cdkDropListConnectedTo]="[todoList, inProgressList]"
-                    class="example-list"
-                    (cdkDropListDropped)="drop($event)">
-                    <div class="example-box list-group-item list-group-item-action d-flex gap-3 py-3" *ngFor="let item of doneTasks" cdkDrag>
-                        <div class="d-flex gap-2 w-100 justify-content-between">
-                            <div>
-                                <h6 class="mb-0">{{item.title}}</h6>
-                                <p class="mb-0 opacity-75">{{item.description}}</p>
-                            </div>
-                            <small class="text-nowrap">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa fa-dropbox"></i>
-                                </a>
-                                <ul class="dropdown-menu bg-black text-white">
-                                    <li><a class="dropdown-item text-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="onTaskClick(item)">View</a></li>
-                                    <li><a class="dropdown-item text-white" href="#">Edit</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-white bg-danger" href="#">Delete</a></li>
-                                </ul>
-                            </small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div *ngIf="selectedTab === 'Details'">
-            <br>
-            <h3>Project Details</h3>
-            <div *ngIf="projectResponse === null">
-                <p>No Project available.</p>
-            </div>
-                <div *ngIf="projectResponse" >
-                    <h5>Name: {{ projectResponse.name }}</h5>
-  <p><strong>Description:</strong> {{ projectResponse.description }}</p>
-  <p><strong>Start Date:</strong> {{ projectResponse.startDate | date: 'medium' }}</p>
-  <p><strong>End Date:</strong> {{ projectResponse.endDate | date: 'medium' }}</p>
-  <p><strong>Created At:</strong> {{ projectResponse.createdAt | date: 'medium' }}</p>
-  <p><strong>Updated At:</strong> {{ projectResponse.updatedAt | date: 'medium' }}</p>
-                </div>
-        </div>
-      <div *ngIf="selectedTab === 'Files'">
-        <br>
-            <h3>Files</h3>
-            
-            <div *ngIf="files.length === 0">
-                <p>No files available.</p>
-            </div>
-            <div *ngIf="files.length > 0">
-                <ul>
-                    <li *ngFor="let file of files">
-                        {{ file.fileName }}
-                    </li>
-                </ul>
-            </div>
-            
-      </div>
-      <div *ngIf="selectedTab === 'Members'">
-        <br>
-        <h3>Members Content</h3>
-        <div class="table-responsive small">
-            <table class="table table-striped table-sm">
-              <thead>
-                <tr>
-                  <th scope="col">Full Name</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Roles</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let user of users">
-                  <td>{{user.fullname}}</td>
-                  <td>{{user.email}}</td>
-                  <td>{{user.roles}}</td>
-                  
-                </tr>
-              </tbody>
-            </table>
+  <!-- Tabs Navigation -->
+  <div class="tabs-header nav nav-tabs">
+    <button
+      *ngFor="let tab of ['Tasks', 'Details', 'Files', 'Members']"
+      class="nav-link"
+      [class.active]="selectedTab === tab"
+      (click)="selectTab(tab)"
+    >
+      {{ tab }}
+    </button>
+  </div>
+
+  <!-- Tabs Content -->
+  <div class="tabs-content">
+    <div *ngIf="selectedTab === 'Tasks'">
+      <br />
+      <div class="example-container">
+        <div
+          class="offcanvas offcanvas-end w-50"
+          tabindex="-1"
+          id="offcanvasRight"
+          aria-labelledby="offcanvasRightLabel"
+        >
+          <div class="offcanvas-header bg-body-secondary">
+            <h5 class="offcanvas-title" id="offcanvasRightLabel">
+              Task Details
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
           </div>
+          <div class="offcanvas-body">
+            <div class="mb-3">
+              <h6 class="text-muted">Title</h6>
+              <p class="fw-bold">{{ selectedTask?.title }}</p>
+            </div>
+            <div class="mb-3">
+              <h6 class="text-muted">Description</h6>
+              <p>{{ selectedTask?.description }}</p>
+            </div>
+            <div class="mb-3">
+              <h6 class="text-muted">Due Date</h6>
+              <p>{{ selectedTask?.dueDate | date : "medium" }}</p>
+            </div>
+            <div class="mb-3">
+              <h6 class="text-muted">Priority</h6>
+              <p>{{ selectedTask?.priority }}</p>
+            </div>
+            <div class="mb-3">
+              <h6 class="text-muted">Status</h6>
+              <p>{{ selectedTask?.status }}</p>
+            </div>
+            <div class="mb-3">
+              <h6 class="text-muted">Assigned User</h6>
+              <p>{{ selectedTask?.userAssigned }}</p>
+            </div>
+            <div class="mb-3">
+              <h6 class="text-muted">Files Included</h6>
+              <ul class="list-unstyled">
+                <li *ngFor="let file of selectedTask?.filesIncluded">
+                  <i class="bi bi-file-earmark"></i> {{ file }}
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h6 class="text-muted">History</h6>
+              <ul class="list-unstyled">
+                <li *ngFor="let history of selectedTask?.historyOfTask">
+                  <i class="bi bi-clock-history"></i> {{ history }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <h3>
+          To do
+          <button
+            class="btn btn-primary btn-sm float-end"
+            (click)="createTask('TODO')"
+          >
+            <i class="bi bi-plus"></i>
+          </button>
+        </h3>
+        <div
+          cdkDropList
+          #todoList="cdkDropList"
+          id="todoList"
+          [cdkDropListData]="todoTasks"
+          [cdkDropListConnectedTo]="[doneList, inProgressList]"
+          class="example-list"
+          (cdkDropListDropped)="drop($event)"
+        >
+          <div
+            class="example-box list-group-item list-group-item-action d-flex gap-3 py-3"
+            *ngFor="let item of todoTasks"
+            cdkDrag
+          >
+            <div class="d-flex gap-2 w-100 justify-content-between">
+              <div>
+                <h5 class="mb-0">{{ item.title }}</h5>
+                <p class="mb-0 opacity-75">{{ item.description }}</p>
+              </div>
+              <small class="text-nowrap">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="fa fa-dropbox"></i>
+                </a>
+                <ul class="dropdown-menu text-white dropdown-menu-end shadow-lg rounded-3 border-0 ">
+                  <li>
+                    <a
+                      class="dropdown-item text-white"
+                      data-bs-toggle="offcanvas"
+                      data-bs-target="#offcanvasRight"
+                      aria-controls="offcanvasRight"
+                      (click)="onTaskClick(item)"
+                      >View</a
+                    >
+                  </li>
+                  <li><a class="dropdown-item text-white" href="#">Edit</a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a class="dropdown-item text-white bg-danger rounded-2" href="#">Delete</a>
+                  </li>
+                </ul>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="example-container">
+        <h3>
+          In Progress
+          <button
+            class="btn btn-primary btn-sm float-end"
+            (click)="createTask('IN_PROGRESS')"
+          >
+            <i class="bi bi-plus"></i>
+          </button>
+        </h3>
+        <div
+          cdkDropList
+          #inProgressList="cdkDropList"
+          id="inProgressList"
+          [cdkDropListData]="inProgressTasks"
+          [cdkDropListConnectedTo]="[todoList, doneList]"
+          class="example-list"
+          (cdkDropListDropped)="drop($event)"
+        >
+          <div
+            class="example-box list-group-item list-group-item-action d-flex gap-3 py-3"
+            *ngFor="let item of inProgressTasks"
+            cdkDrag
+          >
+            <div class="d-flex gap-2 w-100 justify-content-between">
+              <div>
+                <h5 class="mb-0">{{ item.title }}</h5>
+                <p class="mb-0 opacity-75">{{ item.description }}</p>
+              </div>
+              <small class="text-nowrap">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="fa fa-dropbox"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded-3 border-0 ">
+                  <li>
+                    <a
+                      class="dropdown-item text-white"
+                      data-bs-toggle="offcanvas"
+                      data-bs-target="#offcanvasRight"
+                      aria-controls="offcanvasRight"
+                      (click)="onTaskClick(item)"
+                      >View</a
+                    >
+                  </li>
+                  <li><a class="dropdown-item text-white" href="#">Edit</a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a class="dropdown-item text-white bg-danger rounded-2" href="#">Delete</a>
+                  </li>
+                </ul>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="example-container">
+        <h3>
+          Done
+          <button
+            class="btn btn-primary btn-sm float-end"
+            (click)="createTask('DONE')"
+          >
+            <i class="bi bi-plus"></i>
+          </button>
+        </h3>
+        <div
+          cdkDropList
+          #doneList="cdkDropList"
+          id="doneList"
+          [cdkDropListData]="doneTasks"
+          [cdkDropListConnectedTo]="[todoList, inProgressList]"
+          class="example-list"
+          (cdkDropListDropped)="drop($event)"
+        >
+          <div
+            class="example-box list-group-item list-group-item-action d-flex gap-3 py-3"
+            *ngFor="let item of doneTasks"
+            cdkDrag
+          >
+            <div class="d-flex gap-2 w-100 justify-content-between">
+              <div>
+                <h5 class="mb-0">{{ item.title }}</h5>
+                <p class="mb-0 opacity-75">{{ item.description }}</p>
+              </div>
+              <small class="text-nowrap">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="fa fa-dropbox"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded-3 border-0 ">
+                  <li>
+                    <a
+                      class="dropdown-item text-white"
+                      data-bs-toggle="offcanvas"
+                      data-bs-target="#offcanvasRight"
+                      aria-controls="offcanvasRight"
+                      (click)="onTaskClick(item)"
+                      >View</a
+                    >
+                  </li>
+                  <li><a class="dropdown-item text-white" href="#">Edit</a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a class="dropdown-item text-white bg-danger rounded-2" href="#">Delete</a>
+                  </li>
+                </ul>
+                
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="selectedTab === 'Details'">
+      <br />
+      <h3>Project Details</h3>
+    
+      <!-- No project available -->
+      <div *ngIf="projectResponse === null" class="text-muted">
+        <p>No Project available.</p>
+      </div>
+    
+      <!-- Display project details -->
+      <div *ngIf="projectResponse" class="border rounded-3 p-3">
+        <h4 class="fw-bold mb-3">Name: {{ projectResponse.name }}</h4>
+        <div class="mb-3">
+          <h6 class="text-muted">Description</h6>
+          <p>{{ projectResponse.description }}</p>
+        </div>
+        <div class="mb-3">
+          <h6 class="text-muted">Start Date</h6>
+          <p>{{ projectResponse.startDate | date: 'medium' }}</p>
+        </div>
+        <div class="mb-3">
+          <h6 class="text-muted">End Date</h6>
+          <p>{{ projectResponse.endDate | date: 'medium' }}</p>
+        </div>
+        <div class="mb-3">
+          <h6 class="text-muted">Created At</h6>
+          <p>{{ projectResponse.createdAt | date: 'medium' }}</p>
+        </div>
+        <div>
+          <h6 class="text-muted">Updated At</h6>
+          <p>{{ projectResponse.updatedAt | date: 'medium' }}</p>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="selectedTab === 'Files'">
+      <br />
+      <h3>Files</h3>
+
+      <div *ngIf="files.length === 0">
+        <p>No files available.</p>
+      </div>
+      <div *ngIf="files.length > 0">
+        <ul>
+          <li *ngFor="let file of files">
+            {{ file.fileName }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div *ngIf="selectedTab === 'Members'">
+      <br />
+      <h3>Members Content</h3>
+      <div class="table-responsive small">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th scope="col">Full Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Roles</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td>{{ user.fullname }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.roles }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
-  
+</div>

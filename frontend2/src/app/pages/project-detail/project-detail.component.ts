@@ -20,8 +20,8 @@ import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { UserService } from '../../services/user.service';
 import { UserResponse } from '../../models/user-response';
 import { FileService } from '../../services/file.service';
-import * as bootstrap from 'bootstrap';
 import { FileResponse } from '../../models/file-response';
+import { TaskRequest } from '../../models/task-request';
 
 
 
@@ -82,18 +82,64 @@ export class ProjectDetailComponent implements OnInit {
 
     drop(event: CdkDragDrop<TaskResponse[]>) {
         if (event.previousContainer === event.container) {
-            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+          // Move item within the same container
+          moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
-            transferArrayItem(
-                event.previousContainer.data,
+          // Transfer item between containers
+          transferArrayItem(
+            event.previousContainer.data,
+            event.container.data,
+            event.previousIndex,
+            event.currentIndex
+          );
+      
+          const movedTask: TaskResponse = event.container.data[event.currentIndex];
+          const newStatus: EStatus = this.getStatusFromContainerId(event.container.id);
+      
+          if (!newStatus) {
+            console.error('Error: Invalid container ID:', event.container.id);
+            return;
+          }
+      
+          const taskRequest: TaskRequest = {
+            ...movedTask,
+            status: newStatus
+          };
+      
+          // Update task status in backend
+          this.taskService.updateTask(movedTask.id, taskRequest).subscribe({
+            next: () => {
+              console.log('Task status updated successfully:', newStatus);
+      
+              // Update the moved task's status in the local state
+              movedTask.status = newStatus;
+            },
+            error: (err) => {
+              console.error('Error updating task status:', err);
+      
+              // Rollback the UI changes in case of an error
+              transferArrayItem(
                 event.container.data,
-                event.previousIndex,
+                event.previousContainer.data,
                 event.currentIndex,
-            );
-            const task = event.container.data[event.currentIndex];
-            //update task status in backend
+                event.previousIndex
+              );
+            }
+          });
         }
-    }
+      }
+      
+      
+      // Helper function to map container IDs to backend statuses
+      private getStatusFromContainerId(containerId: string): EStatus {
+        const statusMap: { [key: string]: EStatus } = {
+          todoList: EStatus.TO_DO,
+          inProgressList: EStatus.IN_PROGRESS,
+          doneList: EStatus.DONE
+        };
+        return statusMap[containerId];
+      }
+      
 
     async openTaskDetails(task: TaskResponse): Promise<void> {
         if (typeof document !== 'undefined') {
@@ -168,18 +214,32 @@ export class ProjectDetailComponent implements OnInit {
 
     loadTasks() {
         this.taskService.getAllTasks(this.id).subscribe({
-            next: (response) => {
-                this.taskResponse = response;
-                this.todoTasks = this.taskResponse.filter(task => task.status === 'TO_DO');
-                this.inProgressTasks = this.taskResponse.filter(task => task.status === 'IN_PROGRESS');
-                this.doneTasks = this.taskResponse.filter(task => task.status === 'DONE');
-            },
-            error: (error) => {
-                console.log(error);
-            }
-        })
-    }
-
+          next: (response) => {
+            this.taskResponse = response;
+      
+            // Fetch user name for each task
+            this.taskResponse.forEach((task) => {
+              this.userService.getUser(task.userAssigned).subscribe({
+                next: (userResponse) => {
+                  task.userAssigned = userResponse.fullname; // Assuming 'name' is the user's name
+                },
+                error: (error) => {
+                  console.log('Error fetching user:', error);
+                }
+              });
+            });
+      
+            // Filter tasks based on their status
+            this.todoTasks = this.taskResponse.filter(task => task.status === 'TO_DO');
+            this.inProgressTasks = this.taskResponse.filter(task => task.status === 'IN_PROGRESS');
+            this.doneTasks = this.taskResponse.filter(task => task.status === 'DONE');
+          },
+          error: (error) => {
+            console.log('Error fetching tasks:', error);
+          }
+        });
+      }
+      
 
     onTaskClick(task: TaskResponse) {
         this.selectedTask = task;
