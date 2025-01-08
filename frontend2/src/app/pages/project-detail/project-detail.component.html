@@ -115,7 +115,9 @@
                 >
                   <i class="fa fa-dropbox"></i>
                 </a>
-                <ul class="dropdown-menu text-white dropdown-menu-end shadow-lg rounded-3 border-0 ">
+                <ul
+                  class="dropdown-menu text-white dropdown-menu-end shadow-lg rounded-3 border-0"
+                >
                   <li>
                     <a
                       class="dropdown-item text-white"
@@ -129,7 +131,11 @@
                   <li><a class="dropdown-item text-white" href="#">Edit</a></li>
                   <li><hr class="dropdown-divider" /></li>
                   <li>
-                    <a class="dropdown-item text-white bg-danger rounded-2" href="#">Delete</a>
+                    <a
+                      class="dropdown-item text-white bg-danger rounded-2"
+                      href="#"
+                      >Delete</a
+                    >
                   </li>
                 </ul>
               </small>
@@ -177,7 +183,9 @@
                 >
                   <i class="fa fa-dropbox"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded-3 border-0 ">
+                <ul
+                  class="dropdown-menu dropdown-menu-end shadow-lg rounded-3 border-0"
+                >
                   <li>
                     <a
                       class="dropdown-item text-white"
@@ -191,7 +199,11 @@
                   <li><a class="dropdown-item text-white" href="#">Edit</a></li>
                   <li><hr class="dropdown-divider" /></li>
                   <li>
-                    <a class="dropdown-item text-white bg-danger rounded-2" href="#">Delete</a>
+                    <a
+                      class="dropdown-item text-white bg-danger rounded-2"
+                      href="#"
+                      >Delete</a
+                    >
                   </li>
                 </ul>
               </small>
@@ -239,7 +251,9 @@
                 >
                   <i class="fa fa-dropbox"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded-3 border-0 ">
+                <ul
+                  class="dropdown-menu dropdown-menu-end shadow-lg rounded-3 border-0"
+                >
                   <li>
                     <a
                       class="dropdown-item text-white"
@@ -253,10 +267,13 @@
                   <li><a class="dropdown-item text-white" href="#">Edit</a></li>
                   <li><hr class="dropdown-divider" /></li>
                   <li>
-                    <a class="dropdown-item text-white bg-danger rounded-2" href="#">Delete</a>
+                    <a
+                      class="dropdown-item text-white bg-danger rounded-2"
+                      href="#"
+                      >Delete</a
+                    >
                   </li>
                 </ul>
-                
               </small>
             </div>
           </div>
@@ -266,12 +283,12 @@
     <div *ngIf="selectedTab === 'Details'">
       <br />
       <h3>Project Details</h3>
-    
+
       <!-- No project available -->
       <div *ngIf="projectResponse === null" class="text-muted">
         <p>No Project available.</p>
       </div>
-    
+
       <!-- Display project details -->
       <div *ngIf="projectResponse" class="border rounded-3 p-3">
         <h4 class="fw-bold mb-3">Name: {{ projectResponse.name }}</h4>
@@ -281,37 +298,38 @@
         </div>
         <div class="mb-3">
           <h6 class="text-muted">Start Date</h6>
-          <p>{{ projectResponse.startDate | date: 'medium' }}</p>
+          <p>{{ projectResponse.startDate | date : "medium" }}</p>
         </div>
         <div class="mb-3">
           <h6 class="text-muted">End Date</h6>
-          <p>{{ projectResponse.endDate | date: 'medium' }}</p>
+          <p>{{ projectResponse.endDate | date : "medium" }}</p>
         </div>
         <div class="mb-3">
           <h6 class="text-muted">Created At</h6>
-          <p>{{ projectResponse.createdAt | date: 'medium' }}</p>
+          <p>{{ projectResponse.createdAt | date : "medium" }}</p>
         </div>
         <div>
           <h6 class="text-muted">Updated At</h6>
-          <p>{{ projectResponse.updatedAt | date: 'medium' }}</p>
+          <p>{{ projectResponse.updatedAt | date : "medium" }}</p>
         </div>
       </div>
     </div>
-    
     <div *ngIf="selectedTab === 'Files'">
       <br />
       <h3>Files</h3>
-
+    
       <div *ngIf="files.length === 0">
         <p>No files available.</p>
       </div>
-      <div *ngIf="files.length > 0">
-        <ul>
-          <li *ngFor="let file of files">
-            {{ file.fileName }}
-          </li>
-        </ul>
-      </div>
+      <ul class="list-group">
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center"
+          *ngFor="let file of files"
+        >
+          {{ file.fileName }}
+          <button class="btn btn-primary btn-sm" (click)="downloadFile(file.fileId.toString())">Download</button>
+        </li>
+      </ul>
     </div>
     <div *ngIf="selectedTab === 'Members'">
       <br />

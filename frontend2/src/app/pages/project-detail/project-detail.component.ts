@@ -239,7 +239,26 @@ export class ProjectDetailComponent implements OnInit {
           }
         });
       }
+      downloadFile(fileId: string) {
+        this.fileService.downloadFile(fileId).subscribe({
+          next: (fileResponse) => {
+            const byteCharacters = atob(fileResponse.file.toString());
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const blob = new Blob([new Uint8Array(byteNumbers)], { type: fileResponse.contentType.toString() });
+            const url = window.URL.createObjectURL(blob);
       
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileResponse.fileName.toString();
+            link.click();
+            window.URL.revokeObjectURL(url);
+          },
+          error: (err) => console.error(err)
+        });
+      }
 
     onTaskClick(task: TaskResponse) {
         this.selectedTask = task;
