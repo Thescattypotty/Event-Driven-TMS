@@ -178,6 +178,9 @@
       d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
     />
   </symbol>
+    <symbol id="check-square" viewBox="0 0 16 16">
+      <path d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zm-1 11H3v-1h10v1zm0-3H3V8h10v1zm0-3H3V5h10v1z" />
+    </symbol>
 </svg>
 
 <header
@@ -217,14 +220,41 @@
     </li>
   </ul>
 
-  <div id="navbarSearch" class="navbar-search w-100 collapse">
-    <input
-      class="form-control w-100 rounded-0 border-0"
-      type="text"
-      placeholder="Search"
-      aria-label="Search"
-    />
+  <div class="d-flex align-items-center justify-content-between w-100">
+    <!-- Search Bar -->
+    <div id="navbarSearch" class="navbar-search flex-grow-1 me-3">
+      <input
+        class="form-control w-100 rounded-0 border-0"
+        type="text"
+        placeholder="Search"
+        aria-label="Search"
+      />
+    </div>
+  
+    <!-- Notification Button -->
+    <button type="button" class="btn btn-primary position-relative me-3">
+      <i class="bi bi-bell"></i>
+      <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+        <span class="visually-hidden">New alerts</span>
+      </span>
+    </button>
+  
+    <!-- Account Button -->
+    <!-- Account Button -->
+<button
+type="button"
+class="btn btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2"
+style="line-height: 1; vertical-align: middle;"
+aria-label="Account"
+>
+<i class="bi bi-person-circle" style="font-size: 1.2rem; display: inline-block;"></i>
+<span style="display: inline-block; vertical-align: middle;">{{ fullName || 'Account'}}</span>
+</button>
+
+    
   </div>
+  
+  
 </header>
 
 <div class="container-fluid">
@@ -238,48 +268,80 @@
         <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" routerLink="">
+              <a 
+                class="nav-link d-flex align-items-center gap-2" 
+                [class.active]="isActive('')" 
+                (click)="setActive('')" 
+                routerLink="">
                 <svg class="bi"><use xlink:href="#house-fill"/></svg>
                 Dashboard
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" routerLink="/users">
-                <svg class="bi"><use xlink:href="#file-earmark"/></svg>
-                Users
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" routerLink="">
-                <svg class="bi"><use xlink:href="#puzzle"/></svg>
-                Projects
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" routerLink="/files">
-                <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
-                Files
-              </a>
-            </li>
           </ul>
+        
 
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
-            <span>Users</span>
+            <span>Team</span>
             <a class="link-secondary" routerLink="/dashboard/users" aria-label="Add a new report">
               <svg class="bi"><use xlink:href="#plus-circle"/></svg>
             </a>
           </h6>
           <ul class="nav flex-column mb-auto">
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" routerLink="/users">
+              <a 
+                class="nav-link d-flex align-items-center gap-2" 
+                [class.active]="isActive('/users')" 
+                (click)="setActive('/users')" 
+                routerLink="/users">
                 <svg class="bi"><use xlink:href="#people"/></svg>
-                List Users
+                List Members
               </a>
             </li>
+          </ul>
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
+            <span>Projects</span>
+            <a class="link-secondary" routerLink="/dashboard/users" aria-label="Add a new report">
+              <svg class="bi"><use xlink:href="#plus-circle"/></svg>
+            </a>
+          </h6>
+          <ul class="nav flex-column mb-auto">
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" routerLink="/users">
-                <svg class="bi"><use xlink:href="#people"/></svg>
-                Manage Users
+              <a class="nav-link d-flex align-items-center gap-2" [class.active]="isActive('/')" 
+              (click)="setActive('/')" 
+              routerLink="/">
+                <svg class="bi"><use xlink:href="#graph-up"/></svg>
+                List Projects
+              </a>
+            </li>
+          </ul>
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
+            <span>Tasks</span>
+            <a class="link-secondary" routerLink="/dashboard/users" aria-label="Add a new report">
+              <svg class="bi"><use xlink:href="#plus-circle"/></svg>
+            </a>
+          </h6>
+          <ul class="nav flex-column mb-auto">
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" [class.active]="isActive('/project-details')" 
+              (click)="setActive('/project-details')" 
+              routerLink="/project-details">
+                <svg class="bi"><use xlink:href="#list"/></svg>
+                List Tasks
+              </a>
+            </li>
+          </ul><h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
+            <span>Files</span>
+            <a class="link-secondary" routerLink="/dashboard/users" aria-label="Add a new report">
+              <svg class="bi"><use xlink:href="#plus-circle"/></svg>
+            </a>
+          </h6>
+          <ul class="nav flex-column mb-auto">
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" [class.active]="isActive('/files')" 
+              (click)="setActive('/files')" 
+              routerLink="">
+                <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
+                List Files
               </a>
             </li>
           </ul>
@@ -294,10 +356,10 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" routerLink="#">
+                <a class="nav-link d-flex align-items-center gap-2" routerLink="/logout" (click)="logOut()">
                 <svg class="bi"><use xlink:href="#door-closed"/></svg>
                 Sign out
-              </a>
+                </a>
             </li>
           </ul>
         </div>
