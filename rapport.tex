@@ -1,0 +1,329 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{titlesec}
+
+% Configurations de la mise en page
+\geometry{a4paper, margin=1in}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+\begin{document}
+
+% Page de garde
+\title{\textbf{Event Driven TMS}} % Remplacez par le titre de votre projet
+\author{Bennis Yahya & Amsaguine Oualid}
+\date{}
+\maketitle
+
+% Remerciements
+\chapter*{Remerciements}
+\addcontentsline{toc}{chapter}{Remerciements}
+Nous tenons à exprimer notre sincère gratitude à nos professeurs, ainsi qu'à nos familles, pour leur soutien et leurs encouragements tout au long de ce projet.
+
+
+% Résumé
+\chapter*{Résumé}
+\addcontentsline{toc}{chapter}{Résumé}
+Ce projet met en place un TMS (Task Management System) basé sur une architecture microservices et un modèle Event-Driven . Le système permet de gérer des tâches, des utilisateurs, des projets, Chaque service est entièrement réactif, depuis l’accès en base de données jusqu’aux échanges asynchrones via des événements. Cette approche offre une meilleure scalabilité, un découplage fort entre les composants, et une flexibilité accrue pour l’évolution du système.
+
+
+% Abstract
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+This project is a Task Management System built on microservices and an Event-Driven paradigm . The system allows managing tasks, users, projects, and more. Services communicate asynchronously, ensuring a more scalable design and improved modularity. From the database layer to the inter-service communication, everything is fully reactive to enhance performance and responsiveness.
+
+
+% Liste des abréviations
+\chapter*{Liste des abréviations}
+\addcontentsline{toc}{chapter}{Liste des abréviations}
+\begin{description}
+    \item[API] Application Programming Interface
+    \item[CI/CD] Continuous Integration/Continuous Deployment
+    % Ajoutez d'autres abréviations ici
+\end{description}
+
+% Table des figures
+\listoffigures
+\addcontentsline{toc}{chapter}{Table des figures}
+
+% Liste des tableaux
+\listoftables
+\addcontentsline{toc}{chapter}{Liste des tableaux}
+
+% Table des matières
+\tableofcontents
+
+\chapter{Introduction générale}
+
+\section*{Contexte global et importance du projet}
+
+Avec l'essor des technologies numériques et la complexité croissante des systèmes logiciels, les entreprises recherchent des solutions qui permettent une gestion efficace, évolutive et maintenable de leurs données et processus. Dans ce contexte, les architectures modernes, telles que les microservices, se sont imposées comme une alternative robuste aux systèmes monolithiques traditionnels. 
+
+Ce projet s'inscrit dans cette dynamique, en proposant une solution modulaire pour la gestion des utilisateurs, des projets, des tâches et des fichiers. En tirant parti des technologies avancées comme \textbf{Spring Cloud}, \textbf{Kafka}, et \textbf{Eureka}, le projet vise à offrir une plateforme performante et scalable qui répond aux exigences des entreprises modernes. Grâce à une infrastructure bien pensée, il est possible de réduire les dépendances entre les composants et d'améliorer la résilience du système global.
+
+\section*{Architecture microservices et Event-Driven}
+L'architecture microservices repose sur la décomposition d'un système complexe en une collection de services indépendants et autonomes, chacun ayant une responsabilité bien définie. Cette approche permet une flexibilité accrue dans le développement, le déploiement et la maintenance des systèmes logiciels.
+
+Dans ce projet, l'architecture est renforcée par l'approche \textbf{Event-Driven}, qui utilise des événements pour communiquer entre les différents microservices. Cette communication est rendue possible grâce à \textbf{Apache Kafka}, une plateforme de streaming distribuée qui assure une communication asynchrone et fiable entre les services. Cela permet de réduire le couplage entre les microservices tout en garantissant une meilleure réactivité face aux changements ou aux nouvelles exigences.
+
+\newpage
+\section*{Aspect réactif mis en œuvre}
+Le projet met en œuvre des principes \textbf{réactifs}, qui jouent un rôle clé dans la conception de systèmes modernes. L'approche réactive repose sur quatre principes fondamentaux :
+\begin{itemize}
+    \item \textbf{Réactif aux événements} : Les microservices réagissent aux événements produits par d'autres services en temps réel grâce à Kafka.
+    \item \textbf{Évolutivité} : Grâce à la nature décentralisée et découplée de l'architecture, il est possible d'ajuster les ressources en fonction des besoins spécifiques de chaque microservice.
+    \item \textbf{Résilience} : L'approche réactive permet au système de gérer les pannes partielles sans compromettre son fonctionnement global.
+    \item \textbf{Élasticité} : Les microservices peuvent s'adapter dynamiquement aux variations de la charge de travail.
+\end{itemize}
+
+Par ailleurs, l'utilisation combinée de \textbf{PostgreSQL} et \textbf{MongoDB} pour le stockage des données permet une flexibilité accrue dans la gestion des données relationnelles et non relationnelles, tout en garantissant des performances optimales. Cette conception assure une expérience utilisateur fluide et réactive, tant du côté backend que frontend, où \textbf{Angular} joue un rôle essentiel.
+
+Ainsi, ce projet illustre non seulement la puissance des architectures modernes, mais aussi leur pertinence pour répondre aux besoins des entreprises dans un monde de plus en plus connecté et orienté données.
+
+
+\chapter{Pr\'esentation du cadre g\'en\'eral du projet}
+
+\section{Pr\'esentation de l’organisme d’accueil}
+\subsection*{Missions et domaine d’activit\'e}
+Le projet pr\'esent\'e dans ce document a \'et\'e r\'ealis\'e dans un cadre purement \textbf{acad\'emique}, en tant que sujet de fin d'ann\'ee pour valider notre formation. Ce travail, effectu\'e en bin\^ome, vise \`a simuler les conditions r\'eelles de d\'eveloppement logiciel en adoptant des m\'ethodologies et des pratiques modernes.
+
+L'objectif \'etait de concevoir et de mettre en oeuvre une solution compl\`ete bas\'ee sur une architecture microservices, incluant des aspects cl\'es comme la gestion des utilisateurs, des projets, des t\^aches et des fichiers. Ce projet se concentre sur l'apprentissage et l'application des technologies actuelles pour r\'esoudre des probl\`emes concrets tout en renfor\c{c}ant les comp\'etences techniques et collaboratives des participants.
+
+\subsection*{Organisation interne}
+L'organisation du travail en bin\^ome a permis une r\'epartition claire des t\^aches entre les deux membres de l'\'equipe. Chacun a pris en charge certains aspects du projet, tout en assurant une communication constante pour garantir une int\'egration fluide des diff\'erentes parties. Les r\'oles ont \'et\'e distribu\'es de mani\`ere \`a maximiser l'efficacit\'e : l'un s'est concentr\'e sur le backend (architecture des microservices, int\'egration de Kafka, gestion des bases de donn\'ees), tandis que l'autre a pris en charge le frontend et la coordination globale du projet.
+
+\newpage
+\section{Motivation}
+\subsection*{Pourquoi la structure microservices ?}
+L'approche microservices a \'et\'e choisie pour ses avantages cl\'es, en particulier dans le cadre d'un apprentissage :
+\begin{itemize}
+    \item \textbf{Approche modulaire} : Elle permet de d\'ecomposer un syst\`eme complexe en services plus simples \`a comprendre et \`a d\'evelopper.
+    \item \textbf{Scalabilit\'e et flexibilit\'e} : Les microservices offrent la possibilit\'e de d\'evelopper et de d\'eployer chaque composant ind\'ependamment, une comp\'etence essentielle pour les syst\`emes modernes.
+    \item \textbf{Pr\'eparation au monde professionnel} : De nombreuses entreprises adoptent cette architecture, ce qui en fait un choix id\'eal pour acqu\'erir des comp\'etences recherch\'ees sur le march\'e du travail.
+\end{itemize}
+
+\subsection*{Probl\`emes r\'esolus par la r\'eactivit\'e et l’Event-Driven}
+Le choix d’impl\'ementer une architecture r\'eactive et Event-Driven a permis de traiter plusieurs d\'efis techniques courants :
+\begin{itemize}
+    \item \textbf{Gestion efficace des flux de donn\'ees} : L'utilisation de Kafka garantit une communication rapide et fiable entre les diff\'erents services.
+    \item \textbf{R\'esilience et d\'ecouplage} : Les services op\`erent de mani\`ere ind\'ependante, minimisant les effets des pannes sur le syst\`eme global.
+    \item \textbf{Traitement en temps r\'eel} : Les microservices peuvent r\'eagir instantan\'ement aux changements ou aux nouvelles informations, ce qui am\'eliore l'exp\'erience utilisateur.
+\end{itemize}
+
+\section{M\'ethodologie}
+Le projet a \'et\'e r\'ealis\'e en suivant une approche \textbf{Agile}, adapt\'ee au contexte \textbf{acad\'emique} :
+\begin{itemize}
+    \item \textbf{Sprints courts et planifi\'es} : Chaque sprint, d'une dur\'ee de deux semaines, comprenait des objectifs clairs \`a atteindre.
+    \item \textbf{R\'eunions r\'eguli\`eres} : Des points hebdomadaires ont \'et\'e organis\'es pour \'evaluer les progr\`es et ajuster les priorit\'es.
+    \item \textbf{Livrables interm\'ediaires} : Plusieurs prototypes ont \'et\'e pr\'esent\'es au cours du projet pour recueillir des retours et am\'eliorer continuellement le produit.
+\end{itemize}
+Cette m\'ethodologie a permis non seulement de respecter les d\'elais impartis, mais aussi de garantir une collaboration harmonieuse et une meilleure qualit\'e des livrables.
+
+\section*{Conclusion}
+Cette pr\'esentation du cadre g\'en\'eral illustre les fondations acad\'emiques et collaboratives de ce projet, r\'ealis\'e en bin\^ome comme un exercice de synth\`ese des comp\'etences acquises. Le chapitre suivant se concentrera sur le cahier des charges, d\'ecrivant les objectifs fonctionnels et techniques.
+
+% Chapitre 2 : Cahier des charges
+\chapter{Cahier des charges}
+
+\section{Probl\'ematique}
+Dans un environnement num\'erique en constante \'evolution, les organisations rencontrent souvent des difficult\'es \`a g\'erer efficacement leurs processus internes. Parmi ces d\'efis se trouvent :
+\begin{itemize}
+    \item \textbf{Centralisation des donn\'ees} : Les donn\'ees importantes sont souvent dispers\'ees, compliquant leur gestion et leur accessibilit\'e.
+    \item \textbf{Collaboration entre les \'equipes} : Le manque d'outils adapt\'es entrave une collaboration fluide et productive.
+    \item \textbf{Scalabilit\'e des syst\`emes} : Les solutions monolithiques classiques peinent \`a s'adapter \`a une croissance rapide des besoins.
+    \item \textbf{R\'esilience} : Les pannes dans les syst\`emes traditionnels peuvent paralyser une organisation enti\`ere.
+\end{itemize}
+Le projet vise \`a r\'esoudre ces probl\`emes en adoptant une architecture microservices, int\'egrant une communication asynchrone pour am\'eliorer l'efficacit\'e, la r\'esilience et la scalabilit\'e des solutions.
+
+\section{Objectifs}
+\subsection*{Objectifs fonctionnels}
+Le projet propose les objectifs fonctionnels suivants :
+\begin{itemize}
+    \item \textbf{Gestion des utilisateurs} : Cr\'eer, mettre \`a jour, supprimer et authentifier les utilisateurs.
+    \item \textbf{Gestion des projets} : Permettre la cr\'eation, la modification et la suppression des projets.
+    \item \textbf{Gestion des t\^aches} : Offrir une gestion granulaire des t\^aches associ\'ees aux projets.
+    \item \textbf{Stockage de fichiers} : Faciliter le t\'el\'echargement et la r\'ecup\'eration des fichiers li\'es aux projets.
+\end{itemize}
+
+\subsection*{Objectifs techniques}
+Les objectifs techniques incluent :
+\begin{itemize}
+    \item \textbf{Architecture microservices} : Mise en place de services ind\'ependants pour chaque fonction du syst\`eme.
+    \item \textbf{Communication asynchrone} : Utilisation de Kafka pour assurer des \'echanges fiables entre les services.
+    \item \textbf{R\'esilience et scalabilit\'e} : Garantir que le syst\`eme peut \`etre \'etendu et qu'il reste fonctionnel m\^eme en cas de panne partielle.
+    \item \textbf{Int\'egration de bases de donn\'ees multiples} : Utilisation de PostgreSQL pour les donn\'ees relationnelles et de MongoDB pour les donn\'ees non relationnelles.
+\end{itemize}
+
+\section{Sp\'ecifications fonctionnelles}
+Les principales sp\'ecifications fonctionnelles incluent :
+\begin{itemize}
+    \item \textbf{Interface utilisateur} : Conception d'une interface conviviale pour l'acc\'es et la gestion des ressources.
+    \item \textbf{API REST} : Fourniture d'API RESTful pour la communication avec les services.
+    \item \textbf{S\'ecurit\'e} : Impl\'ementation de mesures de s\'ecurit\'e robustes, y compris l'authentification et l'autorisation.
+    \item \textbf{Traitement des \'ev\'enements} : Gestion des flux d'\'ev\'enements pour synchroniser les services en temps r\'eel.
+\end{itemize}
+
+\section{Planification}
+La r\'ealisation du projet est divis\'ee en plusieurs \'etapes :
+\begin{itemize}
+    \item \textbf{Phase 1} : Analyse des besoins et d\'efinition des sp\'ecifications.
+    \item \textbf{Phase 2} : Conception de l'architecture et choix des technologies.
+    \item \textbf{Phase 3} : Impl\'ementation des microservices et de la communication asynchrone.
+    \item \textbf{Phase 4} : Tests, validation du syst\`eme.
+    \item \textbf{Phase 5} : Documentation et pr\'esentation finale.
+\end{itemize}
+
+
+\newpage
+\section{Contraintes et risques}
+\subsection*{Contraintes}
+Plusieurs contraintes ont \'et\'e identifi\'ees dans le cadre du projet :
+\begin{itemize}
+    \item \textbf{Temps limit\'e} : Le projet devant \^etre termin\'e dans un d\'elai pr\'ed\'efini correspondant \`a la fin du semestre acad\'emique.
+    \item \textbf{Ressources humaines} : R\'ealisation en bin\^ome, limitant les capacit\'es d'\'execution.
+    \item \textbf{Technologies nouvelles} : Apprentissage et ma\^itrise des technologies modernes durant le projet.
+\end{itemize}
+
+\subsection*{Risques}
+Les principaux risques pr\'evus incluent :
+\begin{itemize}
+    \item \textbf{D\'elais non respect\'es} : En raison de difficult\'es techniques ou organisationnelles.
+    \item \textbf{Int\'egration des services} : Probl\`emes lors de la mise en communication des microservices.
+    \item \textbf{Bugs et erreurs} : Probl\`emes inattendus dans les diff\'erents composants du syst\`eme.
+\end{itemize}
+
+
+\section{Architecture technique}
+\subsection*{Sch\'ema g\'en\'eral des microservices}
+Le syst\`eme repose sur une architecture microservices, o\`u chaque service est con\c{c}u pour remplir une fonction bien d\'efinie. Le sch\'ema g\'en\'eral de cette architecture inclut :
+\begin{itemize}
+    \item \textbf{config-server} : Serveur centralis\'e de gestion des configurations partag\'ees entre les microservices.
+    \item \textbf{registry-service} : Un service Eureka pour l'enregistrement dynamique et la d\'ecouverte des microservices.
+    \item \textbf{gateway-service} : Passerelle API qui agit comme un point d'entr\'ee unique, dirigeant les requ\^etes utilisateur vers les services appropri\'es.
+    \item Microservices sp\'ecifiques comme \textbf{auth-service}, \textbf{user-service}, \textbf{project-service}, \textbf{task-service} et \textbf{file-service}, chacun assurant une fonction autonome.
+\end{itemize}
+Ces services communiquent entre eux via des API REST et des messages \textit{Event-Driven}.
+
+\subsection*{Mise en avant de l’Event-Driven}
+L'approche \textit{Event-Driven} est au coeur de l'architecture pour assurer une communication asynchrone et r\'eactive. L'outil principal utilis\'e est \textbf{Apache Kafka}, qui offre les avantages suivants :
+\begin{itemize}
+    \item \textbf{D\'ecouplage} : Les producteurs et les consommateurs ne d\'ependent pas directement les uns des autres.
+    \item \textbf{Fiabilit\'e} : Kafka garantit la persistance des messages, m\^eme en cas de panne d'un microservice.
+    \item \textbf{Traitement en temps r\'eel} : Les microservices r\'eagissent imm\'ediatement aux \'ev\'enements publi\'es dans les topics Kafka.
+\end{itemize}
+Par exemple, lors de la cr\'eation d'une nouvelle t\^ache dans le \textit{task-service}, un \'ev\'enement est publi\'e dans Kafka, permettant \`a d'autres services, comme \textit{project-service}, d'éventuellement mettre \`a jour les informations associ\'ees.
+
+\subsection*{Choix de la base de donn\'ees r\'eactive}
+Pour optimiser les performances et garantir une r\'eactivit\'e maximale, une base de donn\'ees r\'eactive a \'et\'e adopt\'ee. Le projet utilise \textbf{R2DBC (Reactive Relational Database Connectivity)}, qui offre les avantages suivants :
+\begin{itemize}
+    \item \textbf{Non-bloquant} : Permet de traiter plusieurs requ\^etes simultan\'ement sans bloquer les ressources.
+    \item \textbf{Adapt\'e \`a une architecture r\'eactive} : Fonctionne harmonieusement avec des frameworks comme Spring WebFlux.
+    \item \textbf{Compatibilit\'e avec PostgreSQL} : Fournit des pilotes r\'eactifs pour PostgreSQL, permettant d'exploiter les capacit\'es relationnelles tout en b\'en\'eficiant d'une ex\'ecution non-bloquante.
+\end{itemize}
+
+\newpage
+\section{Choix des technologies}
+\subsection*{Frameworks et outils}
+Le projet int\'egre des frameworks et outils modernes pour assurer sa qualit\'e et sa maintenabilit\'e :
+\begin{itemize}
+    \item \textbf{Spring Cloud} : Une suite d\'outils destinés à la gestion des microservices distribués. Il facilite la gestion des configurations centralisées, la découverte des services, la tolérance aux pannes, la gestion des circuits et bien plus encore.
+    \item \textbf{Spring WebFlux} : Un framework r\'eactif pour le backend, id\'eal pour construire des API non bloquantes.
+    \item \textbf{Angular} : Utilis\'e pour le frontend, offrant une interface utilisateur dynamique et performante.
+    \item \textbf{Docker} : Conteneurisation des microservices pour simplifier le d\'eploiement et garantir la portabilit\'e.
+    \item \textbf{CI/CD (Jenkins et GitHub Actions)} : Int\'egration et d\'eploiement continus pour automatiser les tests et les mises \`a jour.
+\end{itemize}
+
+\section{S\'ecurit\'e}
+La s\'ecurit\'e est une priorit\'e dans le projet. Les mesures suivantes ont \'et\'e impl\'ement\'ees :
+\begin{itemize}
+    \item \textbf{Authentification et autorisation} : Impl\'ementation de JWT (JSON Web Tokens) pour garantir un acc\'es s\'ecuris\'e aux API.
+    \item \textbf{Gestion des r\^oles} : Attribution de privil\`eges bas\'es sur les r\^oles utilisateur pour contr\^oler l'acc\`es aux ressources.
+\end{itemize}
+
+\section*{Conclusion}
+Ce chapitre met en lumi\`ere les choix techniques et technologiques sous-jacents \`a la r\'ealisation du projet, en insistant sur la r\'eactivit\'e, la scalabilit\'e et la s\'ecurit\'e. Ces fondations posent les bases pour une solution robuste et moderne, r\'epondant aux exigences initiales. Le prochain chapitre abordera les d\'etails de l'impl\'ementation pratique.
+
+
+% Chapitre 4 : Analyse et conception
+\chapter{Analyse et conception}
+
+\section{UML}
+Présentation des diagrammes UML (cas d’utilisation, classes, séquences).
+
+\section{Acteurs}
+Description des rôles et interactions entre les utilisateurs et les services.
+
+\section{Exemples de flux}
+Illustration de la circulation d’un événement entre microservices.
+
+\section*{Conclusion}
+Ouverture vers l’implémentation réelle.
+
+% Chapitre 5 : Mise en œuvre de l’application
+\chapter{Mise en œuvre de l’application}
+
+\section{Langages et technologies}
+Description détaillée du stack technologique (TypeScript, Java, etc.).
+
+\section{Démonstration}
+Aperçu de l’interface et exemples de scénarios d’utilisation mettant en avant la réactivité.
+
+\section*{Conclusion}
+Synthèse de la mise en œuvre et perspectives d’évolution.
+
+% Conclusion générale
+\chapter*{Conclusion générale}
+\addcontentsline{toc}{chapter}{Conclusion générale}
+Rappel des objectifs, bilan de l’approche microservices et réactive, et perspectives d’amélioration.
+
+
+\addcontentsline{toc}{chapter}{Bibliographie}
+\begin{thebibliography}{99}
+
+\bibitem{springcloud2025}
+\textit{Spring Cloud Documentation}. \url{https://spring.io/projects/spring-cloud}. 
+
+\bibitem{postgresql2025}
+\textit{PostgreSQL: Documentation}. \url{https://www.postgresql.org/docs/}. 
+
+\bibitem{mongodb2025}
+\textit{MongoDB Manual}. \url{https://docs.mongodb.com/}. 
+
+\bibitem{springdata2025}
+\textit{Spring Data R2DBC: Getting Started}. \url{https://docs.spring.io/spring-data/relational/reference/r2dbc/getting-started.html}. 
+
+\bibitem{springgateway2025}
+\textit{Spring Cloud Gateway Documentation}. \url{https://docs.spring.io/spring-cloud-gateway/reference/}. 
+
+\bibitem{springcircuitbreaker2025}
+\textit{Spring Cloud Circuit Breaker Documentation}. \url{https://docs.spring.io/spring-cloud-circuitbreaker/reference/}. 
+
+\bibitem{springnetflix2025}
+\textit{Spring Cloud Netflix Documentation}. \url{https://docs.spring.io/spring-cloud-netflix/reference/}. 
+
+\bibitem{springopenfeign2025}
+\textit{Spring Cloud OpenFeign Documentation}. \url{https://docs.spring.io/spring-cloud-openfeign/reference/}. 
+
+\bibitem{springstream2025}
+\textit{Spring Cloud Stream Documentation}. \url{https://docs.spring.io/spring-cloud-stream/reference/}. 
+
+\bibitem{springkafka2025}
+\textit{Spring Kafka Documentation}. \url{https://docs.spring.io/spring-kafka/reference/}. 
+
+\bibitem{angular2025}
+\textit{Angular Documentation}. \url{https://v18.angular.dev/overview}. 
+
+\bibitem{bootstrap2025}
+\textit{Bootstrap Documentation}. \url{https://getbootstrap.com/docs/5.3/getting-started/introduction/}. 
+
+\end{thebibliography}
+
+
+
+
+\end{document}
