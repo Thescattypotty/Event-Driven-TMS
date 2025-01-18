@@ -1,0 +1,27 @@
+.task-generator {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+textarea {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 10px;
+}
+button {
+    margin: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.task {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+.task p {
+    margin: 0;
+}

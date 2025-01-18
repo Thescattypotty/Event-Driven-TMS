@@ -5,6 +5,7 @@ import { ProjectComponent } from './pages/project/project.component';
 import { authGuard } from './guard/auth.guard';
 import { FileComponent } from './pages/file/file.component';
 import { ProjectDetailComponent } from './pages/project-detail/project-detail.component';
+import { TaskGeneratorComponent } from './pages/task/task-generator/task-generator.component';
 
 export const routes: Routes = [
     {
@@ -12,8 +13,12 @@ export const routes: Routes = [
         component: AuthComponent
     },
     {
+        path: 'generator',
+        component: TaskGeneratorComponent
+    },
+    {
         path: '',
-        canActivate: [authGuard],
+        //canActivate: [authGuard],
         children: [
             {
                 path: '',
@@ -27,10 +32,12 @@ export const routes: Routes = [
                 path: 'files',
                 component: FileComponent
             },
+            
             {
                 path: ':id',
                 component: ProjectDetailComponent
-            }
+            },
+            
         ]
     }
 ];

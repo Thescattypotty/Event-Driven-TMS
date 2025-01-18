@@ -1,0 +1,27 @@
+<div class="task-generator">
+    <h2>Task Generator</h2>
+    <textarea [(ngModel)]="projectDescription" placeholder="Enter project description"></textarea>
+    <button (click)="generateTasks()">Generate Tasks</button>
+
+    <div *ngIf="generatedText">
+        <h3>Generated Tasks JSON</h3>
+        <pre>{{ generatedText }}</pre>
+    </div>
+    <div *ngIf="backlogTasks.length > 0">
+        <h3>Backlog Tasks</h3>
+        <ul>
+            <li *ngFor="let task of backlogTasks">
+                <div class="task">
+                    <p><strong>{{ task.title }}</strong></p>
+                    <p>{{ task.description }}</p>
+                    <button (click)="acceptTask(task)">Accept</button>
+                    <button (click)="declineTask(task)">Decline</button>
+                </div>
+            </li>
+        </ul>
+    </div>
+    
+    <div *ngIf="backlogTasks.length === 0">
+        <p>No tasks in the backlog.</p>
+    </div>
+</div>
