@@ -1,27 +1,61 @@
-<div class="task-generator">
-    <h2>Task Generator</h2>
-    <textarea [(ngModel)]="projectDescription" placeholder="Enter project description"></textarea>
-    <button (click)="generateTasks()">Generate Tasks</button>
-
-    <div *ngIf="generatedText">
-        <h3>Generated Tasks JSON</h3>
-        <pre>{{ generatedText }}</pre>
-    </div>
-    <div *ngIf="backlogTasks.length > 0">
-        <h3>Backlog Tasks</h3>
-        <ul>
-            <li *ngFor="let task of backlogTasks">
-                <div class="task">
-                    <p><strong>{{ task.title }}</strong></p>
-                    <p>{{ task.description }}</p>
-                    <button (click)="acceptTask(task)">Accept</button>
-                    <button (click)="declineTask(task)">Decline</button>
+<div class="example-container">
+      <div class="offcanvas-header">
+        <h2 id="offcanvasRightLabel">Task Generator</h2>
+      </div>
+      <div class="offcanvas-body">
+        <textarea
+          class="form-control mb-3"
+          [(ngModel)]="projectDescription"
+          placeholder="Enter project description"
+        ></textarea>
+        <button class="btn btn-primary mb-3" (click)="generateTasks()">Generate Tasks</button>
+  
+        <div *ngIf="generatedText">
+          <h3>Generated Tasks JSON</h3>
+          <pre>{{ generatedText }}</pre>
+        </div>
+  
+        <h3>
+          To do
+          <button class="btn btn-primary btn-sm float-end">
+            <i class="bi bi-plus"></i>
+          </button>
+        </h3>
+        <div
+          cdkDropList
+          #todoList="cdkDropList"
+          id="todoList"
+          [cdkDropListData]="backlogTasks"
+          class="example-list"
+        >
+          <div
+            class="example-box list-group-item list-group-item-action d-flex gap-3 py-3"
+            *ngFor="let item of backlogTasks"
+            cdkDrag
+          >
+            <div class="d-flex gap-2 w-100 justify-content-between">
+              <div>
+                <h5 class="mb-0">{{ item.title }}</h5>
+                <p class="mb-0 opacity-75">{{ item.description }}</p>
+                <div class="mt-2">
+                  <button class="btn btn-success btn-sm me-2" (click)="acceptTask(item)">Accept</button>
+                  <button class="btn btn-danger btn-sm" (click)="declineTask(item)">Decline</button>
                 </div>
-            </li>
-        </ul>
-    </div>
-    
-    <div *ngIf="backlogTasks.length === 0">
-        <p>No tasks in the backlog.</p>
-    </div>
-</div>
+              </div>
+              <small class="text-nowrap">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="fa fa-dropbox"></i>
+                </a>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  

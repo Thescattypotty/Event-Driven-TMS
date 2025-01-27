@@ -30,7 +30,7 @@
                     <button class="btn btn-sm btn-primary" (click)="viewProject(project.id)" title="View">
                       <i class="bi bi-eye"></i>
                     </button>
-                    <button class="btn btn-sm btn-warning" title="Edit">
+                    <button class="btn btn-sm btn-warning" (click)="updateProject(project.id)" title="Edit">
                       <i class="bi bi-pencil"></i>
                     </button>
                     <button class="btn btn-sm btn-danger" (click)="deleteProject(project.id)" title="Delete">

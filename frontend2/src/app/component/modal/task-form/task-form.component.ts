@@ -1,5 +1,5 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
 import { UserService } from '../../../services/user.service';
@@ -27,6 +27,7 @@ export class TaskFormComponent implements OnInit {
     task: Partial<TaskRequest> | null = null;
     create: boolean = true;
     users: UserResponse[] = [];
+    @Input() usersId: String[] = [];
     files: String[] = [];
     fileRequest: FileRequest | null = null;
     projectId: String | null = null;
@@ -58,15 +59,15 @@ export class TaskFormComponent implements OnInit {
     }
     getUsers(): void {
         this.userService.getUsers().subscribe({
-            next: (users) => {
-                this.users = users;
-                console.log("Users : ", users);
-            },
-            error: (error) => {
-                console.error("Error : ", error);
-            }
+          next: (users) => {
+            this.users = users.filter(user => this.usersId.includes(user.id));
+            console.log("Users : ", this.users);
+          },
+          error: (error) => {
+            console.error("Error : ", error);
+          }
         });
-    }
+      }
 
     uploadFile(event: any): void {
         const file: File = event.target.files[0];

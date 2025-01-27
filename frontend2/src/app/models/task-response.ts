@@ -1,3 +1,4 @@
+import { FileResponse } from "./file-response";
 import { EPriority } from "./priority";
 import { EStatus } from "./status";
 
@@ -10,6 +11,7 @@ export interface TaskResponse {
     status: EStatus;
     historyOfTask: String[];
     filesIncluded: String[];
+    files?: FileResponse[];
     userAssigned: String;
     projectId: String;
     createdAt: Date;

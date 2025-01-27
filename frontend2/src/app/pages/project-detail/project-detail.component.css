@@ -29,6 +29,12 @@
   padding: 10px;
   box-sizing: border-box;
 }
+.task-description {
+  max-height: 100px; /* Set max height */
+  overflow: hidden;  /* Hide overflowed content */
+  text-overflow: ellipsis; /* Add ellipsis (…) at the end of long text */
+  word-wrap: break-word; /* Break long words to prevent overflow */
+}
 
 .example-box {
   padding: 10px;
